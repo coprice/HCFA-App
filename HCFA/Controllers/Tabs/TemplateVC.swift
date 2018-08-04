@@ -40,9 +40,10 @@ class TemplateVC: UIViewController, SideMenuItemContent {
     
     func backToSignIn() {
         resetDefaults()
-        let signInVC = self.navigationController!.presentingViewController!
-        dismiss(animated: true, completion: nil)
-        createAlert(title: "Session Expired", message: "", view: signInVC)
+        let signInVC = navigationController!.presentingViewController!
+        dismiss(animated: true, completion: {
+            createAlert(title: "Session Expired", message: "", view: signInVC)
+        })
     }
     
     @objc func sliderTapped(sender: UIButton) {

@@ -51,24 +51,23 @@ class CreateTemplateVC: FormViewController {
     func backToSignIn() {
         resetDefaults()
         let signInVC = navigationController!.presentingViewController!
-        dismiss(animated: true, completion: nil)
-        createAlert(title: "Session Expired", message: "", view: signInVC)
+        dismiss(animated: true, completion: {
+            createAlert(title: "Session Expired", message: "", view: signInVC)
+        })
     }
     
     func getMultivaluedSectionValues(_ tag: String) -> [String] {
         let values = form.values()
         var list: [String] = []
-        var done = false
-        var index = 0
         
-        while !done {
-            if let value = values["\(tag)\(index)"] as? String {
-                list.append(value)
-                index += 1
-            } else {
-                done = true
+        for (key, value) in values {
+            if key.contains(tag) {
+                if let value = value as? String {
+                    list.append(value)
+                }
             }
         }
+        
         return list
     }
 }

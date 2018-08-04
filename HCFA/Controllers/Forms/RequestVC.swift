@@ -92,8 +92,9 @@ class RequestVC: FormViewController {
         case .InvalidSession:
             resetDefaults()
             let signInVC = navigationController!.presentingViewController!
-            dismiss(animated: true, completion: nil)
-            createAlert(title: "Session Expired", message: "", view: signInVC)
+            dismiss(animated: true, completion: {
+                createAlert(title: "Session Expired", message: "", view: signInVC)
+            })
         default:
             navigationController!.popViewController(animated: true)
             createAlert(title: "Request Sent", message: "", view: navigationController!.viewControllers.last!)

@@ -120,8 +120,9 @@ class PasswordViewController: FormViewController, TypedRowControllerType {
                     case .InvalidSession:
                         resetDefaults()
                         let signInVC = self.navigationController!.presentingViewController!
-                        self.dismiss(animated: true, completion: nil)
-                        createAlert(title: "Session Expired", message: "", view: signInVC)
+                        self.dismiss(animated: true, completion: {
+                            createAlert(title: "Session Expired", message: "", view: signInVC)
+                        })
                     default:
                         self.navigationController?.popViewController(animated: true)
                         createAlert(title: "Password Updated", message: "",

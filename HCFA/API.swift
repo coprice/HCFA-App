@@ -307,8 +307,8 @@ extension API {
         }
         
         let data = data as! [String:Any]
-        if let errorMessage = data["error"] {
-            if response?.statusCode == 403 {
+        if let errorMessage = data["error"] as? String {
+            if errorMessage == "Session Expired" {
                 return completionHandler(.InvalidSession, nil)
             }
             return completionHandler(.Error, errorMessage)

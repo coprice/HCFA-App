@@ -200,8 +200,9 @@ class ProfileVC: FormViewController, SideMenuItemContent {
     func backToSignIn() {
         resetDefaults()
         let signInVC = self.navigationController!.presentingViewController!
-        dismiss(animated: true, completion: nil)
-        createAlert(title: "Session Expired", message: "", view: signInVC)
+        dismiss(animated: true, completion: {
+            createAlert(title: "Session Expired", message: "", view: signInVC)
+        })
     }
     
     func uploadImage(data: Data, setImages: @escaping () -> Void) {
@@ -302,10 +303,7 @@ class ProfileVC: FormViewController, SideMenuItemContent {
                 case .Error:
                     createAlert(title: "Error", message: data as! String, view: self)
                 case .InvalidSession:
-                    resetDefaults()
-                    let signInVC = self.navigationController!.presentingViewController!
-                    self.dismiss(animated: true, completion: nil)
-                    createAlert(title: "Session Expired", message: "", view: signInVC)
+                    self.backToSignIn()
                 default:
                     defaults.set(first, forKey: "first")
                     defaults.set(last, forKey: "last")

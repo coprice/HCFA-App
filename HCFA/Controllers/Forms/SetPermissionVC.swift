@@ -133,8 +133,9 @@ class SetPermissionVC: FormViewController, TypedRowControllerType {
     func backToSignIn() {
         resetDefaults()
         let signInVC = navigationController!.presentingViewController!
-        dismiss(animated: true, completion: nil)
-        createAlert(title: "Session Expired", message: "", view: signInVC)
+        dismiss(animated: true, completion: {
+            createAlert(title: "Session Expired", message: "", view: signInVC)
+        })
     }
     
     // these are required to conform to TypedRowControllerType

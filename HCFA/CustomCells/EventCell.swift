@@ -80,7 +80,7 @@ class EventCell: UITableViewCell {
 
             let start = UILabel(frame: CGRect(x: view.frame.width - FULL_WIDTH*0.34 - SIDE_MARGIN, y: TOP_MARGIN,
                                               width: FULL_WIDTH*0.34, height: height/5))
-            start.text = "\(starTime), \(startString)"
+            start.text = "\(startTime), \(startString)"
             start.font = UIFont.findAdaptiveFont(withName: "Baskerville", forUILabel: start.frame.size, withMinimumSize: 8)
             start.textColor = .gray
             start.adjustsFontSizeToFitWidth = true

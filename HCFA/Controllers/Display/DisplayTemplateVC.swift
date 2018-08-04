@@ -18,8 +18,9 @@ class DisplayTemplateVC: UIViewController {
     func backToSignIn() {
         resetDefaults()
         let signInVC = navigationController!.presentingViewController!
-        dismiss(animated: true, completion: nil)
-        createAlert(title: "Session Expired", message: "", view: signInVC)
+        dismiss(animated: true, completion: {
+            createAlert(title: "Session Expired", message: "", view: signInVC)
+        })
     }
     
     // Helpers for displaying views
