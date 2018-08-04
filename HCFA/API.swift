@@ -196,12 +196,12 @@ class API {
                            completionHandler: completionHandler)
     }
     
-    class func createCourseRequest(uid: Int, token: String, cid: Int, message: String?,
+    class func sendCourseRequest(uid: Int, token: String, cid: Int, message: String?,
                                    completionHandler: @escaping (URLResponses, Any?) -> Void) {
         
         let json = ["uid": uid, "token": token, "cid": cid, "message": message] as [String:Any?]
         
-        API.performRequest(requestType: "POST", urlPath: "/courses/request", json: json, completionHandler: completionHandler)
+        API.performRequest(requestType: "POST", urlPath: "/courses/request/send", json: json, completionHandler: completionHandler)
     }
     
     class func getTeams(uid: Int, token: String, completionHandler: @escaping (URLResponses, Any?) -> Void) {
@@ -252,12 +252,12 @@ class API {
                            completionHandler: completionHandler)
     }
     
-    class func createTeamRequest(uid: Int, token: String, tid: Int, message: String?,
+    class func sendTeamRequest(uid: Int, token: String, tid: Int, message: String?,
                                    completionHandler: @escaping (URLResponses, Any?) -> Void) {
         
         let json = ["uid": uid, "token": token, "tid": tid, "message": message] as [String:Any?]
         
-        API.performRequest(requestType: "POST", urlPath: "/teams/request", json: json, completionHandler: completionHandler)
+        API.performRequest(requestType: "POST", urlPath: "/teams/request/send", json: json, completionHandler: completionHandler)
     }
 }
 

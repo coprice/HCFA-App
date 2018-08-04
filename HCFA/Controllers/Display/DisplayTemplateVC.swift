@@ -9,7 +9,7 @@
 import UIKit
 
 class DisplayTemplateVC: UIViewController {
-    
+      
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = lightColor

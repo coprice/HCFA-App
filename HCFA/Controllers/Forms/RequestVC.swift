@@ -11,9 +11,11 @@ import Eureka
 class RequestVC: FormViewController {
     
     var hostVC: HostVC!
+    var navBar: UINavigationBar!
     var isCourse: Bool!
     var id: Int!
     var parentVC: UIViewController!
+    var loadingView: LoadingView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -21,6 +23,10 @@ class RequestVC: FormViewController {
         view.backgroundColor = lightColor
         navigationAccessoryView.barTintColor = redColor
         hostVC = navigationController?.viewControllers.first as! HostVC
+        navBar = navigationController!.navigationBar
+        loadingView = LoadingView(frame: CGRect(x: view.frame.width*0.375,
+                                                y: view.frame.height/2 - view.frame.width*0.125,
+                                                width: view.frame.width*0.25, height: view.frame.width*0.25))
         
         form +++ Section("Optional Message")
             <<< TextAreaRow() { row in
@@ -51,14 +57,18 @@ class RequestVC: FormViewController {
             
             let message = self.form.values()["message"] as? String
             
+            self.view.addSubview(self.loadingView)
+            self.navBar.isUserInteractionEnabled = false
+            self.tableView.isUserInteractionEnabled = false
+            
             if self.isCourse {
-                API.createCourseRequest(uid: defaults.integer(forKey: "uid"),
+                API.sendCourseRequest(uid: defaults.integer(forKey: "uid"),
                                         token: defaults.string(forKey: "token")!, cid: self.id,
                                         message: message, completionHandler: { response, data in
                     self.handle(response, data)
                 })
             } else {
-                API.createTeamRequest(uid: defaults.integer(forKey: "uid"),
+                API.sendTeamRequest(uid: defaults.integer(forKey: "uid"),
                                       token: defaults.string(forKey: "token")!, tid: self.id,
                                       message: message, completionHandler: { response, data in
                     self.handle(response, data)
@@ -70,6 +80,10 @@ class RequestVC: FormViewController {
     }
     
     func handle(_ response: URLResponses, _ data: Any?) {
+        loadingView.removeFromSuperview()
+        navBar.isUserInteractionEnabled = true
+        tableView.isUserInteractionEnabled = true
+        
         switch response {
         case .NotConnected:
             createAlert(title: "Connection Error", message: "Unable to connect to the server", view: self)

@@ -58,7 +58,7 @@ class EventCell: UITableViewCell {
             
             let time = UILabel(frame: CGRect(x: view.frame.width - FULL_WIDTH*0.34 - SIDE_MARGIN, y: TOP_MARGIN,
                                              width: FULL_WIDTH*0.34, height: height/5))
-            time.text = startTime + "-" + endTime
+            time.text = "\(startTime)-\(endTime)"
             time.font = UIFont.findAdaptiveFont(withName: "Baskerville", forUILabel: time.frame.size, withMinimumSize: 8)
             time.textColor = .gray
             time.adjustsFontSizeToFitWidth = true
@@ -80,7 +80,7 @@ class EventCell: UITableViewCell {
 
             let start = UILabel(frame: CGRect(x: view.frame.width - FULL_WIDTH*0.34 - SIDE_MARGIN, y: TOP_MARGIN,
                                               width: FULL_WIDTH*0.34, height: height/5))
-            start.text = startTime + ", " + startString
+            start.text = "\(starTime), \(startString)"
             start.font = UIFont.findAdaptiveFont(withName: "Baskerville", forUILabel: start.frame.size, withMinimumSize: 8)
             start.textColor = .gray
             start.adjustsFontSizeToFitWidth = true
@@ -94,7 +94,7 @@ class EventCell: UITableViewCell {
             
             let end = UILabel(frame:CGRect(x: start.frame.origin.x, y: TOP_MARGIN + height/6,
                                            width: start.frame.width, height: start.frame.height))
-            end.text = endTime + ", " + endString
+            end.text = "\(endTime), \(endString)"
             end.font = UIFont.findAdaptiveFont(withName: "Baskerville", forUILabel: start.frame.size, withMinimumSize: 8)
             end.textColor = .gray
             end.adjustsFontSizeToFitWidth = true

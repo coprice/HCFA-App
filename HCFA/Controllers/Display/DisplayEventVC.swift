@@ -113,7 +113,7 @@ class DisplayEventVC: DisplayTemplateVC {
             
             let timeLabel = createLabel(frame: CGRect(x: view.frame.width/20, y: offset + height/2,
                                                       width: view.frame.width*0.9, height: height*0.4),
-                                        text: (startTime + "-" + endTime), font: infoFont, color: .darkGray,
+                                        text: ("\(startTime)-\(endTime)"), font: infoFont, color: .darkGray,
                                         alignment: .center, fitToWidth: true)
             scrollView.addSubview(timeLabel)
             offset += height
@@ -134,10 +134,10 @@ class DisplayEventVC: DisplayTemplateVC {
             let startStrings = startDateString.split(separator: Character(","))
             let endStrings = endDateString.split(separator: Character(","))
             
-            let startingDateString = String(startStrings[0]) + daySuffix(from: startDate) + ","
-                                     + String(startStrings[1]) + " at " + startTime
-            let endingDateString = String(endStrings[0]) + daySuffix(from: endDate) + ","
-                                   + String(endStrings[1]) + " at " + endTime
+            let startingDateString =
+                "\(startStrings[0])\(daySuffix(from: startDate)),\(startStrings[1]) at \(endTime)"
+            
+            let endingDateString = "\(endStrings[0])\(daySuffix(from: endDate)),\(endStrings[1]) at \(endTime)"
             
             let startDateLabel = createLabel(frame: CGRect(x: view.frame.width*0.25, y: offset,
                                                            width: view.frame.width*0.7, height: height/2),

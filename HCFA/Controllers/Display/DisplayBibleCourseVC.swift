@@ -116,7 +116,7 @@ class DisplayBibleCourseVC: DisplayTemplateVC {
         offset += TOP_MARGIN/2
         
         let leader = UILabel(frame: CGRect(x: SIDE_MARGIN, y: offset, width: FULL_WIDTH, height: categoryHeight))
-        leader.text = "Leader: " + (data["leader_first"] as! String) + " " + (data["leader_last"] as! String)
+        leader.text = "Leader: \(data["leader_first"] as! String) \(data["leader_last"] as! String)"
         leader.textAlignment = .center
         leader.font = infoFont
         leader.textColor = .black
@@ -127,7 +127,7 @@ class DisplayBibleCourseVC: DisplayTemplateVC {
         let abcls = (data["abcls"] as! [String])
         for abcl in abcls {
             let label = UILabel(frame: CGRect(x: SIDE_MARGIN, y: offset, width: FULL_WIDTH, height: categoryHeight))
-            createListLabel(label: label, text: "ABCL: " + abcl, font: infoFont, color: .black, view: scrollView)
+            createListLabel(label: label, text: "ABCL: \(abcl)", font: infoFont, color: .black, view: scrollView)
             offset += label.frame.height
         }
         if !abcls.isEmpty {
@@ -226,13 +226,13 @@ class DisplayBibleCourseVC: DisplayTemplateVC {
         var yearPlural: String
         switch year {
             case "Freshman": yearPlural = "Freshmen"
-            default: yearPlural = year + "s"
+            default: yearPlural = "\(year)s"
         }
         let firstName = (data["leader_first"] as! String)
         if firstName.suffix(1) == "s" {
-            return firstName + "' " + yearPlural
+            return "\(firstName)' \(yearPlural)"
         } else {
-            return firstName + "'s " + yearPlural
+            return "\(firstName)'s \(yearPlural)"
         }
     }
     

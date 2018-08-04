@@ -11,16 +11,12 @@ import Eureka
 class PermissionVC: FormViewController, TypedRowControllerType {
     
     var hostVC: HostVC!
-    var loadingView: LoadingView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         navigationAccessoryView.barTintColor = redColor
         hostVC = navigationController?.viewControllers.first as! HostVC
-        loadingView = LoadingView(frame: CGRect(x: view.frame.width*0.375,
-                                                y: view.frame.height/2 - view.frame.width*0.125,
-                                                width: view.frame.width*0.25, height: view.frame.width*0.25))
         
         form +++ Section("Leaders")
         <<< ButtonRowWithPresent<SetPermissionVC> { row in

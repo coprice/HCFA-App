@@ -26,7 +26,7 @@ class BibleCourseCell: UITableViewCell {
         view.layer.cornerRadius = SIDE_MARGIN
         
         let title = UILabel(frame: CGRect(x: SIDE_MARGIN, y: TOP_MARGIN, width: FULL_WIDTH*0.64, height: height*2/5))
-        title.text = (data["leader_first"] as! String) + " " + (data["leader_last"] as! String)
+        title.text = "\(data["leader_first"] as! String) \(data["leader_last"] as! String)"
         title.font = UIFont(name: "Baskerville", size: FULL_WIDTH*0.08)
         title.baselineAdjustment = .alignCenters
         title.adjustsFontSizeToFitWidth = true

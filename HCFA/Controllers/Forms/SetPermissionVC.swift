@@ -12,9 +12,16 @@ class SetPermissionVC: FormViewController, TypedRowControllerType {
     
     var isLeader: Bool!
     var isAdd: Bool!
+    var navBar: UINavigationBar!
+    var loadingView: LoadingView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        navBar = navigationController!.navigationBar
+        loadingView = LoadingView(frame: CGRect(x: view.frame.width*0.375,
+                                                y: view.frame.height/2 - view.frame.width*0.125,
+                                                width: view.frame.width*0.25, height: view.frame.width*0.25))
         
         form +++ Section("")
         <<< EmailRow() { row in
@@ -52,6 +59,11 @@ class SetPermissionVC: FormViewController, TypedRowControllerType {
                     createAlert(title: "Invalid Action", message: "You cannot change your own permissions",
                                 view: self)
                 } else {
+                    
+                    self.view.addSubview(self.loadingView)
+                    self.navBar.isUserInteractionEnabled = false
+                    self.tableView.isUserInteractionEnabled = false
+                    
                     if self.isAdd {
                         if self.isLeader {
                             self.addLeader(email: email)
@@ -71,6 +83,11 @@ class SetPermissionVC: FormViewController, TypedRowControllerType {
     }
     
     func handle(_ response: URLResponses, _ data: Any?, _ message: String) {
+        
+        loadingView.removeFromSuperview()
+        navBar.isUserInteractionEnabled = true
+        tableView.isUserInteractionEnabled = true
+        
         switch response {
         case .NotConnected:
             createAlert(title: "Connection Error", message: "Unable to connect to the server",
