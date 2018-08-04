@@ -138,11 +138,11 @@ class DisplayBibleCourseVC: DisplayTemplateVC {
 
         if joined {
             offset += TOP_MARGIN/2
-            let members = (data["members"] as! [String:Any])["names"] as! [String]
+            let members = (data["members"] as! [String:Any])["info"] as! [[String?]]
             for member in members {
                 let label = UILabel(frame: CGRect(x: SIDE_MARGIN, y: offset,
                                                   width: FULL_WIDTH,height: categoryHeight))
-                createListLabel(label: label, text: member, font: infoFont, color: .black, view: scrollView)
+                createListLabel(label: label, text: member[0]!, font: infoFont, color: .black, view: scrollView)
                 offset += label.frame.height
             }
             if members.isEmpty {

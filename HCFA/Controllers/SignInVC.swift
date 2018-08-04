@@ -11,23 +11,26 @@ import Eureka
 
 class SignInVC: UIViewController {
     
-    var navigationAccessory: NavigationAccessoryView!
-    var scrollView: UIScrollView!
+    let navigationAccessory = NavigationAccessoryView()
+    let scrollView = UIScrollView()
+    let login = UIButton()
+    let register = UIButton()
+    let email = UITextField()
+    let password = UITextField()
+    let confirm = UITextField()
+    let firstName = UITextField()
+    let lastName = UITextField()
+    let submit = UIButton()
+    let forgot = UIButton()
+    let spinner = UIActivityIndicatorView()
+    
     var banner: UIImageView!
-    var login: UIButton!
-    var register: UIButton!
-    var email: UITextField!
-    var password: UITextField!
-    var confirm: UITextField!
-    var firstName: UITextField!
-    var lastName: UITextField!
-    var submit: UIButton!
     var currentTextField: UITextField?
-    var loginActive: Bool!
-    var switchingMenu: Bool!
+    var loginActive = true
+    var switchingMenu = false
     var animationComplete = false
     var atLaunch = true
-    let spinner = UIActivityIndicatorView()
+    var presentingPassword = false
     
     override func viewDidLoad() {
         
@@ -35,7 +38,6 @@ class SignInVC: UIViewController {
         
         spinner.color = redColor
         
-        navigationAccessory = NavigationAccessoryView()
         navigationAccessory.barTintColor = redColor
         navigationAccessory.previousButton.target = self
         navigationAccessory.previousButton.action = #selector(self.previousPressed)
@@ -61,8 +63,8 @@ class SignInVC: UIViewController {
         
         let TOGGLE_Y = view.frame.height*0.225
         
-        login = UIButton(frame: CGRect(x: view.frame.midX - BUTTON_WIDTH - 2, y: TOGGLE_Y,
-                                       width: BUTTON_WIDTH, height: BUTTON_HEIGHT))
+        login.frame = CGRect(x: view.frame.midX - BUTTON_WIDTH - 2, y: TOGGLE_Y,
+                             width: BUTTON_WIDTH, height: BUTTON_HEIGHT)
         login.layer.cornerRadius = BUTTON_HEIGHT/5
         login.setBackgroundImage(roundedImage(color: redColor, width: BUTTON_WIDTH, height: BUTTON_HEIGHT,
                                               cornerRadius: login.layer.cornerRadius),
@@ -75,8 +77,8 @@ class SignInVC: UIViewController {
         login.layer.borderColor = redColor.cgColor
         login.addTarget(self, action: #selector(self.loginPressed), for: .touchUpInside)
         
-        register = UIButton(frame: CGRect(x: view.frame.midX + 2, y: TOGGLE_Y,
-                                          width: BUTTON_WIDTH, height: BUTTON_HEIGHT))
+        register.frame = CGRect(x: view.frame.midX + 2, y: TOGGLE_Y,
+                                width: BUTTON_WIDTH, height: BUTTON_HEIGHT)
         register.layer.cornerRadius = BUTTON_HEIGHT/5
         register.setBackgroundImage(roundedImage(color: redColor, width: BUTTON_WIDTH, height: BUTTON_HEIGHT,
                                                  cornerRadius: register.layer.cornerRadius),
@@ -89,7 +91,6 @@ class SignInVC: UIViewController {
         register.layer.borderColor = redColor.cgColor
         register.addTarget(self, action: #selector(self.registerPressed), for: .touchUpInside)
         
-        firstName = UITextField()
         firstName.font = UIFont(name: "Baskerville", size: TEXT_SIZE)
         firstName.alpha = 0.0
         firstName.placeholder = "First"
@@ -99,7 +100,6 @@ class SignInVC: UIViewController {
         firstName.autocorrectionType = .no
         firstName.tag = 1
         
-        lastName = UITextField()
         lastName.font = UIFont(name: "Baskerville", size: TEXT_SIZE)
         lastName.alpha = 0.0
         lastName.placeholder = "Last"
@@ -109,7 +109,6 @@ class SignInVC: UIViewController {
         lastName.autocorrectionType = .no
         lastName.tag = 2
         
-        email = UITextField()
         email.font = UIFont(name: "Baskerville", size: TEXT_SIZE)
         email.alpha = 0.0
         email.placeholder = "Email"
@@ -120,7 +119,6 @@ class SignInVC: UIViewController {
         email.autocorrectionType = .no
         email.tag = 3
         
-        password = UITextField()
         password.font = UIFont(name: "Baskerville", size: TEXT_SIZE)
         password.alpha = 0.0
         password.placeholder = "Password"
@@ -131,7 +129,6 @@ class SignInVC: UIViewController {
         password.autocorrectionType = .no
         password.tag = 4
         
-        confirm = UITextField()
         confirm.font = UIFont(name: "Baskerville", size: TEXT_SIZE)
         confirm.alpha = 0.0
         confirm.placeholder = "Confirm Password"
@@ -152,19 +149,27 @@ class SignInVC: UIViewController {
             confirm.textContentType = empty
         }
         
-        submit = UIButton()
         submit.alpha = 0.0
         submit.layer.cornerRadius = BUTTON_HEIGHT/10
         submit.backgroundColor = redColor
         submit.setTitle("Submit", for: .normal)
-        submit.titleLabel?.font =  UIFont(name: "Baskerville", size: BUTTON_WIDTH/5)
+        submit.titleLabel?.font = UIFont(name: "Baskerville", size: BUTTON_WIDTH/5)
         submit.setBackgroundImage(roundedImage(color: highlightColor, width: BUTTON_WIDTH, height: BUTTON_HEIGHT,
-                                               cornerRadius: submit.layer.cornerRadius),
-                                  for: .highlighted)
+                                               cornerRadius: submit.layer.cornerRadius), for: .highlighted)
         submit.addTarget(self, action: #selector(self.submitPressed), for: .touchUpInside)
         
-        scrollView = UIScrollView(frame: CGRect(x: 0, y: view.frame.height*0.31,
-                                                width: view.frame.width, height: view.frame.height*0.665))
+        forgot.alpha = 0.0
+        forgot.setTitle("Forgot Password?", for: .normal)
+        forgot.setTitleColor(redColor, for: .normal)
+        forgot.setTitleColor(highlightColor, for: .highlighted)
+        forgot.titleLabel?.textAlignment = .center
+        forgot.titleLabel?.baselineAdjustment = .alignCenters
+        forgot.titleLabel?.adjustsFontSizeToFitWidth = true
+        forgot.titleLabel?.font = UIFont(name: "Baskerville", size: BUTTON_WIDTH*0.175)
+        forgot.addTarget(self, action: #selector(self.forgotTapped), for: .touchUpInside)
+        
+        scrollView.frame = CGRect(x: 0, y: view.frame.height*0.31,
+                                  width: view.frame.width, height: view.frame.height*0.665)
         scrollView.backgroundColor = .clear
         
         view.addSubview(banner)
@@ -174,9 +179,14 @@ class SignInVC: UIViewController {
         view.addSubview(email)
         view.addSubview(password)
         view.addSubview(submit)
+        view.addSubview(forgot)
     }
     
     override func viewDidAppear(_ animated: Bool) {
+        if presentingPassword {
+            presentingPassword = false
+            return
+        }
         if defaults.integer(forKey: "uid") == 0 {
             handleLogin()
             
@@ -188,7 +198,6 @@ class SignInVC: UIViewController {
                 case.Success:
                     self.atLaunch = false
                     let nav = UINavigationController(rootViewController: HostVC())
-                    nav.setNavigationBarHidden(false, animated: true)
                     self.present(nav, animated: true, completion: nil)
                 default:
                     resetDefaults()
@@ -244,6 +253,7 @@ class SignInVC: UIViewController {
             view.addSubview(email)
             view.addSubview(password)
             view.addSubview(submit)
+            view.addSubview(forgot)
             
             banner.alpha = 0.0
             banner.frame = CGRect(x: 0, y: view.frame.midY - view.frame.height*0.35 - banner.frame.height/2,
@@ -287,19 +297,24 @@ class SignInVC: UIViewController {
         let BUTTON_WIDTH = FIELD_WIDTH/2
         let BUTTON_HEIGHT = FIELD_HEIGHT*0.75
         
-        email.frame = CGRect(x: self.view.frame.midX - FIELD_WIDTH/2, y: view.frame.height*0.32,
+        email.frame = CGRect(x: view.frame.midX - FIELD_WIDTH/2, y: view.frame.height*0.32,
                              width: FIELD_WIDTH, height: FIELD_HEIGHT)
         
-        password.frame = CGRect(x: self.view.frame.midX - FIELD_WIDTH/2, y: view.frame.height*0.42,
+        password.frame = CGRect(x: view.frame.midX - FIELD_WIDTH/2, y: view.frame.height*0.42,
                                 width: FIELD_WIDTH, height: FIELD_HEIGHT)
         
-        submit.frame = CGRect(x: self.view.frame.midX - BUTTON_WIDTH/2, y: view.frame.height*0.52,
+        forgot.frame = CGRect(x: view.frame.midX - BUTTON_WIDTH*0.625,
+                              y: password.frame.height + password.frame.origin.y + BUTTON_HEIGHT/8,
+                              width: BUTTON_WIDTH*1.25, height: BUTTON_HEIGHT*0.75)
+        
+        submit.frame = CGRect(x: view.frame.midX - BUTTON_WIDTH/2, y: BUTTON_HEIGHT*0.875 + view.frame.height*0.52,
                               width: BUTTON_WIDTH, height: BUTTON_HEIGHT)
         
         UIView.animate(withDuration: duration, delay: 0.0, options: .curveEaseIn, animations: {
             self.email.alpha = 1.0
             self.password.alpha = 1.0
             self.submit.alpha = 1.0
+            self.forgot.alpha = 1.0
         }, completion: completion)
     }
     
@@ -349,9 +364,9 @@ class SignInVC: UIViewController {
             self.password.alpha = 0.0
             self.confirm.alpha = 0.0
             self.submit.alpha = 0.0
+            self.forgot.alpha = 0.0
         }, completion: {_ in
             let nav = UINavigationController(rootViewController: HostVC())
-            nav.setNavigationBarHidden(false, animated: true)
             self.present(nav, animated: true, completion: nil)
         })
     }
@@ -364,6 +379,25 @@ class SignInVC: UIViewController {
                 defaults.set(data, forKey: "profile")
             }
         }
+    }
+    
+    func startSpinner() {
+        if loginActive {
+            spinner.center = CGPoint(x: view.frame.width/2, y: view.frame.height*0.625)
+        } else {
+            spinner.center = CGPoint(x: view.frame.width/2, y: view.frame.height*0.825)
+        }
+        spinner.startAnimating()
+    }
+    
+    func stopSpinner() {
+        spinner.stopAnimating()
+    }
+    
+    @objc func forgotTapped(sender: UIButton) {
+        presentingPassword = true
+        let nav = UINavigationController(rootViewController: ForgotPasswordVC())
+        self.present(nav, animated: true, completion: nil)
     }
     
     @objc func submitPressed(sender: UIButton) {
@@ -508,9 +542,11 @@ class SignInVC: UIViewController {
                 self.password.text = nil
                 self.confirm.text = nil
                 self.scrollView.removeFromSuperview()
+                
                 self.view.addSubview(self.email)
                 self.view.addSubview(self.password)
                 self.view.addSubview(self.submit)
+                self.view.addSubview(self.forgot)
                 self.displayLoginForm(duration: 0.15, completion: {_ in self.switchingMenu = false})
             })
         }
@@ -529,12 +565,16 @@ class SignInVC: UIViewController {
                 self.email.alpha = 0.0
                 self.password.alpha = 0.0
                 self.submit.alpha = 0.0
+                self.forgot.alpha = 0.0
+                
             }, completion: {_ in
                 self.email.text = nil
                 self.password.text = nil
                 self.email.removeFromSuperview()
                 self.password.removeFromSuperview()
                 self.submit.removeFromSuperview()
+                self.forgot.removeFromSuperview()
+                
                 self.view.addSubview(self.scrollView)
                 self.scrollView.addSubview(self.email)
                 self.scrollView.addSubview(self.password)
@@ -560,19 +600,6 @@ class SignInVC: UIViewController {
         if !loginActive {
             scrollView.setContentOffset(CGPoint.zero, animated: true)
         }
-    }
-    
-    func startSpinner() {
-        if loginActive {
-            spinner.center = CGPoint(x: view.frame.width/2, y: view.frame.height*0.625)
-        } else {
-            spinner.center = CGPoint(x: view.frame.width/2, y: view.frame.height*0.825)
-        }
-        spinner.startAnimating()
-    }
-    
-    func stopSpinner() {
-        spinner.stopAnimating()
     }
 }
 

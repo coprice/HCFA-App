@@ -34,8 +34,8 @@ class CreateEventVC: CreateTemplateVC {
         
         form +++ Section("General")
             <<< NameRow() { row in
-            row.title = "Event Name"
-            row.placeholder = "Enter title here"
+            row.title = "Title"
+            row.placeholder = "Title"
             row.tag = "title"
             if editingEvent {
                 row.value = (eventData["title"] as! String)
@@ -50,7 +50,7 @@ class CreateEventVC: CreateTemplateVC {
         }
             <<< NameRow() { row in
             row.title = "Location"
-            row.placeholder = "Enter address here"
+            row.placeholder = "Location"
             row.tag = "location"
             if editingEvent {
                 row.value = (eventData["location"] as! String)
@@ -115,7 +115,7 @@ class CreateEventVC: CreateTemplateVC {
         +++ Section("Description")
             <<< TextAreaRow() { row in
             row.title = "Description"
-            row.placeholder = "Describe the event here"
+            row.placeholder = "Description"
             row.tag = "description"
             if editingEvent {
                 row.value = (eventData["description"] as! String)

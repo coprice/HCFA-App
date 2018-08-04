@@ -78,6 +78,7 @@
 		E3A4436420015E33000D007D /* CreateEventVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3A4436320015E33000D007D /* CreateEventVC.swift */; };
 		E3A443682001C2CC000D007D /* CreateBibleCourseVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3A443672001C2CC000D007D /* CreateBibleCourseVC.swift */; };
 		E3A4436A2001C2F7000D007D /* CreateMinistryTeamVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3A443692001C2F7000D007D /* CreateMinistryTeamVC.swift */; };
+		E3AF433021161B1E00A566EF /* ForgotPasswordVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3AF432F21161B1E00A566EF /* ForgotPasswordVC.swift */; };
 		E3D795E21FF591CE003B78F5 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3D795E11FF591CE003B78F5 /* AppDelegate.swift */; };
 		E3D795EA1FF591CE003B78F5 /* HCFA.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = E3D795E81FF591CE003B78F5 /* HCFA.xcdatamodeld */; };
 		E3D795EC1FF591CE003B78F5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E3D795EB1FF591CE003B78F5 /* Assets.xcassets */; };
@@ -185,6 +186,7 @@
 		E3A4436320015E33000D007D /* CreateEventVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateEventVC.swift; sourceTree = "<group>"; };
 		E3A443672001C2CC000D007D /* CreateBibleCourseVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateBibleCourseVC.swift; sourceTree = "<group>"; };
 		E3A443692001C2F7000D007D /* CreateMinistryTeamVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateMinistryTeamVC.swift; sourceTree = "<group>"; };
+		E3AF432F21161B1E00A566EF /* ForgotPasswordVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForgotPasswordVC.swift; sourceTree = "<group>"; };
 		E3D795DE1FF591CE003B78F5 /* HCFA.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HCFA.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E3D795E11FF591CE003B78F5 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		E3D795E91FF591CE003B78F5 /* HCFA.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = HCFA.xcdatamodel; sourceTree = "<group>"; };
@@ -458,6 +460,7 @@
 				E3FE17FC2011A42000C24969 /* CalendarVC.swift */,
 				E30F7ED72106E59500F74370 /* FilterVC.swift */,
 				E33CE525210CFB1200A81C9D /* RequestVC.swift */,
+				E3AF432F21161B1E00A566EF /* ForgotPasswordVC.swift */,
 				E33CE51D210A23E200A81C9D /* PasswordVC.swift */,
 				E3804598210D935400CB0A8D /* PermissionVC.swift */,
 				E380459A211170AB00CB0A8D /* SetPermissionVC.swift */,
@@ -798,6 +801,7 @@
 				E33CE526210CFB1200A81C9D /* RequestVC.swift in Sources */,
 				E368F0AE2006C07C009A43F7 /* DisplayEventVC.swift in Sources */,
 				E3D795E21FF591CE003B78F5 /* AppDelegate.swift in Sources */,
+				E3AF433021161B1E00A566EF /* ForgotPasswordVC.swift in Sources */,
 				E34AACA41FFEF15D00828012 /* EmptyCell.swift in Sources */,
 				E3D795EA1FF591CE003B78F5 /* HCFA.xcdatamodeld in Sources */,
 				E34AACAA1FFF124900828012 /* TemplateVC.swift in Sources */,

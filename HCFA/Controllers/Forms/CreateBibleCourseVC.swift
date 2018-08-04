@@ -25,7 +25,7 @@ class CreateBibleCourseVC: CreateTemplateVC {
         form +++ Section("Leader")
         <<< NameRow() { row in
             row.title = "First Name"
-            row.placeholder = "Enter name here"
+            row.placeholder = "First Name"
             row.tag = "leader_first"
             if editingBC {
                 row.value = data["leader_first"] as? String
@@ -40,7 +40,7 @@ class CreateBibleCourseVC: CreateTemplateVC {
         }
         <<< NameRow() { row in
             row.title = "Last Name"
-            row.placeholder = "Enter name here"
+            row.placeholder = "Last Name"
             row.tag = "leader_last"
             if editingBC {
                 row.value = data["leader_last"] as? String
@@ -95,7 +95,7 @@ class CreateBibleCourseVC: CreateTemplateVC {
             
         <<< NameRow() { row in
             row.title = "Location"
-            row.placeholder = "Enter location here"
+            row.placeholder = "Location"
             row.tag = "location"
             if editingBC {
                 row.value = data["location"] as? String
@@ -110,7 +110,7 @@ class CreateBibleCourseVC: CreateTemplateVC {
         }
         <<< TextAreaRow() { row in
             row.title = "Material"
-            row.placeholder = "Enter what material will be covered"
+            row.placeholder = "Course material"
             row.tag = "material"
             if editingBC {
                 row.value = data["material"] as? String
@@ -205,7 +205,7 @@ class CreateBibleCourseVC: CreateTemplateVC {
             
         +++ Section("GroupMe")
         <<< EmailRow() { row in
-            row.placeholder = "Enter shareable link here"
+            row.placeholder = "GroupMe Link"
             row.tag = "link"
             if editingBC {
                 if let link = data["groupme"] as? String {

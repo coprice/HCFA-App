@@ -62,7 +62,7 @@ class CalendarVC: FormViewController {
         
         form +++ Section("Name and Location")
             <<< NameRow() { row in
-                row.placeholder = "title"
+                row.placeholder = "Title"
                 row.tag = "title"
                 row.value = titleString
                 row.cellUpdate { cell, row in
@@ -71,7 +71,7 @@ class CalendarVC: FormViewController {
                 }
             }
             <<< NameRow() { row in
-                row.placeholder = "location"
+                row.placeholder = "Location"
                 row.tag = "location"
                 row.value = (data["location"] as! String)
                 row.cellUpdate { cell, row in

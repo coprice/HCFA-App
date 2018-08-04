@@ -142,6 +142,27 @@ class DisplayMinistryTeamVC: DisplayTemplateVC {
         offset += TOP_MARGIN/2
         
         if joined {
+            
+            offset += TOP_MARGIN/2
+            let members = (data["members"] as! [String:Any])["info"] as! [[String?]]
+            for member in members {
+                let label = UILabel(frame: CGRect(x: SIDE_MARGIN, y: offset,
+                                                  width: FULL_WIDTH,height: categoryHeight))
+                createListLabel(label: label, text: member[0]!, font: infoFont, color: .black, view: scrollView)
+                offset += label.frame.height
+            }
+            if members.isEmpty {
+                let label = UILabel(frame: CGRect(x: SIDE_MARGIN, y: offset,
+                                                  width: FULL_WIDTH, height: categoryHeight))
+                createListLabel(label: label, text: "There are no members", font: infoFont, color: .gray,
+                                view: scrollView)
+                offset += label.frame.height
+            }
+            offset += TOP_MARGIN/2
+            addLine(x: SIDE_MARGIN, y: offset, width: FULL_WIDTH, view: scrollView)
+            offset += TOP_MARGIN/2
+            
+            
             if let _ = data["groupme"] as? String {
                 let groupmeWidth = FULL_WIDTH*0.6
                 let groupmeHeight = groupmeWidth/2

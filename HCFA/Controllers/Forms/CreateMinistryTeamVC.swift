@@ -23,7 +23,7 @@ class CreateMinistryTeamVC: CreateTemplateVC {
         
         form +++ Section("Team Name")
         <<< NameRow() { row in
-            row.placeholder = "Enter team name here"
+            row.placeholder = "Team Name"
             row.tag = "name"
             if editingMT {
                 row.value = (data["name"] as! String)
@@ -39,7 +39,7 @@ class CreateMinistryTeamVC: CreateTemplateVC {
         
         +++ Section("Team Description")
         <<< TextAreaRow() { row in
-            row.placeholder = "Describe what the team does here"
+            row.placeholder = "Description"
             row.tag = "description"
             if editingMT {
                 row.value = (data["description"] as! String)
@@ -155,7 +155,7 @@ class CreateMinistryTeamVC: CreateTemplateVC {
             
         +++ Section("GroupMe")
         <<< EmailRow() { row in
-            row.placeholder = "Enter shareable link here"
+            row.placeholder = "GroupMe Link"
             row.tag = "link"
             if editingMT {
                 if let link = data["groupme"] as? String {

@@ -145,12 +145,10 @@ class EventVC: TemplateVC {
         createButton.removeFromSuperview()
         selectButton.removeFromSuperview()
         navBar.addSubview(cancel)
-        hostVC.slider.isUserInteractionEnabled = false
         tableView.allowsMultipleSelection = true
     }
     
     @objc func cancelSelect(sender: UIButton) {
-        hostVC.slider.isUserInteractionEnabled = true
         cancel.removeFromSuperview()
         deleteButton.removeFromSuperview()
         navBar.addSubview(createButton)
@@ -283,6 +281,9 @@ class EventVC: TemplateVC {
     }
     
     override func sliderTapped(sender: UIButton) {
+        if cancel.superview != nil {
+            cancelSelect(sender: cancel)
+        }
         showSideMenu()
     }
 }
