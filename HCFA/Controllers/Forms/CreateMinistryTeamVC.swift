@@ -21,6 +21,8 @@ class CreateMinistryTeamVC: CreateTemplateVC {
         done.addTarget(self, action: #selector(self.doneTapped), for: .touchUpInside)
         teamVC = hostVC.contentViewControllers[Tabs.MinistryTeams] as! MinistryTeamVC
         
+        let today = Calendar.current.date(bySetting: .minute, value: 0, of: Date())
+        
         form +++ Section("Team Name")
         <<< NameRow() { row in
             row.placeholder = "Team Name"
@@ -78,6 +80,7 @@ class CreateMinistryTeamVC: CreateTemplateVC {
         <<< TimeInlineRow() { row in
             row.title = "Start Time"
             row.tag = "start"
+            row.minuteInterval = 5
             row.hidden = Condition.function(["day"], { form in
                 return (form.rowBy(tag: "day")?.value == "TBD")})
             
@@ -86,9 +89,7 @@ class CreateMinistryTeamVC: CreateTemplateVC {
                 dateFormatter.dateFormat = "h:mma"
                 row.value = dateFormatter.date(from: (data["start"] as! String))
             } else {
-                row.value = Calendar(identifier: .gregorian).date(from: DateComponents(year: 0, month: 0, day: 0,
-                                                                                       hour: 12, minute: 0,
-                                                                                       second: 0))
+                row.value = today
             }
             row.cellUpdate { cell, row in
                 cell.textLabel?.font = UIFont(name: "Baskerville", size: self.view.frame.width/20)
@@ -108,6 +109,7 @@ class CreateMinistryTeamVC: CreateTemplateVC {
         <<< TimeInlineRow() { row in
             row.title = "End Time"
             row.tag = "end"
+            row.minuteInterval = 5
             row.hidden = Condition.function(["day"], { form in
                 return (form.rowBy(tag: "day")?.value == "TBD")})
             
@@ -116,9 +118,7 @@ class CreateMinistryTeamVC: CreateTemplateVC {
                 dateFormatter.dateFormat = "h:mma"
                 row.value = dateFormatter.date(from: (data["end"] as! String))
             } else {
-                row.value = Calendar(identifier: .gregorian).date(from: DateComponents(year: 0, month: 0, day: 0,
-                                                                                       hour: 13, minute: 0,
-                                                                                       second: 0))
+                row.value = today
             }
             row.cellUpdate { cell, row in
                 cell.textLabel?.font = UIFont(name: "Baskerville", size: self.view.frame.width/20)

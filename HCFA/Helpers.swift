@@ -8,6 +8,8 @@
 
 import UIKit
 import Foundation
+import AWSCore
+import AWSS3
 
 struct Tabs {
     static let Profile = 0
@@ -31,6 +33,7 @@ enum Year {
     case Senior
 }
 
+// For caching images
 var eventImages: [Int:UIImage] = [:]
 
 // -- UserDefaults --
@@ -236,12 +239,41 @@ func daySuffix(from date: Date) -> String {
     }
 }
 
-// s3 urls
+// S3 Helpers
+
+let S3BUCKET = "hcfa-app-dev"
+
+func userS3Key(_ uid: Int) -> String {
+    return "users/\(uid)/profile.png"
+}
+
+func eventS3Key(_ eid: Int) -> String {
+    return "events/\(eid)/image.png"
+}
 
 func userImageURL(_ uid: Int) -> String {
-    return "https://s3.us-east-2.amazonaws.com/hcfa-app-dev/users/\(uid)/profile.png"
+    return "https://s3.us-east-2.amazonaws.com/\(S3BUCKET)/\(userS3Key(uid))"
 }
 
 func eventImageURL(_ eid: Int) -> String {
-    return "https://s3.us-east-2.amazonaws.com/hcfa-app-dev/events/\(eid)/image.png"
+    return "https://s3.us-east-2.amazonaws.com/\(S3BUCKET)/\(eventS3Key(eid))"
+}
+
+func deleteEventImage(_ eid: Int) {
+    let credentialsProvider = AWSCognitoCredentialsProvider(regionType: .USEast1, identityPoolId: "us-east-1:93c7da18-1cd1-4bd4-9b74-67431ca093f4")
+    let configuration = AWSServiceConfiguration(region: .USEast2, credentialsProvider: credentialsProvider)
+    AWSServiceManager.default().defaultServiceConfiguration = configuration
+    
+    let S3 = AWSS3.default()
+    let deleteObjectRequest = AWSS3DeleteObjectRequest()
+    deleteObjectRequest?.bucket = S3BUCKET
+    deleteObjectRequest?.key = eventS3Key(eid)
+    S3.deleteObject(deleteObjectRequest!).continueWith { (task: AWSTask) -> AnyObject? in
+        if let error = task.error {
+            print("Error occurred: \(error)")
+            return nil
+        }
+        print("Deleted successfully.")
+        return nil
+    }
 }

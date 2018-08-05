@@ -22,6 +22,8 @@ class CreateBibleCourseVC: CreateTemplateVC {
         done.addTarget(self, action: #selector(self.doneTapped), for: .touchUpInside)
         courseVC = hostVC.contentViewControllers[Tabs.BibleCourses] as! BibleCourseVC
         
+        let today = Calendar.current.date(bySetting: .minute, value: 0, of: Date())
+        
         form +++ Section("Leader")
         <<< NameRow() { row in
             row.title = "First Name"
@@ -147,14 +149,13 @@ class CreateBibleCourseVC: CreateTemplateVC {
         <<< TimeInlineRow { row in
             row.title = "Start Time"
             row.tag = "start"
+            row.minuteInterval = 5
             if editingBC && isTime {
                 let dateFormatter = DateFormatter()
                 dateFormatter.dateFormat = "h:mma"
                 row.value = dateFormatter.date(from: data["start"] as! String)
             } else {
-                row.value = Calendar(identifier: .gregorian).date(from: DateComponents(year: 0, month: 0, day: 0,
-                                                                                       hour: 19, minute: 30,
-                                                                                       second: 0))
+                row.value = today
             }
             row.hidden = Condition.function(["day"], { form in
                 return (form.rowBy(tag: "day")?.value == "TBD")})
@@ -176,14 +177,13 @@ class CreateBibleCourseVC: CreateTemplateVC {
         <<< TimeInlineRow { row in
             row.title = "End Time"
             row.tag = "end"
+            row.minuteInterval = 5
             if editingBC && isTime {
                 let dateFormatter = DateFormatter()
                 dateFormatter.dateFormat = "h:mma"
                 row.value = dateFormatter.date(from: data["end"] as! String)
             } else {
-                row.value = Calendar(identifier: .gregorian).date(from: DateComponents(year: 0, month: 0, day: 0,
-                                                                                       hour: 21, minute: 00,
-                                                                                       second: 0))
+                row.value = today
             }
             row.hidden = Condition.function(["day"], { form in
                 return (form.rowBy(tag: "day")?.value == "TBD")})

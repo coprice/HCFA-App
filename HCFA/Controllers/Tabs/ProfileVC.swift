@@ -230,7 +230,7 @@ class ProfileVC: FormViewController, SideMenuItemContent {
                     
                     if defaults.string(forKey: "image") == nil {
                         let uid = defaults.integer(forKey: "uid")
-                        let imageURL =  userImageURL(uid)
+                        let imageURL = userImageURL(uid)
 
                         API.updateImage(uid: uid, token: defaults.string(forKey: "token")!, image: imageURL,
                                         completionHandler: { _, _ in })
@@ -242,8 +242,8 @@ class ProfileVC: FormViewController, SideMenuItemContent {
         
         let transferUtility = AWSS3TransferUtility.default()
         
-        transferUtility.uploadData(data, bucket: "hcfa-app-dev",
-                                   key: "users/\(defaults.integer(forKey: "uid"))/profile.png",
+        transferUtility.uploadData(data, bucket: S3BUCKET,
+                                   key: userS3Key(defaults.integer(forKey: "uid")),
                                    contentType: "image/png", expression: expression,
                                    completionHandler: completionHandler).continueWith {
                                     (task) -> AnyObject? in

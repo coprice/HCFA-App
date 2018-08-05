@@ -7,6 +7,8 @@
 //
 
 import UIKit
+import AWSS3
+import AWSCore
 
 class EventVC: TemplateVC {
     
@@ -203,6 +205,10 @@ class EventVC: TemplateVC {
                     createAlert(title: "\(txt!) Deleted", message: "", view: self)
                     self.startRefreshControl()
                     self.refresh(sender: self)
+                    
+                    for eid in events {
+                        deleteEventImage(eid)
+                    }
                 }
             })
         }

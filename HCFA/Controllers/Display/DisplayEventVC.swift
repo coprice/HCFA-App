@@ -161,7 +161,7 @@ class DisplayEventVC: DisplayTemplateVC {
             
             imageView = UIImageView(frame: CGRect(x: view.frame.width*0.075, y: offset + TOP_MARGIN,
                                                   width: FULL_WIDTH-view.frame.width/20,
-                                                  height: view.frame.height*0.35 - TOP_MARGIN*2))
+                                                  height: view.frame.height*0.35))
             
             imageView.contentMode = .scaleAspectFill
             imageView.layer.cornerRadius = view.frame.width/40

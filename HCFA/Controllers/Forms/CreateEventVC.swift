@@ -24,7 +24,8 @@ class CreateEventVC: CreateTemplateVC {
         done.addTarget(self, action: #selector(self.doneTapped), for: .touchUpInside)
         eventVC = hostVC.contentViewControllers[Tabs.Events] as! EventVC
         
-        let today = Date()
+        let today = Calendar.current.date(bySetting: .minute, value: 0, of: Date())
+        
         var startDate: Date!
         var endDate: Date!
         if editingEvent {           
@@ -66,9 +67,10 @@ class CreateEventVC: CreateTemplateVC {
             }
         }
             
-            <<< DateTimeInlineRow() { row in
+        <<< DateTimeInlineRow() { row in
             row.title = "Start"
             row.tag = "start"
+            row.minuteInterval = 5
             row.dateFormatter?.dateFormat = "h:mm a, MMM d, YYYY"
             if editingEvent {
                 row.value = startDate
@@ -93,6 +95,7 @@ class CreateEventVC: CreateTemplateVC {
             <<< DateTimeInlineRow() { row in
             row.title = "End"
             row.tag = "end"
+            row.minuteInterval = 5
             row.dateFormatter?.dateFormat = "h:mm a, MMM d, YYYY"
             if editingEvent {
                 row.value = endDate
@@ -162,9 +165,10 @@ class CreateEventVC: CreateTemplateVC {
                     
                     self.startLoading()
                     
+                    let eid = self.eventData["eid"] as! Int
                     API.deleteEvents(uid: defaults.integer(forKey: "uid"),
                                      token: defaults.string(forKey: "token")!,
-                                     events: [self.eventData["eid"] as! Int], completionHandler: { response, data in
+                                     events: [eid], completionHandler: { response, data in
                         
                         self.stopLoading()
 
@@ -178,6 +182,7 @@ class CreateEventVC: CreateTemplateVC {
                             self.backToSignIn()
                         default:
                             self.backToEvents(title: "Event Deleted", message: "")
+                            deleteEventImage(eid)
                         }
                     })
                 }
@@ -195,7 +200,7 @@ class CreateEventVC: CreateTemplateVC {
     
     func tableView(_: UITableView, willDisplayHeaderView view: UIView, forSection: Int) {
         if let view = view as? UITableViewHeaderFooterView {
-            view.textLabel?.font = UIFont(name: "Baskerville", size: self.view.frame.width/24)
+            view.textLabel?.font = UIFont(name: "Baskerville", size: view.frame.width/24)
         }
     }
     
@@ -255,8 +260,8 @@ class CreateEventVC: CreateTemplateVC {
         
         let transferUtility = AWSS3TransferUtility.default()
         
-        transferUtility.uploadData(data, bucket: "hcfa-app-dev",
-                                   key: "events/\(eid)/image.png",
+        transferUtility.uploadData(data, bucket: S3BUCKET,
+                                   key: eventS3Key(eid),
             contentType: "image/png", expression: expression, completionHandler: completionHandler).continueWith {
             (task) -> AnyObject? in
             
