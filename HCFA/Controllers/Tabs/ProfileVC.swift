@@ -230,7 +230,7 @@ class ProfileVC: FormViewController, SideMenuItemContent {
                     
                     if defaults.string(forKey: "image") == nil {
                         let uid = defaults.integer(forKey: "uid")
-                        let imageURL =  "https://s3.us-east-2.amazonaws.com/hcfa-app-dev/users/\(uid)/profile.png"
+                        let imageURL =  userImageURL(uid)
 
                         API.updateImage(uid: uid, token: defaults.string(forKey: "token")!, image: imageURL,
                                         completionHandler: { _, _ in })

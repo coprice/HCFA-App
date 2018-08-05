@@ -420,7 +420,7 @@ class CreateBibleCourseVC: CreateTemplateVC {
     
     func backToCourses(title: String, message: String) {
         navigationController!.popToViewController(hostVC, animated: true)
-        createAlert(title: title, message: message, view: navigationController!.viewControllers.last!)
+        createAlert(title: title, message: message, view: hostVC)
         courseVC.clearTableview()
         courseVC.startRefreshControl()
         courseVC.refresh(sender: self)

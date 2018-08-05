@@ -374,7 +374,7 @@ class CreateMinistryTeamVC: CreateTemplateVC {
     
     func backToTeams(title: String, message: String) {
         navigationController!.popToViewController(hostVC, animated: true)
-        createAlert(title: title, message: message, view: navigationController!.viewControllers.last!)
+        createAlert(title: title, message: message, view: hostVC)
         teamVC.clearTableview()
         teamVC.startRefreshControl()
         teamVC.refresh(sender: self)

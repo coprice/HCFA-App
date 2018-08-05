@@ -120,13 +120,37 @@ class EventCell: UITableViewCell {
         
         
         if let imageString = data["image"] as? String {
-            let imageView = UIImageView(frame: CGRect(x: SIDE_MARGIN, y: height+TOP_MARGIN,
-                                                      width: FULL_WIDTH, height: height*2-TOP_MARGIN*2))
-            imageView.image = UIImage(named: "banner")
-            imageView.contentMode = .scaleAspectFit
-            if let url = URL(string: imageString) {
-                downloadImage(url: url, view: imageView)
+
+            let imageView = UIImageView(frame: CGRect(x: SIDE_MARGIN*2, y: height+TOP_MARGIN,
+                                                      width: FULL_WIDTH-SIDE_MARGIN*2, height: height*2-TOP_MARGIN*2))
+            imageView.contentMode = .scaleAspectFill
+            imageView.layer.cornerRadius = SIDE_MARGIN
+            imageView.layer.masksToBounds = true
+            
+            let eid = data["eid"] as! Int
+            
+            if let image = eventImages[eid] {
+                imageView.image = image
+                
+            } else {
+                imageView.backgroundColor = .lightGray
+                
+                let spinner = UIActivityIndicatorView()
+                spinner.activityIndicatorViewStyle = .whiteLarge
+                spinner.center = CGPoint(x: imageView.frame.width/2, y: imageView.frame.height/2)
+                spinner.startAnimating()
+                imageView.addSubview(spinner)
+                
+                if let url = URL(string: imageString) {
+                    downloadImage(url: url, view: imageView, completion: {
+                        spinner.removeFromSuperview()
+                        imageView.backgroundColor = .clear
+                        eventImages[eid] = imageView.image!
+                    })
+                }
             }
+            
+            
             view.addSubview(imageView)
         }
         

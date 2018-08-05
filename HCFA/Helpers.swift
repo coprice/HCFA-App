@@ -31,6 +31,8 @@ enum Year {
     case Senior
 }
 
+var eventImages: [Int:UIImage] = [:]
+
 // -- UserDefaults --
 
 let defaults = UserDefaults.standard
@@ -162,6 +164,16 @@ func downloadImage(url: URL, view: UIImageView) {
     }
 }
 
+func downloadImage(url: URL, view: UIImageView, completion: @escaping () -> Void) {
+    getDataFromUrl(url: url) { data, response, error in
+        guard let data = data, error == nil else { return }
+        DispatchQueue.main.async() {
+            view.image = UIImage(data: data)
+            completion()
+        }
+    }
+}
+
 func downloadImage(url: URL, button: UIButton) {
     getDataFromUrl(url: url) { data, response, error in
         guard let data = data, error == nil else { return }
@@ -222,4 +234,14 @@ func daySuffix(from date: Date) -> String {
     case 3, 23: return "rd"
     default: return "th"
     }
+}
+
+// s3 urls
+
+func userImageURL(_ uid: Int) -> String {
+    return "https://s3.us-east-2.amazonaws.com/hcfa-app-dev/users/\(uid)/profile.png"
+}
+
+func eventImageURL(_ eid: Int) -> String {
+    return "https://s3.us-east-2.amazonaws.com/hcfa-app-dev/events/\(eid)/image.png"
 }

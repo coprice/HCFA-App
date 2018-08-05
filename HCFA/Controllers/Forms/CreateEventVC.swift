@@ -224,14 +224,14 @@ class CreateEventVC: CreateTemplateVC {
     }
     
     func backToEvents(title: String, message: String) {
-        navigationController!.popViewController(animated: true)
-        createAlert(title: title, message: message, view: navigationController!.viewControllers.last!)
+        navigationController!.popToViewController(hostVC, animated: true)
+        createAlert(title: title, message: message, view: hostVC)
         eventVC.clearTableview()
         eventVC.startRefreshControl()
         eventVC.refresh(sender: self)
     }
     
-    func uploadImage(data: Data) {
+    func uploadImage(data: Data, eid: Int, completion: @escaping () -> Void) {
         
         let expression = AWSS3TransferUtilityUploadExpression()
         expression.progressBlock = {(task, progress) in
@@ -248,7 +248,7 @@ class CreateEventVC: CreateTemplateVC {
                     print("Error: \(error.localizedDescription)")
                     print("Response: \(task.response?.statusCode ?? 0)")
                 } else {
-                    
+                    completion()
                 }
             })
         }
@@ -256,7 +256,7 @@ class CreateEventVC: CreateTemplateVC {
         let transferUtility = AWSS3TransferUtility.default()
         
         transferUtility.uploadData(data, bucket: "hcfa-app-dev",
-                                   key: "users/\(1)/profile.png",
+                                   key: "events/\(eid)/image.png",
             contentType: "image/png", expression: expression, completionHandler: completionHandler).continueWith {
             (task) -> AnyObject? in
             
@@ -266,7 +266,7 @@ class CreateEventVC: CreateTemplateVC {
             
             if let _ = task.result {
                 DispatchQueue.main.async {
-                    print("Upload Starting!")
+                    // print("Upload Starting!")
                 }
             }
             return nil;
@@ -298,51 +298,84 @@ class CreateEventVC: CreateTemplateVC {
             let start = dateFormatter.string(from: startDate)
             let end = dateFormatter.string(from: endDate)
             
-            if let _ = values["image"] as? UIImage {
-                print("found an image")
-            } else {
-                print("image not found")
-            }
-            
             startLoading()
             
             if editingEvent {
+                
+                let eid = eventData["eid"] as! Int
+                var imageURL: String? = nil
+                if let _ = values["image"] as? UIImage {
+                    imageURL = eventImageURL(eid)
+                }
+                
                 API.updateEvent(uid: defaults.integer(forKey: "uid"), token: defaults.string(forKey: "token")!,
-                                eid: (eventData["eid"] as! Int), title: title, location: location, startDate: start,
-                                endDate: end, description: description, image: nil) { response, data in
-                                    
-                    self.stopLoading()
+                                eid: eid, title: title, location: location, startDate: start,
+                                endDate: end, description: description, image: imageURL) { response, data in
                                     
                     switch response {
                     case .NotConnected:
+                        self.stopLoading()
                         createAlert(title: "Connection Error", message: "Unable to connect to the server", view: self)
                     case .Error:
+                        self.stopLoading()
                         createAlert(title: "Error", message: data as! String, view: self)
                     case .InvalidSession:
+                        self.stopLoading()
                         self.backToSignIn()
                     default:
-                        self.backToEvents(title: "Event Updated", message: "")
+                        if let image = values["image"] as? UIImage {
+                            if let data = UIImagePNGRepresentation(image) {
+                                self.uploadImage(data: data, eid: eid, completion: {
+                                    eventImages[eid] = image
+                                    self.backToEvents(title: "Event Updated", message: "")
+                                })
+                            } else {
+                                self.backToEvents(title: "Event Updated", message: "")
+                            }
+                        } else {
+                            self.backToEvents(title: "Event Updated", message: "")
+                        }
                     }
                 }
-                
             } else {
                 
                 API.createEvent(uid: defaults.integer(forKey: "uid"), token: defaults.string(forKey: "token")!,
                                 title: title, location: location, startDate: start, endDate: end,
                                 description: description, image: nil) { response, data in
                                     
-                    self.stopLoading()
-                                    
                     switch response {
                     case .NotConnected:
+                        self.stopLoading()
                         createAlert(title: "Connection Error", message: "Unable to connect to the server",
                                     view: self)
                     case .Error:
+                        self.stopLoading()
                         createAlert(title: "Error", message: data as! String, view: self)
                     case .InvalidSession:
+                        self.stopLoading()
                         self.backToSignIn()
                     default:
-                        self.backToEvents(title: "Event Created", message: "")
+                        let eid = (data as! [String:Any])["eid"] as! Int
+                        if let image = values["image"] as? UIImage {
+                            if let data = UIImagePNGRepresentation(image) {
+                                self.uploadImage(data: data, eid: eid, completion: {
+                                    eventImages[eid] = image
+                                    
+                                    API.updateEvent(uid: defaults.integer(forKey: "uid"),
+                                                    token: defaults.string(forKey: "token")!, eid: eid, title: title,
+                                                    location: location, startDate: start, endDate: end,
+                                                    description: description, image: eventImageURL(eid),
+                                                    completionHandler: { _, _ in
+                                                        
+                                        self.backToEvents(title: "Event Created", message: "")
+                                    })
+                                })
+                            } else {
+                                self.backToEvents(title: "Event Created", message: "")
+                            }
+                        } else {
+                            self.backToEvents(title: "Event Created", message: "")
+                        }
                     }
                 }
             }

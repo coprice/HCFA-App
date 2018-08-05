@@ -159,16 +159,39 @@ class DisplayEventVC: DisplayTemplateVC {
         
         if let imageString = data["image"] as? String {
             
-            imageView = UIImageView(frame: CGRect(x: SIDE_MARGIN, y: offset + TOP_MARGIN,
-                                                  width: FULL_WIDTH, height: view.frame.height/3))
-            imageView.image = UIImage(named: "banner")
-            imageView.contentMode = .scaleAspectFit
-            if let url = URL(string: imageString) {
-                downloadImage(url: url, view: imageView)
+            imageView = UIImageView(frame: CGRect(x: view.frame.width*0.075, y: offset + TOP_MARGIN,
+                                                  width: FULL_WIDTH-view.frame.width/20,
+                                                  height: view.frame.height*0.35 - TOP_MARGIN*2))
+            
+            imageView.contentMode = .scaleAspectFill
+            imageView.layer.cornerRadius = view.frame.width/40
+            imageView.layer.masksToBounds = true
+            
+            let eid = data["eid"] as! Int
+            
+            if let image = eventImages[eid] {
+                imageView.image = image
+            } else {
+                imageView.backgroundColor = .lightGray
+                
+                let spinner = UIActivityIndicatorView()
+                spinner.activityIndicatorViewStyle = .whiteLarge
+                spinner.center = CGPoint(x: imageView.frame.width/2, y: imageView.frame.height/2)
+                spinner.startAnimating()
+                imageView.addSubview(spinner)
+                
+                if let url = URL(string: imageString) {
+                    downloadImage(url: url, view: imageView, completion: {
+                        spinner.removeFromSuperview()
+                        self.imageView.backgroundColor = .clear
+                        eventImages[eid] = self.imageView.image!
+                    })
+                }
             }
+
             scrollView.addSubview(imageView)
-            offset += imageView.frame.height + TOP_MARGIN*2
-            offset += TOP_MARGIN/2
+            
+            offset += imageView.frame.height + TOP_MARGIN*2.5
             addLine(x: SIDE_MARGIN, y: offset, width: FULL_WIDTH, view: scrollView)
             offset += TOP_MARGIN/2
         }
