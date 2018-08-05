@@ -139,18 +139,40 @@ class DisplayMinistryTeamVC: DisplayTemplateVC {
         scrollView.addSubview(meetingInfo)
         
         addLine(x: SIDE_MARGIN, y: offset, width: FULL_WIDTH, view: scrollView)
-        offset += TOP_MARGIN/2
         
         if joined {
-            
             offset += TOP_MARGIN/2
             let members = (data["members"] as! [String:Any])["info"] as! [[String?]]
-            for member in members {
-                let label = UILabel(frame: CGRect(x: SIDE_MARGIN, y: offset,
-                                                  width: FULL_WIDTH,height: categoryHeight))
+            for (i, member) in members.enumerated() {
+                
+                let imageView = UIImageView(image: UIImage(named: "generic"))
+                if let profile = member[1] {
+                    if let url = URL(string: profile) {
+                        downloadImage(url: url, view: imageView)
+                    }
+                }
+                imageView.frame = CGRect(x: SIDE_MARGIN + FULL_WIDTH*0.25, y: offset, width: FULL_WIDTH/8, height: FULL_WIDTH/8)
+                imageView.layer.cornerRadius = imageView.frame.width/2
+                imageView.contentMode = .scaleAspectFill
+                imageView.layer.masksToBounds = true
+                imageView.layer.borderColor = UIColor.black.cgColor
+                imageView.layer.borderWidth = 1
+                scrollView.addSubview(imageView)
+                
+                let label = UILabel(frame: CGRect(x: SIDE_MARGIN*2 + FULL_WIDTH*0.375 , y: offset,
+                                                  width: FULL_WIDTH*0.625 - SIDE_MARGIN*3, height: FULL_WIDTH/8))
                 createListLabel(label: label, text: member[0]!, font: infoFont, color: .black, view: scrollView)
-                offset += label.frame.height
+                label.textAlignment = .left
+                
+                if i + 1 != members.count {
+                    offset += label.frame.height + TOP_MARGIN/2
+                    addLightLine(x: SIDE_MARGIN*2, y: offset, width: FULL_WIDTH - SIDE_MARGIN*2, view: scrollView)
+                    offset += TOP_MARGIN/2
+                } else {
+                    offset += label.frame.height
+                }
             }
+            
             if members.isEmpty {
                 let label = UILabel(frame: CGRect(x: SIDE_MARGIN, y: offset,
                                                   width: FULL_WIDTH, height: categoryHeight))
@@ -266,7 +288,7 @@ class DisplayMinistryTeamVC: DisplayTemplateVC {
                     self.backToSignIn()
                 default:
                     self.navigationController!.popViewController(animated: true)
-                    createAlert(title: "Bible Course Left", message: "", view: self.hostVC)
+                    createAlert(title: "Ministry Team Left", message: "", view: self.hostVC)
                     let teamVC = self.hostVC.contentViewControllers[Tabs.MinistryTeams] as! MinistryTeamVC
                     teamVC.clearTableview()
                     teamVC.startRefreshControl()

@@ -82,6 +82,12 @@ class DisplayTemplateVC: UIViewController {
         view.addSubview(line)
     }
     
+    func addLightLine(x: CGFloat, y: CGFloat, width: CGFloat, view: UIView) {
+        let line = UILabel(frame: CGRect(x: x, y: y, width: width, height: 1))
+        line.backgroundColor = UIColor(red: 0.2, green: 0.2, blue: 0.2, alpha: 0.2)
+        view.addSubview(line)
+    }
+    
     func daySuffix(from date: Date) -> String {
         let calendar = Calendar.current
         let dayOfMonth = calendar.component(.day, from: date)

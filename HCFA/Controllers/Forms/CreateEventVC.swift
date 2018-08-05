@@ -8,6 +8,8 @@
 
 import ImageRow
 import Eureka
+import AWSCore
+import AWSS3
 
 class CreateEventVC: CreateTemplateVC {
     
@@ -176,7 +178,6 @@ class CreateEventVC: CreateTemplateVC {
                             self.backToSignIn()
                         default:
                             self.backToEvents(title: "Event Deleted", message: "")
-                            createAlert(title: "Event Deleted", message: "", view: self.hostVC)
                         }
                     })
                 }
@@ -223,11 +224,53 @@ class CreateEventVC: CreateTemplateVC {
     }
     
     func backToEvents(title: String, message: String) {
-        navigationController!.popToViewController(hostVC, animated: true)
-        createAlert(title: title, message: message, view: hostVC)
+        navigationController!.popViewController(animated: true)
+        createAlert(title: title, message: message, view: navigationController!.viewControllers.last!)
         eventVC.clearTableview()
         eventVC.startRefreshControl()
         eventVC.refresh(sender: self)
+    }
+    
+    func uploadImage(data: Data) {
+        
+        let expression = AWSS3TransferUtilityUploadExpression()
+        expression.progressBlock = {(task, progress) in
+            DispatchQueue.main.async(execute: {
+                // Do something e.g. Update a progress bar.
+            })
+        }
+        
+        var completionHandler: AWSS3TransferUtilityUploadCompletionHandlerBlock?
+        completionHandler = { (task, error) -> Void in
+            DispatchQueue.main.async(execute: {
+                
+                if let error = error {
+                    print("Error: \(error.localizedDescription)")
+                    print("Response: \(task.response?.statusCode ?? 0)")
+                } else {
+                    
+                }
+            })
+        }
+        
+        let transferUtility = AWSS3TransferUtility.default()
+        
+        transferUtility.uploadData(data, bucket: "hcfa-app-dev",
+                                   key: "users/\(1)/profile.png",
+            contentType: "image/png", expression: expression, completionHandler: completionHandler).continueWith {
+            (task) -> AnyObject? in
+            
+            if let error = task.error {
+                print("Error: \(error.localizedDescription)")
+            }
+            
+            if let _ = task.result {
+                DispatchQueue.main.async {
+                    print("Upload Starting!")
+                }
+            }
+            return nil;
+        }
     }
     
     @objc func doneTapped(sender: UIButton) {
@@ -255,6 +298,12 @@ class CreateEventVC: CreateTemplateVC {
             let start = dateFormatter.string(from: startDate)
             let end = dateFormatter.string(from: endDate)
             
+            if let _ = values["image"] as? UIImage {
+                print("found an image")
+            } else {
+                print("image not found")
+            }
+            
             startLoading()
             
             if editingEvent {
@@ -273,7 +322,6 @@ class CreateEventVC: CreateTemplateVC {
                         self.backToSignIn()
                     default:
                         self.backToEvents(title: "Event Updated", message: "")
-                        createAlert(title: "Event Updated", message: "", view: self.hostVC)
                     }
                 }
                 
