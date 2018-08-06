@@ -481,7 +481,7 @@ class SignInVC: UIViewController {
                 createAlert(title: "Invalid Email", message: "Enter a valid email address", view: self)
             } else if !isSecure(text: userPassword) {
                 createAlert(title: "Insecure Password",
-                            message: "Password must be at least 8 characters, with a capital letter and a numbe",
+                            message: "Password must be at least 8 characters, with a capital letter and a number",
                             view: self)
             } else if confirmedPass.isEmpty {
                 createAlert(title: "Confirmation Empty", message: "Confirm your password", view: self)
