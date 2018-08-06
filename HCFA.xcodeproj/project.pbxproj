@@ -79,6 +79,10 @@
 		E3A443682001C2CC000D007D /* CreateBibleCourseVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3A443672001C2CC000D007D /* CreateBibleCourseVC.swift */; };
 		E3A4436A2001C2F7000D007D /* CreateMinistryTeamVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3A443692001C2F7000D007D /* CreateMinistryTeamVC.swift */; };
 		E3AF433021161B1E00A566EF /* ForgotPasswordVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3AF432F21161B1E00A566EF /* ForgotPasswordVC.swift */; };
+		E3AF43322117AB1300A566EF /* EventImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3AF43312117AB1300A566EF /* EventImageView.swift */; };
+		E3AF43372117BED400A566EF /* reload2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E3AF43342117BED400A566EF /* reload2x.png */; };
+		E3AF43382117BED400A566EF /* reload3x.png in Resources */ = {isa = PBXBuildFile; fileRef = E3AF43352117BED400A566EF /* reload3x.png */; };
+		E3AF43392117BED400A566EF /* reload1x.png in Resources */ = {isa = PBXBuildFile; fileRef = E3AF43362117BED400A566EF /* reload1x.png */; };
 		E3D795E21FF591CE003B78F5 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3D795E11FF591CE003B78F5 /* AppDelegate.swift */; };
 		E3D795EA1FF591CE003B78F5 /* HCFA.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = E3D795E81FF591CE003B78F5 /* HCFA.xcdatamodeld */; };
 		E3D795EC1FF591CE003B78F5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E3D795EB1FF591CE003B78F5 /* Assets.xcassets */; };
@@ -187,6 +191,10 @@
 		E3A443672001C2CC000D007D /* CreateBibleCourseVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateBibleCourseVC.swift; sourceTree = "<group>"; };
 		E3A443692001C2F7000D007D /* CreateMinistryTeamVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateMinistryTeamVC.swift; sourceTree = "<group>"; };
 		E3AF432F21161B1E00A566EF /* ForgotPasswordVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForgotPasswordVC.swift; sourceTree = "<group>"; };
+		E3AF43312117AB1300A566EF /* EventImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventImageView.swift; sourceTree = "<group>"; };
+		E3AF43342117BED400A566EF /* reload2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = reload2x.png; sourceTree = "<group>"; };
+		E3AF43352117BED400A566EF /* reload3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = reload3x.png; sourceTree = "<group>"; };
+		E3AF43362117BED400A566EF /* reload1x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = reload1x.png; sourceTree = "<group>"; };
 		E3D795DE1FF591CE003B78F5 /* HCFA.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HCFA.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E3D795E11FF591CE003B78F5 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		E3D795E91FF591CE003B78F5 /* HCFA.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = HCFA.xcdatamodel; sourceTree = "<group>"; };
@@ -275,6 +283,7 @@
 			isa = PBXGroup;
 			children = (
 				E33CE528210CFE4D00A81C9D /* LoadingView.swift */,
+				E3AF43312117AB1300A566EF /* EventImageView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -481,6 +490,16 @@
 			path = Tabs;
 			sourceTree = "<group>";
 		};
+		E3AF43332117BE5300A566EF /* Reload */ = {
+			isa = PBXGroup;
+			children = (
+				E3AF43362117BED400A566EF /* reload1x.png */,
+				E3AF43342117BED400A566EF /* reload2x.png */,
+				E3AF43352117BED400A566EF /* reload3x.png */,
+			);
+			path = Reload;
+			sourceTree = "<group>";
+		};
 		E3D795D51FF591CE003B78F5 = {
 			isa = PBXGroup;
 			children = (
@@ -535,6 +554,7 @@
 				E38C67A021043FF400AAF74C /* GroupMe */,
 				E3D7963E1FF5D03C003B78F5 /* LaunchImage */,
 				E3A4435320006327000D007D /* Pray */,
+				E3AF43332117BE5300A566EF /* Reload */,
 				E30F7ED92106F55800F74370 /* Select */,
 				E3A443282000399B000D007D /* Slider */,
 				E3A4434C20006253000D007D /* Team */,
@@ -657,11 +677,13 @@
 				E3A4433D20005FC3000D007D /* book1x.png in Resources */,
 				E350D99520F08E7000FAE625 /* calendarIcons2x.png in Resources */,
 				E33CE52D210D1AE200A81C9D /* awsconfiguration.json in Resources */,
+				E3AF43372117BED400A566EF /* reload2x.png in Resources */,
 				E34AACC41FFF26EB00828012 /* slider3x.png in Resources */,
 				E3A4433020005847000D007D /* create2x.png in Resources */,
 				E3A4434B2000624D000D007D /* team1x.png in Resources */,
 				E30F7EDD2106F5DF00F74370 /* select2X.png in Resources */,
 				E3EFF0151FF5D2BA003FB2DD /* icon58px.png in Resources */,
+				E3AF43382117BED400A566EF /* reload3x.png in Resources */,
 				E3EFF0181FF5D2BA003FB2DD /* icon152px.png in Resources */,
 				E34AACB41FFF184C00828012 /* banner1x.png in Resources */,
 				E3EFF0191FF5D2BA003FB2DD /* icon1024px.png in Resources */,
@@ -678,6 +700,7 @@
 				E3EFF0161FF5D2BA003FB2DD /* icon60px.png in Resources */,
 				E3A4432F20005847000D007D /* create3x.png in Resources */,
 				E38C67A42104400A00AAF74C /* groupMe1X.png in Resources */,
+				E3AF43392117BED400A566EF /* reload1x.png in Resources */,
 				E3EFF0141FF5D2BA003FB2DD /* icon180px.png in Resources */,
 				E34AACCF1FFF57D800828012 /* generic1x.png in Resources */,
 				E3EFF00B1FF5D2BA003FB2DD /* icon167px.png in Resources */,
@@ -805,6 +828,7 @@
 				E34AACA41FFEF15D00828012 /* EmptyCell.swift in Sources */,
 				E3D795EA1FF591CE003B78F5 /* HCFA.xcdatamodeld in Sources */,
 				E34AACAA1FFF124900828012 /* TemplateVC.swift in Sources */,
+				E3AF43322117AB1300A566EF /* EventImageView.swift in Sources */,
 				E3804599210D935400CB0A8D /* PermissionVC.swift in Sources */,
 				E37922FA20F1526900CA2F7B /* API.swift in Sources */,
 				E33CE529210CFE4D00A81C9D /* LoadingView.swift in Sources */,

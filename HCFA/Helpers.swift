@@ -33,9 +33,6 @@ enum Year {
     case Senior
 }
 
-// For caching images
-var eventImages: [Int:UIImage] = [:]
-
 // -- UserDefaults --
 
 let defaults = UserDefaults.standard
@@ -167,16 +164,6 @@ func downloadImage(url: URL, view: UIImageView) {
     }
 }
 
-func downloadImage(url: URL, view: UIImageView, completion: @escaping () -> Void) {
-    getDataFromUrl(url: url) { data, response, error in
-        guard let data = data, error == nil else { return }
-        DispatchQueue.main.async() {
-            view.image = UIImage(data: data)
-            completion()
-        }
-    }
-}
-
 func downloadImage(url: URL, button: UIButton) {
     getDataFromUrl(url: url) { data, response, error in
         guard let data = data, error == nil else { return }
@@ -244,11 +231,11 @@ func daySuffix(from date: Date) -> String {
 let S3BUCKET = "hcfa-app-dev"
 
 func userS3Key(_ uid: Int) -> String {
-    return "users/\(uid)/profile.png"
+    return "users/\(uid)/profile.jpeg"
 }
 
 func eventS3Key(_ eid: Int) -> String {
-    return "events/\(eid)/image.png"
+    return "events/\(eid)/image.jpeg"
 }
 
 func userImageURL(_ uid: Int) -> String {
@@ -275,5 +262,15 @@ func deleteEventImage(_ eid: Int) {
         }
         print("Deleted successfully.")
         return nil
+    }
+}
+
+func updateEventImages(_ eid: Int, _ data: Data) {
+    
+    if var eventImages = defaults.dictionary(forKey: "eventImages") as? [String:Data] {
+        eventImages[String(eid)] = data
+        defaults.set(eventImages, forKey: "eventImages")
+    } else {
+        defaults.set([String(eid):data], forKey: "eventImages")
     }
 }

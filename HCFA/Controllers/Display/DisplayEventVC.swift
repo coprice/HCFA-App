@@ -159,36 +159,29 @@ class DisplayEventVC: DisplayTemplateVC {
         
         if let imageString = data["image"] as? String {
             
-            imageView = UIImageView(frame: CGRect(x: view.frame.width*0.075, y: offset + TOP_MARGIN,
-                                                  width: FULL_WIDTH-view.frame.width/20,
-                                                  height: view.frame.height*0.35))
-            
-            imageView.contentMode = .scaleAspectFill
-            imageView.layer.cornerRadius = view.frame.width/40
-            imageView.layer.masksToBounds = true
+            let imageView = EventImageView(frame: CGRect(x: view.frame.width*0.075, y: offset + TOP_MARGIN,
+                                                         width: FULL_WIDTH-view.frame.width/20,
+                                                         height: view.frame.height*0.35))
+            imageView.isCell = false
+            imageView.initializeReload()
             
             let eid = data["eid"] as! Int
+            imageView.eid = eid
+            imageView.imageString = imageString
             
-            if let image = eventImages[eid] {
-                imageView.image = image
-            } else {
-                imageView.backgroundColor = .lightGray
-                
-                let spinner = UIActivityIndicatorView()
-                spinner.activityIndicatorViewStyle = .whiteLarge
-                spinner.center = CGPoint(x: imageView.frame.width/2, y: imageView.frame.height/2)
-                spinner.startAnimating()
-                imageView.addSubview(spinner)
-                
-                if let url = URL(string: imageString) {
-                    downloadImage(url: url, view: imageView, completion: {
-                        spinner.removeFromSuperview()
-                        self.imageView.backgroundColor = .clear
-                        eventImages[eid] = self.imageView.image!
-                    })
+            if let eventImages = defaults.dictionary(forKey: "eventImages") as? [String:Data] {
+                if let data = eventImages[String(eid)] {
+                    if let image = UIImage(data: data) {
+                        imageView.image = image
+                    }
+                } else {
+                    imageView.download()
                 }
+            } else {
+                imageView.download()
             }
-
+            
+            view.addSubview(imageView)
             scrollView.addSubview(imageView)
             
             offset += imageView.frame.height + TOP_MARGIN*2.5

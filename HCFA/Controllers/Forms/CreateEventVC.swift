@@ -262,7 +262,7 @@ class CreateEventVC: CreateTemplateVC {
         
         transferUtility.uploadData(data, bucket: S3BUCKET,
                                    key: eventS3Key(eid),
-            contentType: "image/png", expression: expression, completionHandler: completionHandler).continueWith {
+            contentType: "image/jpeg", expression: expression, completionHandler: completionHandler).continueWith {
             (task) -> AnyObject? in
             
             if let error = task.error {
@@ -329,9 +329,9 @@ class CreateEventVC: CreateTemplateVC {
                         self.backToSignIn()
                     default:
                         if let image = values["image"] as? UIImage {
-                            if let data = UIImagePNGRepresentation(image) {
+                            if let data = UIImageJPEGRepresentation(image, 0.6) {
                                 self.uploadImage(data: data, eid: eid, completion: {
-                                    eventImages[eid] = image
+                                    updateEventImages(eid, data)
                                     self.backToEvents(title: "Event Updated", message: "")
                                 })
                             } else {
@@ -362,9 +362,10 @@ class CreateEventVC: CreateTemplateVC {
                     default:
                         let eid = (data as! [String:Any])["eid"] as! Int
                         if let image = values["image"] as? UIImage {
-                            if let data = UIImagePNGRepresentation(image) {
+                            if let data = UIImageJPEGRepresentation(image, 0.6) {
                                 self.uploadImage(data: data, eid: eid, completion: {
-                                    eventImages[eid] = image
+                                    
+                                    updateEventImages(eid, data)
                                     
                                     API.updateEvent(uid: defaults.integer(forKey: "uid"),
                                                     token: defaults.string(forKey: "token")!, eid: eid, title: title,

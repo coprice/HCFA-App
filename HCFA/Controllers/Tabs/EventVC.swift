@@ -138,6 +138,19 @@ class EventVC: TemplateVC {
         }
     }
     
+    func trimImages() {
+        let events = Set(upcomingRows.map({ String($0["eid"] as! Int) }) + pastRows.map({ String($0["eid"] as! Int) }))
+        
+        if var eventImages = defaults.dictionary(forKey: "eventImages") as? [String:Data] {
+            for (eid, _) in eventImages {
+                if !events.contains(eid) {
+                    eventImages.removeValue(forKey: eid)
+                }
+            }
+            defaults.set(eventImages, forKey: "eventImages")
+        }
+    }
+    
     @objc func create(sender: UIButton) {
         hostVC.slider.removeFromSuperview()
         navigationController!.pushViewController(CreateEventVC(), animated: true)
@@ -256,6 +269,7 @@ class EventVC: TemplateVC {
                 self.rows = self.currentRows()
                 self.tableView.refreshControl?.endRefreshing()
                 self.tableView.reloadData()
+                self.trimImages()
             }
         }
     }

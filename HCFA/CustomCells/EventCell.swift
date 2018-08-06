@@ -121,35 +121,27 @@ class EventCell: UITableViewCell {
         
         if let imageString = data["image"] as? String {
 
-            let imageView = UIImageView(frame: CGRect(x: SIDE_MARGIN*2, y: height+TOP_MARGIN,
-                                                      width: FULL_WIDTH-SIDE_MARGIN*2, height: height*2-TOP_MARGIN*2))
-            imageView.contentMode = .scaleAspectFill
-            imageView.layer.cornerRadius = SIDE_MARGIN
-            imageView.layer.masksToBounds = true
+            let imageView = EventImageView(frame: CGRect(x: SIDE_MARGIN*2, y: height+TOP_MARGIN,
+                                                         width: FULL_WIDTH-SIDE_MARGIN*2,
+                                                         height: height*2-TOP_MARGIN*2))
+            imageView.isCell = true
+            imageView.initializeReload()
             
             let eid = data["eid"] as! Int
-            
-            if let image = eventImages[eid] {
-                imageView.image = image
-                
-            } else {
-                imageView.backgroundColor = .lightGray
-                
-                let spinner = UIActivityIndicatorView()
-                spinner.activityIndicatorViewStyle = .whiteLarge
-                spinner.center = CGPoint(x: imageView.frame.width/2, y: imageView.frame.height/2)
-                spinner.startAnimating()
-                imageView.addSubview(spinner)
-                
-                if let url = URL(string: imageString) {
-                    downloadImage(url: url, view: imageView, completion: {
-                        spinner.removeFromSuperview()
-                        imageView.backgroundColor = .clear
-                        eventImages[eid] = imageView.image!
-                    })
+            imageView.eid = eid
+            imageView.imageString = imageString
+    
+            if let eventImages = defaults.dictionary(forKey: "eventImages") as? [String:Data] {
+                if let data = eventImages[String(eid)] {
+                    if let image = UIImage(data: data) {
+                        imageView.image = image
+                    }
+                } else {
+                    imageView.download()
                 }
+            } else {
+                imageView.download()
             }
-            
             
             view.addSubview(imageView)
         }

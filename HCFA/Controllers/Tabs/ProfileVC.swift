@@ -244,7 +244,7 @@ class ProfileVC: FormViewController, SideMenuItemContent {
         
         transferUtility.uploadData(data, bucket: S3BUCKET,
                                    key: userS3Key(defaults.integer(forKey: "uid")),
-                                   contentType: "image/png", expression: expression,
+                                   contentType: "image/jpeg", expression: expression,
                                    completionHandler: completionHandler).continueWith {
                                     (task) -> AnyObject? in
                                     
@@ -354,7 +354,7 @@ extension ProfileVC: UINavigationControllerDelegate, UIImagePickerControllerDele
             
             switch response {
             case .Success:
-                if let data = UIImagePNGRepresentation(image) {
+                if let data = UIImageJPEGRepresentation(image, 0.6) {
                     self.uploadImage(data: data, setImages: {
                         self.picture.setImage(image, for: .normal)
                         self.profileCell.picture.image = image
