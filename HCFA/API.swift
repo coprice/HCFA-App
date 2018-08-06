@@ -13,6 +13,7 @@ enum URLResponses {
     case Error
     case InvalidSession
     case NotConnected
+    case InternalError
 }
 
 class API {
@@ -306,14 +307,17 @@ extension API {
             return completionHandler(.NotConnected, nil)
         }
         
-        let data = data as! [String:Any]
-        if let errorMessage = data["error"] as? String {
-            if errorMessage == "Session Expired" {
-                return completionHandler(.InvalidSession, nil)
+        if let data = data as? [String:Any] {
+            if let errorMessage = data["error"] as? String {
+                if errorMessage == "Session Expired" {
+                    return completionHandler(.InvalidSession, nil)
+                }
+                return completionHandler(.Error, errorMessage)
             }
-            return completionHandler(.Error, errorMessage)
+            
+            completionHandler(.Success, data)
+        } else {
+            completionHandler(.InternalError, nil)
         }
-        
-        completionHandler(.Success, data)
     }
 }
