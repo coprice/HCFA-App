@@ -180,6 +180,8 @@ class CreateEventVC: CreateTemplateVC {
                             createAlert(title: "Error", message: data as! String, view: self)
                         case .InvalidSession:
                             self.backToSignIn()
+                        case .InternalError:
+                            createAlert(title: "Internal Server Error", message: "Something went wrong", view: self)
                         default:
                             self.backToEvents(title: "Event Deleted", message: "")
                             deleteEventImage(eid)
@@ -327,6 +329,9 @@ class CreateEventVC: CreateTemplateVC {
                     case .InvalidSession:
                         self.stopLoading()
                         self.backToSignIn()
+                    case .InternalError:
+                        self.stopLoading()
+                        createAlert(title: "Internal Server Error", message: "Something went wrong", view: self)
                     default:
                         if let image = values["image"] as? UIImage {
                             if let data = UIImageJPEGRepresentation(image, 0.6) {
@@ -359,6 +364,9 @@ class CreateEventVC: CreateTemplateVC {
                     case .InvalidSession:
                         self.stopLoading()
                         self.backToSignIn()
+                    case .InternalError:
+                        self.stopLoading()
+                        createAlert(title: "Internal Server Error", message: "Something went wrong", view: self)
                     default:
                         let eid = (data as! [String:Any])["eid"] as! Int
                         if let image = values["image"] as? UIImage {

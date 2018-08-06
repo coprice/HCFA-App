@@ -151,6 +151,13 @@ class EventVC: TemplateVC {
         }
     }
     
+    func emptyTable() {
+        upcomingRows = []
+        pastRows = []
+        rows = []
+        tableView.reloadData()
+    }
+    
     @objc func create(sender: UIButton) {
         hostVC.slider.removeFromSuperview()
         navigationController!.pushViewController(CreateEventVC(), animated: true)
@@ -214,11 +221,12 @@ class EventVC: TemplateVC {
                     createAlert(title: "Error", message: data as! String, view: self)
                 case .InvalidSession:
                     self.backToSignIn()
+                case .InternalError:
+                    createAlert(title: "Internal Server Error", message: "Something went wrong", view: self)
                 default:
                     createAlert(title: "\(txt!) Deleted", message: "", view: self)
                     self.startRefreshControl()
                     self.refresh(sender: self)
-                    
                     for eid in events {
                         deleteEventImage(eid)
                     }
@@ -234,34 +242,28 @@ class EventVC: TemplateVC {
     }
     
     @objc func refresh(sender: AnyObject) {
-
+        
+        if firstAppearance {
+            firstAppearance = false
+        }
+        
         API.getEvents { response, data in
-            
-            if self.firstAppearance {
-                self.firstAppearance = false
-            }
             
             switch response {
             case .NotConnected:
-                self.upcomingRows = []
-                self.pastRows = []
-                self.rows = []
-                self.tableView.reloadData()
+                self.emptyTable()
                 createAlert(title: "Connection Error", message: "Unable to connect to the server", view: self,
-                            completion: {
-                                self.tableView.refreshControl?.endRefreshing()
-                })
+                            completion: { self.tableView.refreshControl?.endRefreshing() })
             case .Error:
-                self.upcomingRows = []
-                self.pastRows = []
-                self.rows = []
-                self.tableView.reloadData()
+                self.emptyTable()
                 createAlert(title: "Error", message: "Unable to connect to the server", view: self,
-                            completion: {
-                                self.tableView.refreshControl?.endRefreshing()
-                })
+                            completion: { self.tableView.refreshControl?.endRefreshing() })
             case .InvalidSession:
                 self.backToSignIn()
+            case .InternalError:
+                self.emptyTable()
+                createAlert(title: "Internal Server Error", message: "Something went wrong", view: self,
+                            completion: { self.tableView.refreshControl?.endRefreshing() })
             default:
                 let data = data as! [String:Any]
                 self.upcomingRows = data["upcoming_events"] as! [[String:Any]]
@@ -408,7 +410,7 @@ extension EventVC: UITableViewDelegate {
             selectButton.removeFromSuperview()
             
             let displayEvent = DisplayEventVC()
-            displayEvent.load(data, navBar, hostVC)
+            displayEvent.data = data
             navigationController!.pushViewController(displayEvent, animated: true)
         } else {
             

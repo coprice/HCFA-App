@@ -123,6 +123,8 @@ class PasswordViewController: FormViewController, TypedRowControllerType {
                         self.dismiss(animated: true, completion: {
                             createAlert(title: "Session Expired", message: "", view: signInVC)
                         })
+                    case .InternalError:
+                        createAlert(title: "Internal Server Error", message: "Something went wrong", view: self)
                     default:
                         self.navigationController?.popViewController(animated: true)
                         createAlert(title: "Password Updated", message: "",

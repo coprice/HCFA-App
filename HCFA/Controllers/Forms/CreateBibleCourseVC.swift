@@ -368,6 +368,8 @@ class CreateBibleCourseVC: CreateTemplateVC {
                             createAlert(title: "Error", message: data as! String, view: self)
                         case .InvalidSession:
                             self.backToSignIn()
+                        case .InternalError:
+                            createAlert(title: "Internal Server Error", message: "Something went wrong", view: self)
                         default:
                             self.backToCourses(title: "Course Deleted", message: "")
                         }
@@ -532,6 +534,8 @@ class CreateBibleCourseVC: CreateTemplateVC {
                         createAlert(title: "Error", message: data as! String, view: self)
                     case .InvalidSession:
                         self.backToSignIn()
+                    case .InternalError:
+                        createAlert(title: "Internal Server Error", message: "Something went wrong", view: self)
                     default:
                         self.backToCourses(title: "Course Updated", message: "")
                     }
@@ -554,6 +558,8 @@ class CreateBibleCourseVC: CreateTemplateVC {
                         createAlert(title: "Error", message: data as! String, view: self)
                     case .InvalidSession:
                         self.backToSignIn()
+                    case .InternalError:
+                        createAlert(title: "Internal Server Error", message: "Something went wrong", view: self)
                     default:
                         self.backToCourses(title: "Course Created", message: "")
                     }

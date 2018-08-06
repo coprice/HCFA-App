@@ -414,14 +414,6 @@ class SignInVC: UIViewController {
             } else if userPassword.isEmpty {
                 createAlert(title: "Password Empty", message: "Enter your password", view: self)
             } else {
-//                defaults.set(2, forKey: "uid")
-//                defaults.set("Collin", forKey: "first")
-//                defaults.set("Price", forKey: "last")
-//                defaults.set("c", forKey: "email")
-//                defaults.set(true, forKey: "admin")
-//                defaults.set(true, forKey: "leader")
-//                defaults.set("ebf02403eee66af2d1af5f071e117590a1550fd3b4b7d67084c575160d17a422", forKey: "token")
-//                self.loadHomePage(duration: 0.5)
                 startSpinner()
 
                 API.login(email: userEmail, password: userPassword, completionHandler: {response, data in
@@ -433,6 +425,8 @@ class SignInVC: UIViewController {
                                     view: self)
                     case .Error:
                         createAlert(title: "Error", message: data as! String, view: self)
+                    case .InternalError:
+                        createAlert(title: "Internal Server Error", message: "Something went wrong", view: self)
                     default:
                         let data = data as! [String:Any]
 
@@ -445,17 +439,14 @@ class SignInVC: UIViewController {
                         defaults.set(data["token"] as! String, forKey: "token")
                         
                         if let imageURL = data["image"] as? String {
-                            defaults.set(imageURL, forKey: "image")
-                            
                             if let url = URL(string: imageURL) {
+                                defaults.set(imageURL, forKey: "image")
                                 self.downloadProfile(url: url)
                             }
-                            
                         } else {
                             defaults.set(nil, forKey: "image")
                             defaults.set(nil, forKey: "profile")
                         }
-
                         self.loadHomePage(duration: 0.5)
                     }
                 })
@@ -499,6 +490,8 @@ class SignInVC: UIViewController {
                                     view: self)
                     case .Error:
                         createAlert(title: "Error", message: data as! String, view: self)
+                    case .InternalError:
+                        createAlert(title: "Internal Server Error", message: "Something went wrong", view: self)
                     default:
                         let data = data as! [String:Any]
                         

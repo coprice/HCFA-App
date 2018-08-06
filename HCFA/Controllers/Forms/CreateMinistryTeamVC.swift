@@ -327,6 +327,8 @@ class CreateMinistryTeamVC: CreateTemplateVC {
                             createAlert(title: "Error", message: data as! String, view: self)
                         case .InvalidSession:
                             self.backToSignIn()
+                        case .InternalError:
+                            createAlert(title: "Internal Server Error", message: "Something went wrong", view: self)
                         default:
                             self.backToTeams(title: "Team Deleted", message: "")
                         }
@@ -471,6 +473,8 @@ class CreateMinistryTeamVC: CreateTemplateVC {
                         createAlert(title: "Error", message: data as! String, view: self)
                     case .InvalidSession:
                         self.backToSignIn()
+                    case .InternalError:
+                        createAlert(title: "Internal Server Error", message: "Something went wrong", view: self)
                     default:
                         self.backToTeams(title: "Team Updated", message: "")
                     }
@@ -490,6 +494,8 @@ class CreateMinistryTeamVC: CreateTemplateVC {
                         createAlert(title: "Error", message: data as! String, view: self)
                     case .InvalidSession:
                         self.backToSignIn()
+                    case .InternalError:
+                        createAlert(title: "Internal Server Error", message: "Something went wrong", view: self)
                     default:
                         self.backToTeams(title: "Team Created", message: "")
                     }

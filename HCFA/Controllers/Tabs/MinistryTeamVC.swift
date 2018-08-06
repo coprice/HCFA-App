@@ -92,6 +92,12 @@ class MinistryTeamVC: TemplateVC {
         }
     }
     
+    func setRows() {
+        yourRows = allRows.filter({ userTeams.contains($0["tid"] as! Int) })
+        rows = currentRows()
+        tableView.reloadData()
+    }
+    
     @objc func create(sender: UIButton) {
         hostVC.slider.removeFromSuperview()
         createButton.removeFromSuperview()
@@ -124,27 +130,23 @@ class MinistryTeamVC: TemplateVC {
             switch response {
             case .NotConnected:
                 self.allRows = []
-                self.yourRows = self.allRows.filter({ row in
-                    self.userTeams.contains(row["tid"] as! Int)
-                })
-                self.rows = self.currentRows()
-                self.tableView.reloadData()
+                self.setRows()
                 createAlert(title: "Connection Error", message: "Unable to connect to the server", view: self,
                             completion: {
                     self.tableView.refreshControl?.endRefreshing()
                 })
             case .Error:
                 self.allRows = []
-                self.yourRows = self.allRows.filter({ row in
-                    self.userTeams.contains(row["tid"] as! Int)
-                })
-                self.rows = self.currentRows()
-                self.tableView.reloadData()
-                createAlert(title: "Error", message: "Unable to connect to the server", view: self, completion: {
-                    self.tableView.refreshControl?.endRefreshing()
-                })
+                self.setRows()
+                createAlert(title: "Error", message: "Unable to connect to the server", view: self,
+                            completion: { self.tableView.refreshControl?.endRefreshing() })
             case .InvalidSession:
                 self.backToSignIn()
+            case .InternalError:
+                self.allRows = []
+                self.setRows()
+                createAlert(title: "Internal Server Error", message: "Something went wrong", view: self,
+                            completion: { self.tableView.refreshControl?.endRefreshing() })
             default:
                 let data = data as! [String:Any]
                 
@@ -153,14 +155,8 @@ class MinistryTeamVC: TemplateVC {
                 let coursesDict = data["user_teams"] as! [String:Any]
                 self.adminTeams = (coursesDict["admin"] as! [Int])
                 self.userTeams = (coursesDict["member"] as! [Int]) + self.adminTeams
-                
-                self.yourRows = self.allRows.filter({ row in
-                    self.userTeams.contains(row["tid"] as! Int)
-                })
-                
-                self.rows = self.currentRows()
+                self.setRows()
                 self.tableView.refreshControl?.endRefreshing()
-                self.tableView.reloadData()
             }
         }
     }
@@ -246,7 +242,7 @@ extension MinistryTeamVC: UITableViewDelegate {
         if adminTeams.contains(tid) || defaults.bool(forKey: "admin") {
             displayMT.admin = true
         }
-        displayMT.load(data, navBar, hostVC)
+        displayMT.data = data
         navigationController!.pushViewController(displayMT, animated: true)
     }
     

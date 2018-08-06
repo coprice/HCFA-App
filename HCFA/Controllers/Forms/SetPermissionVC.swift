@@ -96,6 +96,8 @@ class SetPermissionVC: FormViewController, TypedRowControllerType {
             createAlert(title: "Error", message: data as! String, view: self)
         case .InvalidSession:
             self.backToSignIn()
+        case .InternalError:
+            createAlert(title: "Internal Server Error", message: "Something went wrong", view: self)
         default:
             navigationController!.popViewController(animated: true)
             createAlert(title: message, message: "", view: navigationController!.viewControllers.last!)

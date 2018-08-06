@@ -95,6 +95,8 @@ class RequestVC: FormViewController {
             dismiss(animated: true, completion: {
                 createAlert(title: "Session Expired", message: "", view: signInVC)
             })
+        case .InternalError:
+            createAlert(title: "Internal Server Error", message: "Something went wrong", view: self)
         default:
             navigationController!.popViewController(animated: true)
             createAlert(title: "Request Sent", message: "", view: navigationController!.viewControllers.last!)

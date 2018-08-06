@@ -255,6 +255,31 @@ class BibleCourseVC: TemplateVC {
         return rows.filter({ ($0["gender"] as! String) == gender })
     }
     
+    func setSectionRows() {
+        yourRows = rows.filter({ userCourses.contains($0["cid"] as! Int) })
+        
+        let freshmen = filterRowsByYear("Freshman")
+        let sophomores = filterRowsByYear("Sophomore")
+        let juniors = filterRowsByYear("Junior")
+        let seniors = filterRowsByYear("Senior")
+        
+        freshmanMen = filterByGender(freshmen, "Men")
+        freshmanWomen = filterByGender(freshmen, "Women")
+        sophomoreMen = filterByGender(sophomores, "Men")
+        sophomoreWomen = filterByGender(sophomores, "Women")
+        juniorMen = filterByGender(juniors, "Men")
+        juniorWomen = filterByGender(juniors, "Women")
+        seniorMen = filterByGender(seniors, "Men")
+        seniorWomen = filterByGender(seniors, "Women")
+    }
+    
+    func emptyTable() {
+        rows = []
+        yourRows = []
+        setSectionRows()
+        tableView.reloadData()
+    }
+    
     @objc func create(sender: UIButton) {
         hostVC.slider.removeFromSuperview()
         createButton.removeFromSuperview()
@@ -285,21 +310,20 @@ class BibleCourseVC: TemplateVC {
 
             switch response {
             case .NotConnected:
-                self.yourRows = []
-                self.tableView.reloadData()
+                self.emptyTable()
                 createAlert(title: "Connection Error", message: "Unable to connect to the server", view: self,
-                            completion: {
-                    self.tableView.refreshControl?.endRefreshing()
-                })
+                            completion: { self.tableView.refreshControl?.endRefreshing() })
                 
             case .Error:
-                self.yourRows = []
-                self.tableView.reloadData()
-                createAlert(title: "Error", message: "Unable to connect to the server", view: self, completion: {
-                    self.tableView.refreshControl?.endRefreshing()
-                })
+                self.emptyTable()
+                createAlert(title: "Error", message: "Unable to connect to the server", view: self,
+                            completion: { self.tableView.refreshControl?.endRefreshing() })
             case .InvalidSession:
                 self.backToSignIn()
+            case .InternalError:
+                self.emptyTable()
+                createAlert(title: "Internal Server Error", message: "Something went wrong", view: self,
+                            completion: { self.tableView.refreshControl?.endRefreshing() })
             default:
                 let data = data as! [String:Any]
                 self.rows = data["courses"] as! [[String:Any]]
@@ -307,24 +331,7 @@ class BibleCourseVC: TemplateVC {
                 let coursesDict = data["user_courses"] as! [String:Any]
                 self.adminCourses = (coursesDict["admin"] as! [Int])
                 self.userCourses = (coursesDict["member"] as! [Int]) + self.adminCourses
-                
-                self.yourRows = self.rows.filter({ row in
-                    self.userCourses.contains(row["cid"] as! Int)
-                })
-                
-                let freshmen = self.filterRowsByYear("Freshman")
-                let sophomores = self.filterRowsByYear("Sophomore")
-                let juniors = self.filterRowsByYear("Junior")
-                let seniors = self.filterRowsByYear("Senior")
-                
-                self.freshmanMen = self.filterByGender(freshmen, "Men")
-                self.freshmanWomen = self.filterByGender(freshmen, "Women")
-                self.sophomoreMen = self.filterByGender(sophomores, "Men")
-                self.sophomoreWomen = self.filterByGender(sophomores, "Women")
-                self.juniorMen = self.filterByGender(juniors, "Men")
-                self.juniorWomen = self.filterByGender(juniors, "Women")
-                self.seniorMen = self.filterByGender(seniors, "Men")
-                self.seniorWomen = self.filterByGender(seniors, "Women")
+                self.setSectionRows()
                 
                 self.tableView.reloadData()
                 self.tableView.refreshControl?.endRefreshing()
@@ -470,15 +477,15 @@ extension BibleCourseVC: UITableViewDelegate {
             let cid = data["cid"] as! Int
             
             let displayBC = DisplayBibleCourseVC()
+            
             if userCourses.contains(cid) {
                 displayBC.joined = true
             }
-            
             if adminCourses.contains(cid) || defaults.bool(forKey: "admin") {
                 displayBC.admin = true
             }
             
-            displayBC.load(data, navBar, hostVC)
+            displayBC.data = data
             navigationController!.pushViewController(displayBC, animated: true)
         }
     }

@@ -304,6 +304,8 @@ class ProfileVC: FormViewController, SideMenuItemContent {
                     createAlert(title: "Error", message: data as! String, view: self)
                 case .InvalidSession:
                     self.backToSignIn()
+                case .InternalError:
+                    createAlert(title: "Internal Server Error", message: "Something went wrong", view: self)
                 default:
                     defaults.set(first, forKey: "first")
                     defaults.set(last, forKey: "last")
