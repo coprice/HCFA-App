@@ -13,7 +13,7 @@ class ProfileCell: UITableViewCell {
     
     var cellWidth: CGFloat!
     var cellHeight: CGFloat!
-    var picture: UIImageView!
+    let picture = UIImageView()
     
     func load() {
         frame = CGRect(x: 0, y: 0, width: cellWidth, height: cellHeight)
@@ -24,9 +24,8 @@ class ProfileCell: UITableViewCell {
         colorView.backgroundColor = .clear
         selectedBackgroundView = colorView
         
-        picture = UIImageView(frame: CGRect(x: cellWidth*0.2625,
-                                            y: UIApplication.shared.statusBarFrame.height + cellHeight/40,
-                                            width: cellWidth*0.475, height: cellWidth*0.475))        
+        picture.frame = CGRect(x: cellWidth*0.2625, y: UIApplication.shared.statusBarFrame.height + cellHeight/40,
+                               width: cellWidth*0.475, height: cellWidth*0.475)
         picture.image = UIImage(named: "generic")
         picture.contentMode = .scaleAspectFill
         picture.layer.cornerRadius = picture.frame.width/2

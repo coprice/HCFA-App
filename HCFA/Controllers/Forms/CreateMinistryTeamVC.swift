@@ -10,9 +10,9 @@ import Eureka
 
 class CreateMinistryTeamVC: CreateTemplateVC {
     
+    var teamVC: MinistryTeamVC!
     var data: [String:Any]!
     var editingMT = false
-    var teamVC: MinistryTeamVC!
     var isMeeting = false
     
     override func viewDidLoad() {
@@ -379,10 +379,10 @@ class CreateMinistryTeamVC: CreateTemplateVC {
         createAlert(title: title, message: message, view: hostVC)
         teamVC.clearTableview()
         teamVC.startRefreshControl()
-        teamVC.refresh(sender: self)
+        teamVC.refresh()
     }
     
-    @objc func doneTapped(sender: UIButton) {
+    @objc func doneTapped() {
         let values = form.values()
 
         if values["name"]! == nil {

@@ -11,12 +11,14 @@ import Eureka
 class ForgotPasswordVC: FormViewController {
 
     let cancel = UIButton()
+    var navBar: UINavigationBar!
+    var loadingView: LoadingView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = lightColor
         navigationAccessoryView.tintColor = redColor
-        let navBar = navigationController!.navigationBar
+        navBar = navigationController!.navigationBar
         
         cancel.frame = CGRect(x: navBar.frame.width*0.75, y: 0,
                               width: navBar.frame.width/4, height: navBar.frame.height)
@@ -26,6 +28,9 @@ class ForgotPasswordVC: FormViewController {
         cancel.setTitleColor(barHighlightColor, for: .highlighted)
         cancel.addTarget(self, action: #selector(self.cancelTapped), for: .touchUpInside)
         
+        loadingView = LoadingView(frame: CGRect(x: view.frame.width*0.375,
+                                                y: view.frame.height/2 - view.frame.width*0.125,
+                                                width: view.frame.width*0.25, height: view.frame.width*0.25))
         
         navBar.topItem?.title = "Reset Password"
         navBar.addSubview(cancel)
@@ -53,11 +58,41 @@ class ForgotPasswordVC: FormViewController {
             cell.textLabel?.textColor = redColor
         }
         .onCellSelection { _, _ in
-            print("time to send change password request")
+            
+            guard let email = self.form.values()["email"] as? String else {
+                return createAlert(title: "Email Empty", message: "Enter your email address", view: self)
+            }
+            
+            self.view.addSubview(self.loadingView)
+            self.navBar.isUserInteractionEnabled = false
+            self.tableView.isUserInteractionEnabled = false
+            
+            API.sendPasswordRequest(email: email, completionHandler: { response, data in
+                
+                self.loadingView.removeFromSuperview()
+                self.navBar.isUserInteractionEnabled = true
+                self.tableView.isUserInteractionEnabled = true
+                
+                switch response {
+                case .NotConnected:
+                    createAlert(title: "Connection Error", message: "Unable to connect to the server",
+                                view: self)
+                case .Error:
+                    createAlert(title: "Error", message: data as! String, view: self)
+                case .InternalError:
+                    createAlert(title: "Internal Server Error", message: "Something went wrong", view: self)
+                default:
+                    let signInVC = self.navigationController!.presentingViewController!
+                    self.dismiss(animated: true, completion: {
+                        createAlert(title: "Request Sent", message: "An email has been sent to you",
+                                    view: signInVC)
+                    })
+                }
+            })
         }
     }
     
-    @objc func cancelTapped(sender: UIButton) {
+    @objc func cancelTapped() {
         dismiss(animated: true, completion: nil)
     }
 }

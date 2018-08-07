@@ -11,9 +11,10 @@ import InteractiveSideMenu
 
 class TemplateVC: UIViewController, SideMenuItemContent {
     
+    let createButton = UIButton()
     var hostVC: HostVC!
-    var createButton: UIButton!
     var navBar: UINavigationBar!
+    var tableView: UITableView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -23,9 +24,9 @@ class TemplateVC: UIViewController, SideMenuItemContent {
         hostVC = navigationController?.viewControllers.first as! HostVC
         
         let BUTTON_LENGTH = navBar.frame.height*0.6
-        createButton = UIButton(frame: CGRect(x: view.frame.width - BUTTON_LENGTH*1.5,
-                                              y: (navBar.frame.height-BUTTON_LENGTH)/2,
-                                              width: BUTTON_LENGTH, height: BUTTON_LENGTH))
+        createButton.frame = CGRect(x: view.frame.width - BUTTON_LENGTH*1.5,
+                                    y: (navBar.frame.height-BUTTON_LENGTH)/2,
+                                    width: BUTTON_LENGTH, height: BUTTON_LENGTH)
         createButton.setImage(UIImage(named: "create"), for: .normal)
         createButton.imageView?.contentMode = .scaleAspectFit
     }
@@ -46,7 +47,7 @@ class TemplateVC: UIViewController, SideMenuItemContent {
         })
     }
     
-    @objc func sliderTapped(sender: UIButton) {
+    @objc func sliderTapped() {
         showSideMenu()
     }
 }

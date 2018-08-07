@@ -10,8 +10,8 @@ import UIKit
 
 class BibleCourseVC: TemplateVC {
     
-    var tableView: UITableView!
-    var filterButton: UIButton!
+    let filterButton = UIButton()
+    
     var cellWidth: CGFloat!
     var cellHeight: CGFloat!
     
@@ -28,7 +28,6 @@ class BibleCourseVC: TemplateVC {
     
     var userCourses: [Int] = []
     var adminCourses: [Int] = []
-    
     var displayingYear = Year.All
     var displayingGender = Gender.Both
     var displayingYours = true
@@ -48,7 +47,7 @@ class BibleCourseVC: TemplateVC {
                            width: BUTTON_LENGTH, height: BUTTON_LENGTH)
         }
         
-        filterButton = UIButton(frame: frame)
+        filterButton.frame = frame
         filterButton.setImage(UIImage(named: "filter"), for: .normal)
         filterButton.imageView?.contentMode = .scaleAspectFit
         filterButton.addTarget(self, action: #selector(self.toggleFilter), for: .touchUpInside)
@@ -61,7 +60,7 @@ class BibleCourseVC: TemplateVC {
         
         let refreshControl = UIRefreshControl(frame: CGRect(x: 0, y: 0, width: view.frame.width, height: 0))
         refreshControl.tintColor = highlightColor
-        refreshControl.addTarget(self, action: #selector(self.refresh(sender:)), for: UIControlEvents.valueChanged)
+        refreshControl.addTarget(self, action: #selector(self.refresh), for: UIControlEvents.valueChanged)
         
         tableView = UITableView(frame: CGRect(x: 0, y: offset, width: view.frame.width,
                                               height: view.frame.height - offset), style: .grouped)
@@ -81,7 +80,7 @@ class BibleCourseVC: TemplateVC {
         
         if firstAppearance {
             startRefreshControl()
-            refresh(sender: self)
+            refresh()
         }
         
         navBar.topItem?.title = "Bible Courses"
@@ -280,27 +279,27 @@ class BibleCourseVC: TemplateVC {
         tableView.reloadData()
     }
     
-    @objc func create(sender: UIButton) {
+    @objc func create() {
         hostVC.slider.removeFromSuperview()
         createButton.removeFromSuperview()
         navigationController!.pushViewController(CreateBibleCourseVC(), animated: true)
     }
     
-    @objc func displayUsersBCs(sender: UIButton) {
+    @objc func displayUsersBCs() {
         if displayingYours || tableView.refreshControl!.isRefreshing { return }
         displayingYours = true
         filterButton.removeFromSuperview()
         tableView.reloadData()
     }
     
-    @objc func displayBCs(sender: UIButton) {
+    @objc func displayBCs() {
         if !displayingYours || tableView.refreshControl!.isRefreshing { return }
         displayingYours = false
         navBar.addSubview(filterButton)
         tableView.reloadData()
     }
     
-    @objc func refresh(sender:AnyObject) {
+    @objc func refresh() {
         API.getCourses(uid: defaults.integer(forKey: "uid"), token: defaults.string(forKey: "token")!) {
             response, data in
             
@@ -339,7 +338,7 @@ class BibleCourseVC: TemplateVC {
         }
     }
     
-    @objc func toggleFilter(sender: UIButton) {
+    @objc func toggleFilter() {
         navigationController!.pushViewController(FilterVC(), animated: true)
     }
 }
@@ -542,7 +541,7 @@ extension BibleCourseVC: UITableViewDataSource {
         if displayingYours {
             if yourRows.isEmpty {
                 let cell = EmptyCell()
-                cell.load(width: cellWidth, height: cellHeight/4, text: "You are not in any bible courses")
+                cell.load(width: cellWidth, height: cellHeight/4, text: "You are not in any bible courses", color: .gray)
                 cell.isUserInteractionEnabled = false
                 return cell
             }
@@ -557,7 +556,7 @@ extension BibleCourseVC: UITableViewDataSource {
         } else {
             if rows.isEmpty {
                 let cell = EmptyCell()
-                cell.load(width: cellWidth, height: cellHeight/4, text: "No bible courses to display")
+                cell.load(width: cellWidth, height: cellHeight/4, text: "No bible courses to display", color: .gray)
                 cell.isUserInteractionEnabled = false
                 return cell
             }
@@ -565,9 +564,8 @@ extension BibleCourseVC: UITableViewDataSource {
             let currentRows = getRowsBySection(indexPath.section)
             if currentRows.isEmpty {
                 let cell = EmptyCell()
-                cell.load(width: cellWidth, height: cellHeight/4, text: "Bible courses TBD")
+                cell.load(width: cellWidth, height: cellHeight/4, text: "Bible courses TBD", color: redColor)
                 cell.isUserInteractionEnabled = false
-                cell.notice.textColor = redColor
                 cell.selectionStyle = .none
                 return cell
             }

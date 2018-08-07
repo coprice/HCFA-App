@@ -12,10 +12,9 @@ class RequestVC: FormViewController {
     
     var hostVC: HostVC!
     var navBar: UINavigationBar!
+    var loadingView: LoadingView!
     var isCourse: Bool!
     var id: Int!
-    var parentVC: UIViewController!
-    var loadingView: LoadingView!
     
     override func viewDidLoad() {
         super.viewDidLoad()

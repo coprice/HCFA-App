@@ -39,9 +39,6 @@
 		E34AACCF1FFF57D800828012 /* generic1x.png in Resources */ = {isa = PBXBuildFile; fileRef = E34AACCC1FFF57D800828012 /* generic1x.png */; };
 		E34AACD01FFF57D800828012 /* generic2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E34AACCD1FFF57D800828012 /* generic2x.png */; };
 		E34AACD11FFF57D800828012 /* generic3x.png in Resources */ = {isa = PBXBuildFile; fileRef = E34AACCE1FFF57D800828012 /* generic3x.png */; };
-		E350D99320F08E7000FAE625 /* calendarIcons1x.png in Resources */ = {isa = PBXBuildFile; fileRef = E350D99020F08E7000FAE625 /* calendarIcons1x.png */; };
-		E350D99420F08E7000FAE625 /* calendarIcons3x.png in Resources */ = {isa = PBXBuildFile; fileRef = E350D99120F08E7000FAE625 /* calendarIcons3x.png */; };
-		E350D99520F08E7000FAE625 /* calendarIcons2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E350D99220F08E7000FAE625 /* calendarIcons2x.png */; };
 		E35ACB43200A84C600039184 /* BibleCourseCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E35ACB42200A84C600039184 /* BibleCourseCell.swift */; };
 		E35ACB45200BF9C900039184 /* DisplayBibleCourseVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E35ACB44200BF9C900039184 /* DisplayBibleCourseVC.swift */; };
 		E35ACB47200BFB6700039184 /* DisplayTemplateVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E35ACB46200BFB6700039184 /* DisplayTemplateVC.swift */; };
@@ -54,6 +51,9 @@
 		E38C67A52104400A00AAF74C /* groupMe2X.png in Resources */ = {isa = PBXBuildFile; fileRef = E38C67A22104400900AAF74C /* groupMe2X.png */; };
 		E38C67A62104400A00AAF74C /* groupMe3X.png in Resources */ = {isa = PBXBuildFile; fileRef = E38C67A32104400900AAF74C /* groupMe3X.png */; };
 		E38F690120B668050091559B /* LeagueGothic-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = E38F690020B668050091559B /* LeagueGothic-Regular.otf */; };
+		E39B910521196BC200D560C2 /* calendar2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E39B910221196BC200D560C2 /* calendar2x.png */; };
+		E39B910621196BC200D560C2 /* calendar1x.png in Resources */ = {isa = PBXBuildFile; fileRef = E39B910321196BC200D560C2 /* calendar1x.png */; };
+		E39B910721196BC200D560C2 /* calendar3x.png in Resources */ = {isa = PBXBuildFile; fileRef = E39B910421196BC200D560C2 /* calendar3x.png */; };
 		E3A4432320000C74000D007D /* SideMenuCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3A4432220000C74000D007D /* SideMenuCell.swift */; };
 		E3A4432620003940000D007D /* +UIFont.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3A4432520003940000D007D /* +UIFont.swift */; };
 		E3A4432E20005847000D007D /* create1x.png in Resources */ = {isa = PBXBuildFile; fileRef = E3A4432B20005847000D007D /* create1x.png */; };
@@ -151,9 +151,6 @@
 		E34AACCC1FFF57D800828012 /* generic1x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = generic1x.png; sourceTree = "<group>"; };
 		E34AACCD1FFF57D800828012 /* generic2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = generic2x.png; sourceTree = "<group>"; };
 		E34AACCE1FFF57D800828012 /* generic3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = generic3x.png; sourceTree = "<group>"; };
-		E350D99020F08E7000FAE625 /* calendarIcons1x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = calendarIcons1x.png; sourceTree = "<group>"; };
-		E350D99120F08E7000FAE625 /* calendarIcons3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = calendarIcons3x.png; sourceTree = "<group>"; };
-		E350D99220F08E7000FAE625 /* calendarIcons2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = calendarIcons2x.png; sourceTree = "<group>"; };
 		E35ACB42200A84C600039184 /* BibleCourseCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BibleCourseCell.swift; sourceTree = "<group>"; };
 		E35ACB44200BF9C900039184 /* DisplayBibleCourseVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayBibleCourseVC.swift; sourceTree = "<group>"; };
 		E35ACB46200BFB6700039184 /* DisplayTemplateVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayTemplateVC.swift; sourceTree = "<group>"; };
@@ -166,6 +163,9 @@
 		E38C67A22104400900AAF74C /* groupMe2X.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = groupMe2X.png; sourceTree = "<group>"; };
 		E38C67A32104400900AAF74C /* groupMe3X.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = groupMe3X.png; sourceTree = "<group>"; };
 		E38F690020B668050091559B /* LeagueGothic-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "LeagueGothic-Regular.otf"; sourceTree = "<group>"; };
+		E39B910221196BC200D560C2 /* calendar2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = calendar2x.png; sourceTree = "<group>"; };
+		E39B910321196BC200D560C2 /* calendar1x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = calendar1x.png; sourceTree = "<group>"; };
+		E39B910421196BC200D560C2 /* calendar3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = calendar3x.png; sourceTree = "<group>"; };
 		E3A4432220000C74000D007D /* SideMenuCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideMenuCell.swift; sourceTree = "<group>"; };
 		E3A4432520003940000D007D /* +UIFont.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "+UIFont.swift"; sourceTree = "<group>"; };
 		E3A4432B20005847000D007D /* create1x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = create1x.png; sourceTree = "<group>"; };
@@ -317,9 +317,9 @@
 		E350D98F20F08E5B00FAE625 /* Calendar */ = {
 			isa = PBXGroup;
 			children = (
-				E350D99020F08E7000FAE625 /* calendarIcons1x.png */,
-				E350D99220F08E7000FAE625 /* calendarIcons2x.png */,
-				E350D99120F08E7000FAE625 /* calendarIcons3x.png */,
+				E39B910321196BC200D560C2 /* calendar1x.png */,
+				E39B910221196BC200D560C2 /* calendar2x.png */,
+				E39B910421196BC200D560C2 /* calendar3x.png */,
 			);
 			path = Calendar;
 			sourceTree = "<group>";
@@ -675,7 +675,6 @@
 				E3D7964B1FF5D085003B78F5 /* launch1536x2048.png in Resources */,
 				E3A4435120006323000D007D /* pray2x.png in Resources */,
 				E3A4433D20005FC3000D007D /* book1x.png in Resources */,
-				E350D99520F08E7000FAE625 /* calendarIcons2x.png in Resources */,
 				E33CE52D210D1AE200A81C9D /* awsconfiguration.json in Resources */,
 				E3AF43372117BED400A566EF /* reload2x.png in Resources */,
 				E34AACC41FFF26EB00828012 /* slider3x.png in Resources */,
@@ -684,6 +683,7 @@
 				E30F7EDD2106F5DF00F74370 /* select2X.png in Resources */,
 				E3EFF0151FF5D2BA003FB2DD /* icon58px.png in Resources */,
 				E3AF43382117BED400A566EF /* reload3x.png in Resources */,
+				E39B910621196BC200D560C2 /* calendar1x.png in Resources */,
 				E3EFF0181FF5D2BA003FB2DD /* icon152px.png in Resources */,
 				E34AACB41FFF184C00828012 /* banner1x.png in Resources */,
 				E3EFF0191FF5D2BA003FB2DD /* icon1024px.png in Resources */,
@@ -707,13 +707,14 @@
 				E30F7ED12104E2FC00F74370 /* filter3X.png in Resources */,
 				E38C67A52104400A00AAF74C /* groupMe2X.png in Resources */,
 				E38F690120B668050091559B /* LeagueGothic-Regular.otf in Resources */,
+				E39B910721196BC200D560C2 /* calendar3x.png in Resources */,
 				E34AACB31FFF184C00828012 /* banner2x.png in Resources */,
 				E3EFF0171FF5D2BA003FB2DD /* icon76px.png in Resources */,
-				E350D99420F08E7000FAE625 /* calendarIcons3x.png in Resources */,
 				E3D7964D1FF5D085003B78F5 /* launch1125x2436.png in Resources */,
 				E3A443432000614D000D007D /* event1x.png in Resources */,
 				E3EFF00D1FF5D2BA003FB2DD /* icon40px.png in Resources */,
 				E3A4435020006323000D007D /* pray1x.png in Resources */,
+				E39B910521196BC200D560C2 /* calendar2x.png in Resources */,
 				E3A4433E20005FC3000D007D /* book2x.png in Resources */,
 				E3D796491FF5D085003B78F5 /* launch640x1136.png in Resources */,
 				E30F7ED32104E2FC00F74370 /* filter2X.png in Resources */,
@@ -726,7 +727,6 @@
 				E3D796481FF5D085003B78F5 /* launch750x1334.png in Resources */,
 				E3EFF00E1FF5D2BA003FB2DD /* icon29px.png in Resources */,
 				E34AACB51FFF184C00828012 /* gear2x.png in Resources */,
-				E350D99320F08E7000FAE625 /* calendarIcons1x.png in Resources */,
 				E38C67A62104400A00AAF74C /* groupMe3X.png in Resources */,
 				E3A443442000614D000D007D /* event2x.png in Resources */,
 			);

@@ -10,13 +10,8 @@ import UIKit
 
 class DisplayMinistryTeamVC: DisplayTemplateVC {
     
-    var navBar: UINavigationBar!
-    var edit: UIButton!
-    var data: [String:Any]!
-    var hostVC: HostVC!
     var joined = false
     var admin = false
-    var firstAppearance = true
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -24,11 +19,12 @@ class DisplayMinistryTeamVC: DisplayTemplateVC {
         title = (data["name"] as! String)
         
         if firstAppearance {
+            firstAppearance = false
             navBar = navigationController!.navigationBar
             hostVC = navigationController!.viewControllers.first as! HostVC
             
-            edit = UIButton(frame: CGRect(x: navBar.frame.width*0.75, y: 0,
-                                          width: navBar.frame.width/4,height: navBar.frame.height))
+            edit.frame = CGRect(x: navBar.frame.width*0.75, y: 0,
+                                width: navBar.frame.width/4,height: navBar.frame.height)
             edit.setTitle("Edit", for: .normal)
             edit.titleLabel?.textColor = .white
             edit.titleLabel?.font = UIFont(name: "Baskerville", size: UIScreen.main.bounds.width/21)
@@ -107,9 +103,9 @@ class DisplayMinistryTeamVC: DisplayTemplateVC {
             addLine(x: SIDE_MARGIN, y: offset, width: FULL_WIDTH, view: scrollView)
             
             if joined {
-                offset += TOP_MARGIN/2
                 let members = (data["members"] as! [String:Any])["info"] as! [[String?]]
                 for (i, member) in members.enumerated() {
+                    offset += TOP_MARGIN*0.75
                     
                     let imageView = UIImageView(image: UIImage(named: "generic"))
                     if let profile = member[1] {
@@ -131,69 +127,89 @@ class DisplayMinistryTeamVC: DisplayTemplateVC {
                     label.textAlignment = .left
                     
                     if i + 1 != members.count {
-                        offset += label.frame.height + TOP_MARGIN/2
+                        offset += label.frame.height + TOP_MARGIN*0.75
                         addLightLine(x: SIDE_MARGIN*2, y: offset, width: FULL_WIDTH - SIDE_MARGIN*2, view: scrollView)
-                        offset += TOP_MARGIN/2
                     } else {
-                        offset += label.frame.height
+                        offset += label.frame.height + TOP_MARGIN/4
                     }
                 }
                 
                 if members.isEmpty {
+                    offset += TOP_MARGIN/2
                     let label = UILabel(frame: CGRect(x: SIDE_MARGIN, y: offset,
                                                       width: FULL_WIDTH, height: categoryHeight))
                     createListLabel(label: label, text: "There are no members", font: infoFont, color: .gray,
                                     view: scrollView)
                     offset += label.frame.height
                 }
+                
                 offset += TOP_MARGIN/2
                 addLine(x: SIDE_MARGIN, y: offset, width: FULL_WIDTH, view: scrollView)
-                offset += TOP_MARGIN/2
+                let buttonLength = FULL_WIDTH/4
                 
-                
-                if let _ = data["groupme"] as? String {
-                    let groupmeWidth = FULL_WIDTH*0.6
-                    let groupmeHeight = groupmeWidth/2
+                if isMeeting {
+                    if let _ = data["groupme"] as? String {
+                        offset += TOP_MARGIN*1.5
+                        let groupmeButton = UIButton(frame: CGRect(x: (view.frame.width - buttonLength)*0.7, y: offset,
+                                                                   width: buttonLength, height: buttonLength))
+                        groupmeButton.setBackgroundImage(UIImage(named: "groupme"), for: .normal)
+                        groupmeButton.imageView?.contentMode = .scaleAspectFit
+                        groupmeButton.addTarget(self, action: #selector(self.groupmeLink), for: .touchUpInside)
+                        scrollView.addSubview(groupmeButton)
+                        
+                        let calendarButton = UIButton(frame: CGRect(x: (view.frame.width - buttonLength*0.8)*0.3,
+                                                                    y: offset,
+                                                                    width: buttonLength, height: buttonLength))
+                        calendarButton.setBackgroundImage(UIImage(named: "calendar"), for: .normal)
+                        calendarButton.imageView?.contentMode = .scaleAspectFit
+                        calendarButton.addTarget(self, action: #selector(self.addToCalendar), for: .touchUpInside)
+                        scrollView.addSubview(calendarButton)
+                        
+                        offset += buttonLength + TOP_MARGIN*1.5
+                        
+                    } else {
+                        offset += TOP_MARGIN*1.5
+                        let calendarButton = UIButton(frame: CGRect(x: (view.frame.width - buttonLength*0.8)/2, y: offset,
+                                                                    width: buttonLength, height: buttonLength))
+                        calendarButton.setBackgroundImage(UIImage(named: "calendar"), for: .normal)
+                        calendarButton.imageView?.contentMode = .scaleAspectFit
+                        calendarButton.addTarget(self, action: #selector(self.addToCalendar), for: .touchUpInside)
+                        scrollView.addSubview(calendarButton)
+                        
+                        offset += buttonLength + TOP_MARGIN*1.5
+                    }
                     
-                    let groupmeButton = UIButton(frame: CGRect(x: (view.frame.width - groupmeWidth)/2, y: offset,
-                                                               width: groupmeWidth, height: groupmeHeight))
+                    if !admin { addLine(x: SIDE_MARGIN, y: offset, width: FULL_WIDTH, view: scrollView) }
+                    
+                } else if let _ = data["groupme"] as? String {
+                    offset += TOP_MARGIN*1.5
+                    let groupmeButton = UIButton(frame: CGRect(x: (view.frame.width - buttonLength)/2, y: offset,
+                                                               width: buttonLength, height: buttonLength))
                     groupmeButton.setBackgroundImage(UIImage(named: "groupme"), for: .normal)
                     groupmeButton.imageView?.contentMode = .scaleAspectFit
                     groupmeButton.addTarget(self, action: #selector(self.groupmeLink), for: .touchUpInside)
                     scrollView.addSubview(groupmeButton)
                     
-                    offset += groupmeHeight + TOP_MARGIN/2
-                    addLine(x: SIDE_MARGIN, y: offset, width: FULL_WIDTH, view: scrollView)
+                    offset += buttonLength + TOP_MARGIN*1.5
+                    if !admin { addLine(x: SIDE_MARGIN, y: offset, width: FULL_WIDTH, view: scrollView) }
                 }
                 
-                if isMeeting {
-                    let calendarWidth = FULL_WIDTH*0.6
-                    let calendarHeight = calendarWidth/2
-                    
-                    let calendarButton = UIButton(frame: CGRect(x: (view.frame.width - calendarWidth)/2, y: offset,
-                                                                width: calendarWidth, height: calendarHeight))
-                    calendarButton.setBackgroundImage(UIImage(named: "calendar"), for: .normal)
-                    calendarButton.imageView?.contentMode = .scaleAspectFit
-                    calendarButton.addTarget(self, action: #selector(self.addToCalendar), for: .touchUpInside)
-                    scrollView.addSubview(calendarButton)
-                    
-                    offset += calendarHeight + TOP_MARGIN/2
-                    addLine(x: SIDE_MARGIN, y: offset, width: FULL_WIDTH, view: scrollView)
+                if !admin {
                     offset += TOP_MARGIN/2
+                    
+                    let leaveButton = UIButton(frame: CGRect(x: view.frame.width/2 - FULL_WIDTH/2, y: offset + TOP_MARGIN/2,
+                                                             width: FULL_WIDTH, height: categoryHeight))
+                    leaveButton.backgroundColor = lightColor
+                    leaveButton.setBackgroundImage(squareImage(color: .lightGray, width: leaveButton.frame.width,
+                                                               height: leaveButton.frame.height),
+                                                   for: .highlighted)
+                    leaveButton.setTitle("Leave Team", for: .normal)
+                    leaveButton.setTitleColor(redColor, for: .normal)
+                    leaveButton.titleLabel?.font = infoFont
+                    leaveButton.addTarget(self, action: #selector(self.leaveMT), for: .touchUpInside)
+                    offset += leaveButton.frame.height + TOP_MARGIN*2
+                    scrollView.addSubview(leaveButton)
                 }
-                
-                let leaveButton = UIButton(frame: CGRect(x: view.frame.width/2 - FULL_WIDTH/2, y: offset + TOP_MARGIN/2,
-                                                         width: FULL_WIDTH, height: categoryHeight))
-                leaveButton.backgroundColor = lightColor
-                leaveButton.setBackgroundImage(squareImage(color: .lightGray, width: leaveButton.frame.width,
-                                                           height: leaveButton.frame.height),
-                                               for: .highlighted)
-                leaveButton.setTitle("Leave Team", for: .normal)
-                leaveButton.setTitleColor(redColor, for: .normal)
-                leaveButton.titleLabel?.font = infoFont
-                leaveButton.addTarget(self, action: #selector(self.leaveMT), for: .touchUpInside)
-                offset += leaveButton.frame.height + TOP_MARGIN*2
-                scrollView.addSubview(leaveButton)
                 
             } else {
                 let joinButton = UIButton(frame: CGRect(x: view.frame.width/2 - FULL_WIDTH/2, y: offset + TOP_MARGIN/2,
@@ -227,7 +243,7 @@ class DisplayMinistryTeamVC: DisplayTemplateVC {
         edit.removeFromSuperview()
     }
     
-    @objc func editTapped(sender: UIButton) {
+    @objc func editTapped() {
         let editMT = CreateMinistryTeamVC()
         editMT.editWith(data)
         
@@ -238,7 +254,7 @@ class DisplayMinistryTeamVC: DisplayTemplateVC {
         navigationController!.pushViewController(editMT, animated: true)
     }
     
-    @objc func addToCalendar(sender: UIButton) {
+    @objc func addToCalendar() {
         let backItem = UIBarButtonItem()
         backItem.title = "Back"
         navBar.topItem?.backBarButtonItem = backItem
@@ -249,7 +265,7 @@ class DisplayMinistryTeamVC: DisplayTemplateVC {
         navigationController!.pushViewController(calendarVC, animated: true)
     }
     
-    @objc func leaveMT(sender: UIButton) {
+    @objc func leaveMT() {
         let alert = UIAlertController(title: "Leave Ministry Team?",
                                       message: "Are you sure you want to leave this ministry team?",
                                       preferredStyle: .alert)
@@ -273,7 +289,7 @@ class DisplayMinistryTeamVC: DisplayTemplateVC {
                     let teamVC = self.hostVC.contentViewControllers[Tabs.MinistryTeams] as! MinistryTeamVC
                     teamVC.clearTableview()
                     teamVC.startRefreshControl()
-                    teamVC.refresh(sender: self)
+                    teamVC.refresh()
                 }
             })
         }
@@ -283,15 +299,14 @@ class DisplayMinistryTeamVC: DisplayTemplateVC {
         self.present(alert, animated: true, completion: nil)
     }
     
-    @objc func joinMT(sender: UIButton) {
+    @objc func joinMT() {
         let requestVC = RequestVC()
         requestVC.isCourse = false
         requestVC.id = data["tid"] as! Int
-        requestVC.parentVC = self
         navigationController!.pushViewController(requestVC, animated: true)
     }
     
-    @objc func groupmeLink(sender: UIButton) {
+    @objc func groupmeLink() {
         UIApplication.shared.open(URL(string: data["groupme"] as! String)!, options: [:], completionHandler: nil)
     }
 }

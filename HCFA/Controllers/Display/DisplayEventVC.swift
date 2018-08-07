@@ -11,13 +11,6 @@ import EventKit
 
 class DisplayEventVC: DisplayTemplateVC {
     
-    var navBar: UINavigationBar!
-    var edit: UIButton!
-    var data: [String:Any]!
-    var imageView: UIImageView!
-    var hostVC: HostVC!
-    var firstAppearance = true
-    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
@@ -26,8 +19,8 @@ class DisplayEventVC: DisplayTemplateVC {
             hostVC = navigationController!.viewControllers.first as! HostVC
             firstAppearance = false
             
-            edit = UIButton(frame: CGRect(x: navBar.frame.width*0.75, y: 0, width: navBar.frame.width/4,
-                                          height: navBar.frame.height))
+            edit.frame = CGRect(x: navBar.frame.width*0.75, y: 0,
+                                width: navBar.frame.width/4, height: navBar.frame.height)
             edit.setTitle("Edit", for: .normal)
             edit.titleLabel?.textColor = .white
             edit.titleLabel?.font = UIFont(name: "Baskerville", size: UIScreen.main.bounds.width/21)
@@ -43,30 +36,9 @@ class DisplayEventVC: DisplayTemplateVC {
                                                         height: view.frame.height - offset))
             scrollView.backgroundColor = .clear
             
-            offset = 0 // keep track of total height used
-            
-            let titleFont = UIFont(name: "LeagueGothic-Regular", size: view.frame.width/8)!
-            let titleHeight = calcLabelHeight(text: (data["title"] as! String),
-                                              frame: CGRect(x: SIDE_MARGIN, y: offset + TOP_MARGIN,
-                                                            width: FULL_WIDTH, height: CGFloat.greatestFiniteMagnitude),
-                                              font: titleFont)
-            
-            let titleLabel = UILabel(frame: CGRect(x: SIDE_MARGIN, y: TOP_MARGIN,
-                                                   width: FULL_WIDTH, height: titleHeight))
-            titleLabel.text = (data["title"] as! String)
-            titleLabel.textColor = .black
-            titleLabel.textAlignment = .center
-            titleLabel.font = titleFont
-            titleLabel.backgroundColor = .clear
-            titleLabel.adjustsFontSizeToFitWidth = true
-            scrollView.addSubview(titleLabel)
-            
-            offset += titleLabel.frame.height + TOP_MARGIN*3/2
-            addLine(x: SIDE_MARGIN, y: offset, width: FULL_WIDTH, view: scrollView)
-            offset += TOP_MARGIN/2
+            offset = TOP_MARGIN
             
             let infoFont = UIFont(name: "Baskerville", size: view.frame.width/20)!
-            
             let location = UITextView(frame: CGRect(x: SIDE_MARGIN, y: offset, width: FULL_WIDTH, height: 0))
             createTextView(location, font: infoFont, text: (data["location"] as! String), color: .darkGray,
                            textAlignment: .center)
@@ -184,19 +156,17 @@ class DisplayEventVC: DisplayTemplateVC {
             
             offset += TOP_MARGIN/2
             addLine(x: SIDE_MARGIN, y: offset, width: FULL_WIDTH, view: scrollView)
-            offset += TOP_MARGIN
+            offset += TOP_MARGIN*1.5
             
-            let calendarWidth = FULL_WIDTH*0.6
-            let calendarHeight = calendarWidth/2
-            
-            let calendarButton = UIButton(frame: CGRect(x: (view.frame.width - calendarWidth)/2, y: offset,
-                                                        width: calendarWidth, height: calendarHeight))
+            let calendarLength = FULL_WIDTH*0.25
+            let calendarButton = UIButton(frame: CGRect(x: (view.frame.width - calendarLength*0.8)/2, y: offset,
+                                                        width: calendarLength, height: calendarLength))
             calendarButton.setBackgroundImage(UIImage(named: "calendar"), for: .normal)
             calendarButton.imageView?.contentMode = .scaleAspectFit
             calendarButton.addTarget(self, action: #selector(self.addToCalendar), for: .touchUpInside)
             scrollView.addSubview(calendarButton)
             
-            offset += calendarHeight + TOP_MARGIN
+            offset += calendarLength + TOP_MARGIN
             scrollView.contentSize = CGSize(width: view.frame.width, height: offset)
             view.addSubview(scrollView)
         }
@@ -217,13 +187,9 @@ class DisplayEventVC: DisplayTemplateVC {
         edit.removeFromSuperview()
     }
     
-    @objc func editTapped(sender: UIButton) {
+    @objc func editTapped() {
         let editEvent = CreateEventVC()
-        if let view = imageView {
-            editEvent.editWith(data, view.image)
-        } else {
-            editEvent.editWith(data, nil)
-        }
+        editEvent.editWith(data)
         
         let backItem = UIBarButtonItem()
         backItem.title = "Back"
@@ -232,7 +198,7 @@ class DisplayEventVC: DisplayTemplateVC {
         navigationController!.pushViewController(editEvent, animated: true)
     }
     
-    @objc func addToCalendar(sender: UIButton) {
+    @objc func addToCalendar() {
         let backItem = UIBarButtonItem()
         backItem.title = "Back"
         navBar.topItem?.backBarButtonItem = backItem

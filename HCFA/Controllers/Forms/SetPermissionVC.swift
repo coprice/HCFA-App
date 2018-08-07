@@ -10,10 +10,10 @@ import Eureka
 
 class SetPermissionVC: FormViewController, TypedRowControllerType {
     
-    var isLeader: Bool!
-    var isAdd: Bool!
     var navBar: UINavigationBar!
     var loadingView: LoadingView!
+    var isLeader: Bool!
+    var isAdd: Bool!
     
     override func viewDidLoad() {
         super.viewDidLoad()

@@ -107,6 +107,14 @@ class API {
                            completionHandler: completionHandler)
     }
     
+    class func sendPasswordRequest(email: String, completionHandler: @escaping (URLResponses, Any?) -> Void) {
+        
+        let json = ["email": email]
+        
+        API.performRequest(requestType: "POST", urlPath: "/users/reset/send", json: json,
+                           completionHandler: completionHandler)
+    }
+    
     class func getEvents(completionHandler: @escaping (URLResponses, Any?) -> Void) {
         
         API.performRequest(requestType: "GET", urlPath: "/events", json: nil, completionHandler: completionHandler)

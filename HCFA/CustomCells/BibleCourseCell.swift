@@ -9,6 +9,7 @@
 import UIKit
 
 class BibleCourseCell: UITableViewCell {
+    
     var width: CGFloat!
     var height: CGFloat!
     let view = UIImageView()

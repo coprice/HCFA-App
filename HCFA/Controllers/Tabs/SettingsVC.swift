@@ -76,7 +76,7 @@ class SettingsVC: FormViewController, SideMenuItemContent {
         hostVC.slider.removeTarget(self, action: #selector(self.sliderTapped), for: .touchUpInside)
     }
     
-    @objc func sliderTapped(sender: UIButton) {
+    @objc func sliderTapped() {
         showSideMenu()
     }
 }

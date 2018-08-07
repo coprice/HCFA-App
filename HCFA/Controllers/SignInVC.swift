@@ -394,13 +394,13 @@ class SignInVC: UIViewController {
         spinner.stopAnimating()
     }
     
-    @objc func forgotTapped(sender: UIButton) {
+    @objc func forgotTapped() {
         presentingPassword = true
         let nav = UINavigationController(rootViewController: ForgotPasswordVC())
         self.present(nav, animated: true, completion: nil)
     }
     
-    @objc func submitPressed(sender: UIButton) {
+    @objc func submitPressed() {
         
         currentTextField?.resignFirstResponder()
         
@@ -512,7 +512,7 @@ class SignInVC: UIViewController {
         }
     }
     
-    @objc func loginPressed(sender: UIButton) {
+    @objc func loginPressed() {
         if loginActive || switchingMenu { return } else {
             loginActive = true
             switchingMenu = true
@@ -545,7 +545,7 @@ class SignInVC: UIViewController {
         }
     }
     
-    @objc func registerPressed(sender: UIButton) {
+    @objc func registerPressed() {
         if !loginActive || switchingMenu { return } else {
             
             loginActive = false
@@ -647,7 +647,7 @@ extension SignInVC: UITextFieldDelegate {
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
-        submitPressed(sender: submit)
+        submitPressed()
         return true
     }
 }

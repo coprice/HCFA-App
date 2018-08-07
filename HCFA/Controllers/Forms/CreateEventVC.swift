@@ -13,10 +13,9 @@ import AWSS3
 
 class CreateEventVC: CreateTemplateVC {
     
-    var eventData: [String:Any]!
-    var image: UIImage!
-    var editingEvent = false
     var eventVC: EventVC!
+    var eventData: [String:Any]!
+    var editingEvent = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -138,8 +137,10 @@ class CreateEventVC: CreateTemplateVC {
             row.clearAction = .yes(style: .default)
             row.tag = "image"
             if editingEvent {
-                if let loadedImage = image {
-                    row.value = loadedImage
+                if let eventImages = defaults.dictionary(forKey: "eventImages") as? [String:Data] {
+                    if let data = eventImages[String(eventData["eid"] as! Int)] {
+                        row.value = UIImage(data: data)
+                    }
                 }
             }
             row.cellUpdate { cell, row in
@@ -224,9 +225,8 @@ class CreateEventVC: CreateTemplateVC {
         done.removeFromSuperview()
     }
     
-    func editWith(_ data: [String:Any], _ loadedImage: UIImage?) {
+    func editWith(_ data: [String:Any]) {
         editingEvent = true
-        image = loadedImage
         eventData = data
     }
     
@@ -235,7 +235,7 @@ class CreateEventVC: CreateTemplateVC {
         createAlert(title: title, message: message, view: hostVC)
         eventVC.clearTableview()
         eventVC.startRefreshControl()
-        eventVC.refresh(sender: self)
+        eventVC.refresh()
     }
     
     func uploadImage(data: Data, eid: Int, completion: @escaping () -> Void) {
@@ -280,7 +280,7 @@ class CreateEventVC: CreateTemplateVC {
         }
     }
     
-    @objc func doneTapped(sender: UIButton) {
+    @objc func doneTapped() {
         let values = form.values()
         let startDate = values["start"] as! Date
         let endDate = values["end"] as! Date

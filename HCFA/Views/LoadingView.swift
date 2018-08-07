@@ -12,6 +12,7 @@ class LoadingView: UIView {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
+        
         backgroundColor = .white
         layer.cornerRadius = frame.width*0.25
         layer.borderColor = redColor.cgColor

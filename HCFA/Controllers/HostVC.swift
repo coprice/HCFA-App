@@ -12,7 +12,7 @@ import AWSS3
 
 class HostVC: MenuContainerViewController {
     
-    var slider: UIButton!
+    let slider = UIButton()
     var navBar: UINavigationBar!
     
     override func viewDidLoad() {
@@ -21,8 +21,8 @@ class HostVC: MenuContainerViewController {
         navBar = navigationController!.navigationBar
         
         let BUTTON_LENGTH = navBar.frame.height*0.6
-        slider = UIButton(frame: CGRect(x: BUTTON_LENGTH/2, y: navBar.frame.height*0.2,
-                                        width: BUTTON_LENGTH, height: BUTTON_LENGTH))
+        slider.frame = CGRect(x: BUTTON_LENGTH/2, y: navBar.frame.height*0.2,
+                              width: BUTTON_LENGTH, height: BUTTON_LENGTH)
         slider.setImage(UIImage(named: "slider"), for: .normal)
         slider.contentMode = .scaleAspectFit
 

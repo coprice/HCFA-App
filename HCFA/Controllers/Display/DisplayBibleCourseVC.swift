@@ -11,13 +11,8 @@ import EventKit
 
 class DisplayBibleCourseVC: DisplayTemplateVC {
     
-    var navBar: UINavigationBar!
-    var edit: UIButton!
-    var data: [String:Any]!
-    var hostVC: HostVC!
     var joined = false
     var admin = false
-    var firstAppearance = true
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -29,8 +24,8 @@ class DisplayBibleCourseVC: DisplayTemplateVC {
             navBar = navigationController!.navigationBar
             hostVC = navigationController!.viewControllers.first as! HostVC
             
-            edit = UIButton(frame: CGRect(x: navBar.frame.width*0.75, y: 0, width: navBar.frame.width/4,
-                                          height: navBar.frame.height))
+            edit.frame = CGRect(x: navBar.frame.width*0.75, y: 0,
+                                width: navBar.frame.width/4, height: navBar.frame.height)
             edit.setTitle("Edit", for: .normal)
             edit.titleLabel?.textColor = .white
             edit.titleLabel?.font = UIFont(name: "Baskerville", size: view.frame.width/21)
@@ -96,16 +91,15 @@ class DisplayBibleCourseVC: DisplayTemplateVC {
             let material = UITextView(frame: CGRect(x: SIDE_MARGIN, y: offset, width: FULL_WIDTH, height: 0))
             createTextView(material, font: infoFont, text: (data["material"] as! String), color: .black,
                            textAlignment: .left)
-            offset += material.frame.height
+            offset += material.frame.height + TOP_MARGIN/2
             scrollView.addSubview(material)
             
-            offset += TOP_MARGIN/2
             addLine(x: SIDE_MARGIN, y: offset, width: FULL_WIDTH, view: scrollView)
             
             if joined {
-                offset += TOP_MARGIN
                 let members = (data["members"] as! [String:Any])["info"] as! [[String?]]
                 for (i, member) in members.enumerated() {
+                    offset += TOP_MARGIN*0.75
                     
                     let imageView = UIImageView(image: UIImage(named: "generic"))
                     if let profile = member[1] {
@@ -113,6 +107,7 @@ class DisplayBibleCourseVC: DisplayTemplateVC {
                             downloadImage(url: url, view: imageView)
                         }
                     }
+                    
                     imageView.frame = CGRect(x: SIDE_MARGIN + FULL_WIDTH*0.25, y: offset, width: FULL_WIDTH/8, height: FULL_WIDTH/8)
                     imageView.layer.cornerRadius = imageView.frame.width/2
                     imageView.contentMode = .scaleAspectFill
@@ -127,56 +122,76 @@ class DisplayBibleCourseVC: DisplayTemplateVC {
                     label.textAlignment = .left
                     
                     if i + 1 != members.count {
-                        offset += label.frame.height + TOP_MARGIN/2
+                        offset += label.frame.height + TOP_MARGIN*0.75
                         addLightLine(x: SIDE_MARGIN*2, y: offset, width: FULL_WIDTH - SIDE_MARGIN*2, view: scrollView)
-                        offset += TOP_MARGIN/2
                     } else {
-                        offset += label.frame.height
+                        offset += label.frame.height + TOP_MARGIN/4
                     }
                 }
+                
                 if members.isEmpty {
+                    offset += TOP_MARGIN/2
                     let label = UILabel(frame: CGRect(x: SIDE_MARGIN, y: offset,
                                                       width: FULL_WIDTH, height: categoryHeight))
                     createListLabel(label: label, text: "There are no members", font: infoFont, color: .gray,
                                     view: scrollView)
                     offset += label.frame.height
                 }
+                
                 offset += TOP_MARGIN/2
                 addLine(x: SIDE_MARGIN, y: offset, width: FULL_WIDTH, view: scrollView)
-                offset += TOP_MARGIN/2
+                let buttonLength = FULL_WIDTH/4
                 
-                if let _ = data["groupme"] as? String {
-                    let groupmeWidth = FULL_WIDTH*0.6
-                    let groupmeHeight = groupmeWidth/2
+                if let _ = data["groupme"] as? String, let _ = data["day"] as? String {
                     
-                    let groupmeButton = UIButton(frame: CGRect(x: (view.frame.width - groupmeWidth)/2, y: offset,
-                                                               width: groupmeWidth, height: groupmeHeight))
+                    offset += TOP_MARGIN*1.5
+                    let groupmeButton = UIButton(frame: CGRect(x: (view.frame.width - buttonLength)*0.7, y: offset,
+                                                               width: buttonLength, height: buttonLength))
                     groupmeButton.setBackgroundImage(UIImage(named: "groupme"), for: .normal)
                     groupmeButton.imageView?.contentMode = .scaleAspectFit
                     groupmeButton.addTarget(self, action: #selector(self.groupmeLink), for: .touchUpInside)
                     scrollView.addSubview(groupmeButton)
                     
-                    offset += groupmeHeight + TOP_MARGIN/2
-                    addLine(x: SIDE_MARGIN, y: offset, width: FULL_WIDTH, view: scrollView)
-                }
-                
-                if let _ = data["day"] as? String {
-                    
-                    let calendarWidth = FULL_WIDTH*0.6
-                    let calendarHeight = calendarWidth/2
-                    
-                    let calendarButton = UIButton(frame: CGRect(x: (view.frame.width - calendarWidth)/2, y: offset,
-                                                                width: calendarWidth, height: calendarHeight))
+                    let calendarButton = UIButton(frame: CGRect(x: (view.frame.width - buttonLength*0.8)*0.3,
+                                                                y: offset,
+                                                                width: buttonLength, height: buttonLength))
                     calendarButton.setBackgroundImage(UIImage(named: "calendar"), for: .normal)
                     calendarButton.imageView?.contentMode = .scaleAspectFit
                     calendarButton.addTarget(self, action: #selector(self.addToCalendar), for: .touchUpInside)
                     scrollView.addSubview(calendarButton)
                     
-                    offset += calendarHeight + TOP_MARGIN/2
+                    offset += buttonLength + TOP_MARGIN*1.5
+                    if !admin { addLine(x: SIDE_MARGIN, y: offset, width: FULL_WIDTH, view: scrollView) }
+                
+                } else if let _ = data["day"] as? String {
+                    
+                    offset += TOP_MARGIN*1.5
+                    let calendarButton = UIButton(frame: CGRect(x: (view.frame.width - buttonLength*0.8)/2, y: offset,
+                                                                width: buttonLength, height: buttonLength))
+                    calendarButton.setBackgroundImage(UIImage(named: "calendar"), for: .normal)
+                    calendarButton.imageView?.contentMode = .scaleAspectFit
+                    calendarButton.addTarget(self, action: #selector(self.addToCalendar), for: .touchUpInside)
+                    scrollView.addSubview(calendarButton)
+                    
+                    offset += buttonLength + TOP_MARGIN*1.5
+                    if !admin { addLine(x: SIDE_MARGIN, y: offset, width: FULL_WIDTH, view: scrollView) }
+                    
+                } else if let _ = data["groupme"] as? String {
+                    
+                    offset += TOP_MARGIN*1.5
+                    let groupmeButton = UIButton(frame: CGRect(x: (view.frame.width - buttonLength)/2, y: offset,
+                                                               width: buttonLength, height: buttonLength))
+                    groupmeButton.setBackgroundImage(UIImage(named: "groupme"), for: .normal)
+                    groupmeButton.imageView?.contentMode = .scaleAspectFit
+                    groupmeButton.addTarget(self, action: #selector(self.groupmeLink), for: .touchUpInside)
+                    scrollView.addSubview(groupmeButton)
+                    
+                    offset += buttonLength + TOP_MARGIN*1.5
+                    if !admin { addLine(x: SIDE_MARGIN, y: offset, width: FULL_WIDTH, view: scrollView) }
                 }
                 
                 if !admin {
-                    addLine(x: SIDE_MARGIN, y: offset, width: FULL_WIDTH, view: scrollView)
+                    offset += TOP_MARGIN/2
                     let leaveButton = UIButton(frame: CGRect(x: view.frame.width/2 - FULL_WIDTH/2, y: offset + TOP_MARGIN,
                                                              width: FULL_WIDTH, height: categoryHeight))
                     leaveButton.backgroundColor = lightColor
@@ -239,7 +254,7 @@ class DisplayBibleCourseVC: DisplayTemplateVC {
         }
     }
     
-    @objc func editTapped(sender: UIButton) {
+    @objc func editTapped() {
         let editBC = CreateBibleCourseVC()
         editBC.editWith(data)
         
@@ -250,7 +265,7 @@ class DisplayBibleCourseVC: DisplayTemplateVC {
         navigationController!.pushViewController(editBC, animated: true)
     }
     
-    @objc func addToCalendar(sender: UIButton) {
+    @objc func addToCalendar() {
         let backItem = UIBarButtonItem()
         backItem.title = "Back"
         navBar.topItem?.backBarButtonItem = backItem
@@ -261,7 +276,7 @@ class DisplayBibleCourseVC: DisplayTemplateVC {
         navigationController!.pushViewController(calendarVC, animated: true)
     }
     
-    @objc func leaveBC(sender: UIButton) {
+    @objc func leaveBC() {
         let alert = UIAlertController(title: "Leave Course?",
                                       message: "Are you sure you want to leave this bible course?",
                                       preferredStyle: .alert)
@@ -285,7 +300,7 @@ class DisplayBibleCourseVC: DisplayTemplateVC {
                     let courseVC = self.hostVC.contentViewControllers[Tabs.BibleCourses] as! BibleCourseVC
                     courseVC.clearTableview()
                     courseVC.startRefreshControl()
-                    courseVC.refresh(sender: self)
+                    courseVC.refresh()
                 }
             })
         }
@@ -295,15 +310,14 @@ class DisplayBibleCourseVC: DisplayTemplateVC {
         self.present(alert, animated: true, completion: nil)
     }
     
-    @objc func joinBC(sender: UIButton) {
+    @objc func joinBC() {
         let requestVC = RequestVC()
         requestVC.isCourse = true
         requestVC.id = data["cid"] as! Int
-        requestVC.parentVC = self
         navigationController!.pushViewController(requestVC, animated: true)
     }
     
-    @objc func groupmeLink(sender: UIButton) {
+    @objc func groupmeLink() {
         UIApplication.shared.open(URL(string: data["groupme"] as! String)!, options: [:], completionHandler: nil)
     }
  }

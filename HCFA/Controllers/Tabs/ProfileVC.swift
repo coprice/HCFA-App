@@ -13,13 +13,14 @@ import AWSS3
 
 class ProfileVC: FormViewController, SideMenuItemContent {
     
-    var save: UIButton!
+    let save = UIButton()
+    let picture = UIButton()
+    
     var hostVC: HostVC!
     var sideMenu: SideMenuVC!
     var profileCell: ProfileCell!
     var navBar: UINavigationBar!
     var camera: DSCameraHandler!
-    var picture: UIButton!
     var loadingView: LoadingView!
     var cameraLoaded = false
     
@@ -38,21 +39,20 @@ class ProfileVC: FormViewController, SideMenuItemContent {
                                                 y: view.frame.height/2 - view.frame.width*0.125,
                                                 width: view.frame.width*0.25, height: view.frame.width*0.25))
         
-        save = UIButton(frame: CGRect(x: navBar.frame.width*0.8, y: 0, width: navBar.frame.width*0.2,
-                                      height: navBar.frame.height))
+        save.frame = CGRect(x: navBar.frame.width*0.8, y: 0,
+                            width: navBar.frame.width*0.2, height: navBar.frame.height)
         save.setTitle("Save", for: .normal)
         save.titleLabel?.textColor = .white
         save.titleLabel?.font = UIFont(name: "Georgia", size: navBar.frame.width/21)
         save.setTitleColor(barHighlightColor, for: .highlighted)
         save.addTarget(self, action: #selector(self.saveTapped), for: .touchUpInside)
         
-        picture = UIButton(frame: CGRect(x: view.frame.width*0.25,
-                                         y: view.frame.width*0.05,
-                                         width: view.frame.width*0.5, height: view.frame.width*0.5))
+        picture.frame = CGRect(x: view.frame.width*0.25, y: view.frame.width*0.05,
+                               width: view.frame.width*0.5, height: view.frame.width*0.5)
         picture.setImage(UIImage(named: "generic"), for: .normal)
         picture.imageView?.contentMode = .scaleAspectFill
-        picture.layer.cornerRadius = picture.frame.width/2
         picture.layer.masksToBounds = true
+        picture.layer.cornerRadius = picture.frame.width/2
         picture.layer.borderColor = UIColor.black.cgColor
         picture.layer.borderWidth = 1
         picture.addGestureRecognizer(UITapGestureRecognizer(target: self,

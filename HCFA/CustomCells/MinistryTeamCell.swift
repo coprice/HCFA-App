@@ -9,6 +9,7 @@
 import UIKit
 
 class MinistryTeamCell: UITableViewCell {
+    
     var width: CGFloat!
     var height: CGFloat!
     let view = UIImageView()

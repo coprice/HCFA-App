@@ -11,8 +11,8 @@ import Eureka
 class PasswordViewController: FormViewController, TypedRowControllerType {
 
     var hostVC: HostVC!
-    var loadingView: LoadingView!
     var navBar: UINavigationBar!
+    var loadingView: LoadingView!
     
     override func viewDidLoad() {
         super.viewDidLoad()

@@ -17,15 +17,14 @@ enum CalendarType {
 
 class CalendarVC: FormViewController {
     
-    var data: [String:Any]!
+    let eventStore = EKEventStore()
     var type: CalendarType!
-    var eventStore: EKEventStore!
+    var data: [String:Any]!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         title = "Add to Calendar"
-        eventStore = EKEventStore()
         
         var titleString: String!
         var startDate: Date!

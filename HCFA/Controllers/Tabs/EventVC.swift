@@ -12,7 +12,11 @@ import AWSCore
 
 class EventVC: TemplateVC {
     
-    var tableView: UITableView!
+    let selectButton = UIButton()
+    let cancel = UIButton()
+    let deleteButton = UIButton()
+    
+    var loadingView: LoadingView!
     var cellWidth: CGFloat!
     var cellHeight: CGFloat!
     var rows: [[String:Any]] = []
@@ -20,10 +24,6 @@ class EventVC: TemplateVC {
     var pastRows: [[String:Any]] = []
     var displayingUpcoming = true
     var firstAppearance = true
-    var selectButton: UIButton!
-    var cancel: UIButton!
-    var deleteButton: UIButton!
-    var loadingView: LoadingView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -32,15 +32,15 @@ class EventVC: TemplateVC {
         cellHeight = view.frame.height*0.175
         
         let BUTTON_LENGTH = navBar.frame.height*0.6
-        selectButton = UIButton(frame: CGRect(x: view.frame.width - BUTTON_LENGTH*3,
-                                              y: (navBar.frame.height-BUTTON_LENGTH)/2,
-                                              width: BUTTON_LENGTH, height: BUTTON_LENGTH))
+        selectButton.frame = CGRect(x: view.frame.width - BUTTON_LENGTH*3,
+                                    y: (navBar.frame.height-BUTTON_LENGTH)/2,
+                                    width: BUTTON_LENGTH, height: BUTTON_LENGTH)
         selectButton.setImage(UIImage(named: "select"), for: .normal)
         selectButton.imageView?.contentMode = .scaleAspectFit
         selectButton.addTarget(self, action: #selector(self.selectRows), for: .touchUpInside)
         
-        cancel = UIButton(frame: CGRect(x: navBar.frame.width*0.75, y: 0, width: navBar.frame.width/4,
-                                      height: navBar.frame.height))
+        cancel.frame = CGRect(x: navBar.frame.width*0.75, y: 0,
+                              width: navBar.frame.width/4, height: navBar.frame.height)
         cancel.setTitle("Cancel", for: .normal)
         cancel.titleLabel?.textColor = .white
         cancel.titleLabel?.font = UIFont(name: "Georgia", size: navBar.frame.width/21)
@@ -51,7 +51,7 @@ class EventVC: TemplateVC {
         
         let refreshControl = UIRefreshControl(frame: CGRect(x: 0, y: 0, width: view.frame.width, height: 0))
         refreshControl.tintColor = highlightColor
-        refreshControl.addTarget(self, action: #selector(self.refresh(sender:)), for: UIControlEvents.valueChanged)
+        refreshControl.addTarget(self, action: #selector(self.refresh), for: UIControlEvents.valueChanged)
         
         let offset = navBar.frame.height + UIApplication.shared.statusBarFrame.height
         tableView = UITableView(frame: CGRect(x: 0, y: offset, width: view.frame.width,
@@ -65,8 +65,8 @@ class EventVC: TemplateVC {
         tableView.separatorStyle = .none
         view.addSubview(tableView)
         
-        deleteButton = UIButton(frame: CGRect(x: view.frame.width*0.125 - 1, y: view.frame.height - offset,
-                                         width: view.frame.width*0.75, height: offset*0.8))
+        deleteButton.frame = CGRect(x: view.frame.width*0.125 - 1, y: view.frame.height - offset,
+                                    width: view.frame.width*0.75, height: offset*0.8)
         deleteButton.layer.cornerRadius = deleteButton.frame.width/25
         deleteButton.backgroundColor = UIColor(red: 0.98, green: 0.95, blue: 0.95, alpha: 1.0)
         deleteButton.setBackgroundImage(roundedImage(color: UIColor(red: 0.8, green: 0.78, blue: 0.78, alpha: 1.0),
@@ -91,7 +91,7 @@ class EventVC: TemplateVC {
         
         if firstAppearance {
             startRefreshControl()
-            refresh(sender: self)
+            refresh()
         }
         
         navBar.topItem?.title = "Events"
@@ -158,19 +158,19 @@ class EventVC: TemplateVC {
         tableView.reloadData()
     }
     
-    @objc func create(sender: UIButton) {
+    @objc func create() {
         hostVC.slider.removeFromSuperview()
         navigationController!.pushViewController(CreateEventVC(), animated: true)
     }
     
-    @objc func selectRows(sender: UIButton) {
+    @objc func selectRows() {
         createButton.removeFromSuperview()
         selectButton.removeFromSuperview()
         navBar.addSubview(cancel)
         tableView.allowsMultipleSelection = true
     }
     
-    @objc func cancelSelect(sender: UIButton) {
+    @objc func cancelSelect() {
         cancel.removeFromSuperview()
         deleteButton.removeFromSuperview()
         navBar.addSubview(createButton)
@@ -178,7 +178,7 @@ class EventVC: TemplateVC {
         tableView.allowsMultipleSelection = false
     }
     
-    @objc func deleteSelected(sender: UIButton) {
+    @objc func deleteSelected() {
         guard let indexPaths = tableView.indexPathsForSelectedRows else { return }
         
         var events: [Int] = []
@@ -212,7 +212,7 @@ class EventVC: TemplateVC {
                 self.loadingView.removeFromSuperview()
                 self.view.isUserInteractionEnabled = true
                 self.cancel.isUserInteractionEnabled = true
-                self.cancelSelect(sender: self.cancel)
+                self.cancelSelect()
                 
                 switch response {
                 case .NotConnected:
@@ -226,7 +226,7 @@ class EventVC: TemplateVC {
                 default:
                     createAlert(title: "\(txt!) Deleted", message: "", view: self)
                     self.startRefreshControl()
-                    self.refresh(sender: self)
+                    self.refresh()
                     for eid in events {
                         deleteEventImage(eid)
                     }
@@ -241,7 +241,7 @@ class EventVC: TemplateVC {
         present(alert, animated: true, completion: nil)
     }
     
-    @objc func refresh(sender: AnyObject) {
+    @objc func refresh() {
         
         if firstAppearance {
             firstAppearance = false
@@ -276,7 +276,7 @@ class EventVC: TemplateVC {
         }
     }
 
-    @objc func displayUpcomingEvents(sender: UIButton) {
+    @objc func displayUpcomingEvents() {
         
         if displayingUpcoming || tableView.refreshControl!.isRefreshing || cancel.superview != nil { return }
         displayingUpcoming = true
@@ -289,7 +289,7 @@ class EventVC: TemplateVC {
         tableView.reloadData()
     }
     
-    @objc func displayPastEvents(sender: UIButton) {
+    @objc func displayPastEvents() {
         
         if !displayingUpcoming || tableView.refreshControl!.isRefreshing { return }
         displayingUpcoming = false
@@ -302,9 +302,9 @@ class EventVC: TemplateVC {
         tableView.reloadData()
     }
     
-    override func sliderTapped(sender: UIButton) {
+    override func sliderTapped() {
         if cancel.superview != nil {
-            cancelSelect(sender: cancel)
+            cancelSelect()
         }
         showSideMenu()
     }
@@ -470,7 +470,7 @@ extension EventVC: UITableViewDataSource {
                 text = "No past events to display"
             }
             
-            cell.load(width: cellWidth, height: cellHeight/4, text: text)
+            cell.load(width: cellWidth, height: cellHeight/4, text: text, color: .gray)
             cell.isUserInteractionEnabled = false
             return cell
         }

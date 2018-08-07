@@ -9,17 +9,17 @@
 import UIKit
 
 class EmptyCell: UITableViewCell {
-    var notice: UILabel!
     
-    func load(width: CGFloat, height: CGFloat, text: String) {
+    func load(width: CGFloat, height: CGFloat, text: String, color: UIColor) {
         backgroundColor = .clear
         
         let SIDE_MARGIN = width/40
         
+        
         frame = CGRect(x: SIDE_MARGIN, y: height*0.85/4, width: width-SIDE_MARGIN*2, height: height*0.85)
-        notice = UILabel(frame: self.frame)
+        let notice = UILabel(frame: frame)
         notice.text = text
-        notice.textColor = .gray
+        notice.textColor = color
         notice.textAlignment = .center
         notice.font = UIFont(name: "Baskerville", size: width/18)
         notice.adjustsFontSizeToFitWidth = true

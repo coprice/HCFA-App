@@ -10,12 +10,13 @@ import UIKit
 
 class MinistryTeamVC: TemplateVC {
     
-    var tableView: UITableView!
     var cellWidth: CGFloat!
     var cellHeight: CGFloat!
+    
     var rows: [[String:Any]] = []
     var yourRows: [[String:Any]] = []
     var allRows: [[String:Any]] = []
+    
     var userTeams: [Int] = []
     var adminTeams: [Int] = []
     var displayingYours = true
@@ -32,7 +33,7 @@ class MinistryTeamVC: TemplateVC {
         
         let refreshControl = UIRefreshControl(frame: CGRect(x: 0, y: 0, width: view.frame.width, height: 0))
         refreshControl.tintColor = highlightColor
-        refreshControl.addTarget(self, action: #selector(self.refresh(sender:)), for: UIControlEvents.valueChanged)
+        refreshControl.addTarget(self, action: #selector(self.refresh), for: UIControlEvents.valueChanged)
         
         tableView = UITableView(frame: CGRect(x: 0, y: offset, width: view.frame.width,
                                               height: view.frame.height - offset), style: .grouped)
@@ -51,7 +52,7 @@ class MinistryTeamVC: TemplateVC {
         
         if firstAppearance {
             startRefreshControl()
-            refresh(sender: self)
+            refresh()
         }
         
         navBar.topItem?.title = "Ministry Teams"
@@ -98,27 +99,27 @@ class MinistryTeamVC: TemplateVC {
         tableView.reloadData()
     }
     
-    @objc func create(sender: UIButton) {
+    @objc func create() {
         hostVC.slider.removeFromSuperview()
         createButton.removeFromSuperview()
         navigationController!.pushViewController(CreateMinistryTeamVC(), animated: true)
     }
     
-    @objc func displayUsersMTs(sender: UIButton) {
+    @objc func displayUsersMTs() {
         if displayingYours || tableView.refreshControl!.isRefreshing { return }
         displayingYours = true
         rows = currentRows()
         tableView.reloadData()
     }
     
-    @objc func displayMTs(sender: UIButton) {
+    @objc func displayMTs() {
         if !displayingYours || tableView.refreshControl!.isRefreshing { return }
         displayingYours = false
         rows = currentRows()
         tableView.reloadData()
     }
     
-    @objc func refresh(sender:AnyObject) {
+    @objc func refresh() {
         
         API.getTeams(uid: defaults.integer(forKey: "uid"), token: defaults.string(forKey: "token")!) {
             response, data in
@@ -288,7 +289,7 @@ extension MinistryTeamVC: UITableViewDataSource {
             } else {
                 text = "No ministry teams to display"
             }
-            cell.load(width: cellWidth, height: cellHeight/4, text: text)
+            cell.load(width: cellWidth, height: cellHeight/4, text: text, color: .gray)
             cell.isUserInteractionEnabled = false
             return cell
         }

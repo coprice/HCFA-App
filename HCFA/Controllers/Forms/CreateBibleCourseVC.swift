@@ -11,9 +11,9 @@ import Eureka
 
 class CreateBibleCourseVC: CreateTemplateVC {
     
+    var courseVC: BibleCourseVC!
     var data: [String:Any]!
     var editingBC = false
-    var courseVC: BibleCourseVC!
     var isTime = false
     
     override func viewDidLoad() {
@@ -425,10 +425,10 @@ class CreateBibleCourseVC: CreateTemplateVC {
         createAlert(title: title, message: message, view: hostVC)
         courseVC.clearTableview()
         courseVC.startRefreshControl()
-        courseVC.refresh(sender: self)
+        courseVC.refresh()
     }
     
-    @objc func doneTapped(sender: UIButton) {
+    @objc func doneTapped() {
         let values = form.values()
         
         let abcls = getMultivaluedSectionValues("abclName")

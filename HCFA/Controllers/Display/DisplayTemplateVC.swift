@@ -9,6 +9,13 @@
 import UIKit
 
 class DisplayTemplateVC: UIViewController {
+    
+    let edit = UIButton()
+    
+    var navBar: UINavigationBar!
+    var hostVC: HostVC!
+    var data: [String:Any]!
+    var firstAppearance = true
       
     override func viewDidLoad() {
         super.viewDidLoad()
