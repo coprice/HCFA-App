@@ -2,6 +2,7 @@
 *.lock
 Pods/
 HCFA.xcworkspace/xcshareddata/
+HCFA/awsconfiguration.json
 
 ## Build generated
 build/
