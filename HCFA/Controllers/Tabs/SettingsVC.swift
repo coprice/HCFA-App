@@ -62,6 +62,11 @@ class SettingsVC: FormViewController, SideMenuItemContent {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        
+        let backItem = UIBarButtonItem()
+        backItem.title = "Settings"
+        navBar.topItem?.backBarButtonItem = backItem
+        
         navBar.topItem?.title = "Settings"
         
         if hostVC.slider.superview == nil {

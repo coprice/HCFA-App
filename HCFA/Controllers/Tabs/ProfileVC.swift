@@ -145,6 +145,10 @@ class ProfileVC: FormViewController, SideMenuItemContent {
     }
     
     override func viewWillAppear(_ animated: Bool) {
+        
+        let backItem = UIBarButtonItem()
+        backItem.title = "Profile"
+        navBar.topItem?.backBarButtonItem = backItem
 
         if hostVC.slider.superview == nil {
             navBar.addSubview(hostVC.slider)
