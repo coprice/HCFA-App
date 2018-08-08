@@ -25,6 +25,10 @@ class HostVC: MenuContainerViewController {
                               width: BUTTON_LENGTH, height: BUTTON_LENGTH)
         slider.setImage(UIImage(named: "slider"), for: .normal)
         slider.contentMode = .scaleAspectFit
+        slider.widthAnchor.constraint(equalToConstant: 32.0).isActive = true
+        slider.heightAnchor.constraint(equalToConstant: 32.0).isActive = true
+        let barItem = UIBarButtonItem(customView: slider)
+        navBar.topItem?.leftBarButtonItem = barItem
 
         transitionOptions = TransitionOptions(duration: 0.4, contentScale: 1.0,
                                               visibleContentWidth: UIScreen.main.bounds.width/6)

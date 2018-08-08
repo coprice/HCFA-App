@@ -96,10 +96,6 @@ class BibleCourseVC: TemplateVC {
         if filterButton.superview == nil && !displayingYours {
             navBar.addSubview(filterButton)
         }
-        
-        if hostVC.slider.superview == nil {
-            navBar.addSubview(hostVC.slider)
-        }
     }
     
     override func viewWillDisappear(_ animated: Bool) {

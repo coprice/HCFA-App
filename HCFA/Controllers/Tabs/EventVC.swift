@@ -107,10 +107,6 @@ class EventVC: TemplateVC {
         if selectButton.superview == nil && defaults.bool(forKey: "admin") && !displayingUpcoming {
             navBar.addSubview(selectButton)
         }
-        
-        if hostVC.slider.superview == nil {
-            navBar.addSubview(hostVC.slider)
-        }
     }
     
     override func viewWillDisappear(_ animated: Bool) {
