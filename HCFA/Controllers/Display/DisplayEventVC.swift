@@ -120,21 +120,25 @@ class DisplayEventVC: DisplayTemplateVC {
                 let eid = data["eid"] as! Int
                 imageView.eid = eid
                 imageView.imageString = imageString
+                imageView.startSpinner()
+                scrollView.addSubview(imageView)
                 
-                if let eventImages = defaults.dictionary(forKey: "eventImages") as? [String:Data] {
-                    if let data = eventImages[String(eid)] {
-                        if let image = UIImage(data: data) {
-                            imageView.image = image
+                DispatchQueue.main.async {
+                    if let eventImages = defaults.dictionary(forKey: "eventImages") as? [String:Data] {
+                        if let data = eventImages[String(eid)] {
+                            if let image = UIImage(data: data) {
+                                imageView.image = image
+                                imageView.stopSpinner()
+                            } else {
+                                imageView.download()
+                            }
+                        } else {
+                            imageView.download()
                         }
                     } else {
                         imageView.download()
                     }
-                } else {
-                    imageView.download()
                 }
-                
-                view.addSubview(imageView)
-                scrollView.addSubview(imageView)
                 
                 offset += imageView.frame.height + TOP_MARGIN*2.5
                 addLine(x: SIDE_MARGIN, y: offset, width: FULL_WIDTH, view: scrollView)

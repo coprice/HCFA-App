@@ -34,11 +34,13 @@ class ProfileCell: UITableViewCell {
         picture.layer.borderWidth = 1
         addSubview(picture)
         
-        if let urlString = defaults.string(forKey: "image") {
-            if let data = defaults.object(forKey: "profile") as? Data {
-                picture.image = UIImage(data: data)!
-            } else if let url = URL(string: urlString) {
-                downloadImage(url: url, view: picture)
+        DispatchQueue.main.async {
+            if let urlString = defaults.string(forKey: "image") {
+                if let data = defaults.object(forKey: "profile") as? Data {
+                    self.picture.image = UIImage(data: data)!
+                } else if let url = URL(string: urlString) {
+                    downloadImage(url: url, view: self.picture)
+                }
             }
         }
         

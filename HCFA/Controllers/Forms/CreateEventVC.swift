@@ -138,9 +138,12 @@ class CreateEventVC: CreateTemplateVC {
             row.clearAction = .yes(style: .default)
             row.tag = "image"
             if editingEvent {
-                if let eventImages = defaults.dictionary(forKey: "eventImages") as? [String:Data] {
-                    if let data = eventImages[String(eventData["eid"] as! Int)] {
-                        row.value = UIImage(data: data)
+                DispatchQueue.main.async {
+                    if let eventImages = defaults.dictionary(forKey: "eventImages") as? [String:Data] {
+                        if let data = eventImages[String(self.eventData["eid"] as! Int)] {
+                            row.value = UIImage(data: data)
+                            row.updateCell()
+                        }
                     }
                 }
             }
