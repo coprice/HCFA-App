@@ -138,8 +138,9 @@ class PasswordViewController: FormViewController, TypedRowControllerType {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        title = "Change Password"
-        hostVC.slider.removeFromSuperview()
+        navigationItem.title = "Change Password"
+        navigationItem.leftBarButtonItem = nil
+        navigationItem.rightBarButtonItem = nil
     }
     
     // these are required to conform to TypedRowControllerType

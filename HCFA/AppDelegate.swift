@@ -20,16 +20,23 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         window = UIWindow(frame: UIScreen.main.bounds)
         
         // Navigation bar appearances
-        UINavigationBar.appearance().barTintColor = redColor
-        UINavigationBar.appearance().backgroundColor = redColor
-        UINavigationBar.appearance().titleTextAttributes =
+        let barAppearance = UINavigationBar.appearance()
+        barAppearance.barTintColor = redColor
+        barAppearance.backgroundColor = redColor
+        barAppearance.titleTextAttributes =
             [NSAttributedStringKey.foregroundColor: UIColor.white,
              NSAttributedStringKey.font: UIFont(name: "Baskerville", size: window!.frame.width/16)!]
         
         // Navigation bar button appearances
-        UIBarButtonItem.appearance().tintColor = .white
-        UIBarButtonItem.appearance().setTitleTextAttributes([NSAttributedStringKey.foregroundColor: UIColor.white, NSAttributedStringKey.font: UIFont(name: "Baskerville", size: window!.frame.width/21)!], for: .normal)
-        UIBarButtonItem.appearance().setTitleTextAttributes([NSAttributedStringKey.font: UIFont(name: "Georgia", size: window!.frame.width/20)!], for: .highlighted)
+        let itemAppearance = UIBarButtonItem.appearance()
+        itemAppearance.tintColor = .white
+        itemAppearance.setTitleTextAttributes([NSAttributedStringKey.foregroundColor: UIColor.white,
+                                               NSAttributedStringKey.font: UIFont(name: "Baskerville",
+                                                                                  size: window!.frame.width/21)!],
+                                              for: .normal)
+        itemAppearance.setTitleTextAttributes([NSAttributedStringKey.font: UIFont(name: "Baskerville",
+                                                                                  size: window!.frame.width/21)!],
+                                              for: .highlighted)
         
         window?.rootViewController = SignInVC()
         window?.makeKeyAndVisible()

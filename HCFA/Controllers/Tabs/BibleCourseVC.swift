@@ -10,8 +10,7 @@ import UIKit
 
 class BibleCourseVC: TemplateVC {
     
-    let filterButton = UIButton()
-    
+    var filter: UIBarButtonItem!
     var cellWidth: CGFloat!
     var cellHeight: CGFloat!
     
@@ -36,25 +35,19 @@ class BibleCourseVC: TemplateVC {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let BUTTON_LENGTH = navBar.frame.height*0.6
-        var frame: CGRect!
-        if defaults.bool(forKey: "admin") || defaults.bool(forKey: "leader") {
-            frame = CGRect(x: view.frame.width - BUTTON_LENGTH*3, y: (navBar.frame.height-BUTTON_LENGTH)/2,
-                           width: BUTTON_LENGTH, height: BUTTON_LENGTH)
-            
-        } else {
-            frame = CGRect(x: view.frame.width - BUTTON_LENGTH*1.5, y: (navBar.frame.height-BUTTON_LENGTH)/2,
-                           width: BUTTON_LENGTH, height: BUTTON_LENGTH)
-        }
+        let barHeight = navigationController!.navigationBar.frame.height
+        let BUTTON_LENGTH = barHeight*0.6
         
-        filterButton.frame = frame
+        let filterButton = UIButton(frame: CGRect(x: 0, y: 0, width: BUTTON_LENGTH, height: BUTTON_LENGTH))
         filterButton.setImage(UIImage(named: "filter"), for: .normal)
         filterButton.imageView?.contentMode = .scaleAspectFit
         filterButton.addTarget(self, action: #selector(self.toggleFilter), for: .touchUpInside)
+        filterButton.widthAnchor.constraint(equalToConstant: 28).isActive = true
+        filterButton.heightAnchor.constraint(equalToConstant: 28).isActive = true
         
-        createButton.addTarget(self, action: #selector(self.create), for: .touchUpInside)
+        filter = UIBarButtonItem(customView: filterButton)
         
-        let offset = navBar.frame.height + UIApplication.shared.statusBarFrame.height
+        let offset = barHeight + UIApplication.shared.statusBarFrame.height
         cellWidth = view.frame.width
         cellHeight = view.frame.height*0.175
         
@@ -74,7 +67,6 @@ class BibleCourseVC: TemplateVC {
         view.addSubview(tableView)
     }
 
-    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
@@ -83,25 +75,30 @@ class BibleCourseVC: TemplateVC {
             refresh()
         }
         
-        navBar.topItem?.title = "Bible Courses"
-
         let backItem = UIBarButtonItem()
         backItem.title = "BCs"
-        navBar.topItem?.backBarButtonItem = backItem
+        hostVC.navigationItem.backBarButtonItem = backItem
+        hostVC.navigationItem.title = "Bible Courses"
         
-        if createButton.superview == nil && defaults.bool(forKey: "admin") {
-            navBar.addSubview(createButton)
-        }
-        
-        if filterButton.superview == nil && !displayingYours {
-            navBar.addSubview(filterButton)
+        if defaults.bool(forKey: "admin") {
+            if !displayingYours {
+                hostVC.navigationItem.rightBarButtonItems = [hostVC.create, filter]
+            } else {
+                hostVC.navigationItem.rightBarButtonItem = hostVC.create
+            }
+            hostVC.createButton.addTarget(self, action: #selector(self.create), for: .touchUpInside)
+        } else {
+            if !displayingYours {
+                hostVC.navigationItem.rightBarButtonItem = filter
+            }
         }
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        createButton.removeFromSuperview()
-        filterButton.removeFromSuperview()
+        if defaults.bool(forKey: "admin") {
+            hostVC.createButton.removeTarget(self, action: #selector(self.create), for: .touchUpInside)
+        }
     }
     
     func startRefreshControl() {
@@ -276,22 +273,34 @@ class BibleCourseVC: TemplateVC {
     }
     
     @objc func create() {
-        hostVC.slider.removeFromSuperview()
-        createButton.removeFromSuperview()
+//        hostVC.slider.removeFromSuperview()
+//        createButton.removeFromSuperview()
         navigationController!.pushViewController(CreateBibleCourseVC(), animated: true)
     }
     
     @objc func displayUsersBCs() {
         if displayingYours || tableView.refreshControl!.isRefreshing { return }
         displayingYours = true
-        filterButton.removeFromSuperview()
+        
+        if defaults.bool(forKey: "admin") {
+            hostVC.navigationItem.rightBarButtonItems = nil
+            hostVC.navigationItem.rightBarButtonItem = hostVC.create
+        }
+        
         tableView.reloadData()
     }
     
     @objc func displayBCs() {
         if !displayingYours || tableView.refreshControl!.isRefreshing { return }
         displayingYours = false
-        navBar.addSubview(filterButton)
+        
+        if defaults.bool(forKey: "admin") {
+            hostVC.navigationItem.rightBarButtonItem = nil
+            hostVC.navigationItem.rightBarButtonItems = [hostVC.create, filter]
+        } else {
+            hostVC.navigationItem.rightBarButtonItem = filter
+        }
+        
         tableView.reloadData()
     }
     
@@ -466,9 +475,7 @@ extension BibleCourseVC: UITableViewDelegate {
         }
         
         if let data = currentRows[indexPath.row] {
-            hostVC.slider.removeFromSuperview()
-            createButton.removeFromSuperview()
-            filterButton.removeFromSuperview()
+
             let cid = data["cid"] as! Int
             
             let displayBC = DisplayBibleCourseVC()

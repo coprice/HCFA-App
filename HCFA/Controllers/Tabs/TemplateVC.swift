@@ -11,7 +11,6 @@ import InteractiveSideMenu
 
 class TemplateVC: UIViewController, SideMenuItemContent {
     
-    let createButton = UIButton()
     var hostVC: HostVC!
     var navBar: UINavigationBar!
     var tableView: UITableView!
@@ -22,21 +21,18 @@ class TemplateVC: UIViewController, SideMenuItemContent {
         
         navBar = navigationController!.navigationBar
         hostVC = navigationController?.viewControllers.first as! HostVC
-        
-        let BUTTON_LENGTH = navBar.frame.height*0.6
-        createButton.frame = CGRect(x: view.frame.width - BUTTON_LENGTH*1.5,
-                                    y: (navBar.frame.height-BUTTON_LENGTH)/2,
-                                    width: BUTTON_LENGTH, height: BUTTON_LENGTH)
-        createButton.setImage(UIImage(named: "create"), for: .normal)
-        createButton.imageView?.contentMode = .scaleAspectFit
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        hostVC.slider.addTarget(self, action: #selector(self.sliderTapped), for: .touchUpInside)
+        super.viewWillAppear(animated)
+        hostVC.sliderButton.addTarget(self, action: #selector(self.sliderTapped), for: .touchUpInside)
+        hostVC.navigationItem.leftBarButtonItem = hostVC.slider
+        hostVC.navigationItem.rightBarButtonItems = nil
     }
     
     override func viewWillDisappear(_ animated: Bool) {
-        hostVC.slider.removeTarget(self, action: #selector(self.sliderTapped), for: .touchUpInside)
+        super.viewWillDisappear(animated)
+        hostVC.sliderButton.removeTarget(self, action: #selector(self.sliderTapped), for: .touchUpInside)
     }
     
     func backToSignIn() {

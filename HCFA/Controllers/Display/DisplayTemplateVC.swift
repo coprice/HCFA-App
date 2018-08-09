@@ -10,9 +10,7 @@ import UIKit
 
 class DisplayTemplateVC: UIViewController {
     
-    let edit = UIButton()
-    
-    var navBar: UINavigationBar!
+    var edit: UIBarButtonItem!
     var hostVC: HostVC!
     var data: [String:Any]!
     var firstAppearance = true

@@ -11,6 +11,7 @@ import Eureka
 
 class CreateBibleCourseVC: CreateTemplateVC {
     
+    var done: UIBarButtonItem!
     var courseVC: BibleCourseVC!
     var data: [String:Any]!
     var editingBC = false
@@ -19,7 +20,7 @@ class CreateBibleCourseVC: CreateTemplateVC {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        done.addTarget(self, action: #selector(self.doneTapped), for: .touchUpInside)
+        done = UIBarButtonItem(title: "Done", style: .done, target: self, action: #selector(self.doneTapped))
         courseVC = hostVC.contentViewControllers[Tabs.BibleCourses] as! BibleCourseVC
         
         let today = Calendar.current.date(bySetting: .minute, value: 0, of: Date())
@@ -401,15 +402,10 @@ class CreateBibleCourseVC: CreateTemplateVC {
         } else {
             navigationItem.title = "New Bible Course"
         }
-        if hostVC.slider.superview != nil {
-            hostVC.slider.removeFromSuperview()
-        }
-        navBar.addSubview(done)
-    }
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        done.removeFromSuperview()
+        
+        navigationItem.leftBarButtonItem = nil
+        navigationItem.rightBarButtonItems = nil
+        navigationItem.rightBarButtonItem = done
     }
     
     func editWith(_ loadedData: [String:Any]) {

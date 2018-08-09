@@ -12,7 +12,10 @@ import AWSS3
 
 class HostVC: MenuContainerViewController {
     
-    let slider = UIButton()
+    let sliderButton = UIButton()
+    let createButton = UIButton()
+    var slider: UIBarButtonItem!
+    var create: UIBarButtonItem!
     var navBar: UINavigationBar!
     
     override func viewDidLoad() {
@@ -21,14 +24,20 @@ class HostVC: MenuContainerViewController {
         navBar = navigationController!.navigationBar
         
         let BUTTON_LENGTH = navBar.frame.height*0.6
-        slider.frame = CGRect(x: BUTTON_LENGTH/2, y: navBar.frame.height*0.2,
-                              width: BUTTON_LENGTH, height: BUTTON_LENGTH)
-        slider.setImage(UIImage(named: "slider"), for: .normal)
-        slider.contentMode = .scaleAspectFit
-        slider.widthAnchor.constraint(equalToConstant: 32.0).isActive = true
-        slider.heightAnchor.constraint(equalToConstant: 32.0).isActive = true
-        let barItem = UIBarButtonItem(customView: slider)
-        navBar.topItem?.leftBarButtonItem = barItem
+        sliderButton.frame = CGRect(x: 0, y: 0, width: BUTTON_LENGTH, height: BUTTON_LENGTH)
+        sliderButton.setImage(UIImage(named: "slider"), for: .normal)
+        sliderButton.contentMode = .scaleAspectFit
+        sliderButton.widthAnchor.constraint(equalToConstant: 28).isActive = true
+        sliderButton.heightAnchor.constraint(equalToConstant: 28).isActive = true
+
+        createButton.frame = CGRect(x: 0, y: 0, width: BUTTON_LENGTH, height: BUTTON_LENGTH)
+        createButton.setImage(UIImage(named: "create"), for: .normal)
+        createButton.imageView?.contentMode = .scaleAspectFit
+        createButton.widthAnchor.constraint(equalToConstant: 28).isActive = true
+        createButton.heightAnchor.constraint(equalToConstant: 28).isActive = true
+        
+        slider = UIBarButtonItem(customView: sliderButton)
+        create = UIBarButtonItem(customView: createButton)
 
         transitionOptions = TransitionOptions(duration: 0.4, contentScale: 1.0,
                                               visibleContentWidth: UIScreen.main.bounds.width/6)

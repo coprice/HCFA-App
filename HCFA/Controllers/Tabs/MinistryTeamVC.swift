@@ -25,11 +25,9 @@ class MinistryTeamVC: TemplateVC {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let offset = navBar.frame.height + UIApplication.shared.statusBarFrame.height
+        let offset = navigationController!.navigationBar.frame.height + UIApplication.shared.statusBarFrame.height
         cellWidth = view.frame.width
         cellHeight = view.frame.height/5
-        
-        createButton.addTarget(self, action: #selector(self.create), for: .touchUpInside)
         
         let refreshControl = UIRefreshControl(frame: CGRect(x: 0, y: 0, width: view.frame.width, height: 0))
         refreshControl.tintColor = highlightColor
@@ -55,22 +53,20 @@ class MinistryTeamVC: TemplateVC {
             refresh()
         }
         
-        navBar.topItem?.title = "Ministry Teams"
         let backItem = UIBarButtonItem()
         backItem.title = "MTs"
-        navBar.topItem?.backBarButtonItem = backItem
+        hostVC.navigationItem.title = "Ministry Teams"
+        hostVC.navigationItem.backBarButtonItem = backItem
         
-        if createButton.superview == nil && defaults.bool(forKey: "admin") {
-            navBar.addSubview(createButton)
-        }
-        if hostVC.slider.superview == nil {
-            navBar.addSubview(hostVC.slider)
+        if defaults.bool(forKey: "admin") {
+            hostVC.navigationItem.rightBarButtonItem = hostVC.create
+            hostVC.createButton.addTarget(self, action: #selector(self.create), for: .touchUpInside)
         }
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        createButton.removeFromSuperview()
+        hostVC.createButton.removeTarget(self, action: #selector(self.create), for: .touchUpInside)
     }
     
     func startRefreshControl() {
@@ -100,8 +96,6 @@ class MinistryTeamVC: TemplateVC {
     }
     
     @objc func create() {
-        hostVC.slider.removeFromSuperview()
-        createButton.removeFromSuperview()
         navigationController!.pushViewController(CreateMinistryTeamVC(), animated: true)
     }
     

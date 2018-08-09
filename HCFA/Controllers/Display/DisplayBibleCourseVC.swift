@@ -16,23 +16,14 @@ class DisplayBibleCourseVC: DisplayTemplateVC {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
-        title = getTitle()
-        
+
         if firstAppearance {
             firstAppearance = false
-            navBar = navigationController!.navigationBar
             hostVC = navigationController!.viewControllers.first as! HostVC
             
-            edit.frame = CGRect(x: navBar.frame.width*0.75, y: 0,
-                                width: navBar.frame.width/4, height: navBar.frame.height)
-            edit.setTitle("Edit", for: .normal)
-            edit.titleLabel?.textColor = .white
-            edit.titleLabel?.font = UIFont(name: "Baskerville", size: view.frame.width/21)
-            edit.setTitleColor(barHighlightColor, for: .highlighted)
-            edit.addTarget(self, action: #selector(self.editTapped), for: .touchUpInside)
+            edit = UIBarButtonItem(title: "Edit", style: .done, target: self, action: #selector(self.editTapped))
             
-            var offset = navBar.frame.height + UIApplication.shared.statusBarFrame.height
+            var offset = navigationController!.navigationBar.frame.height + UIApplication.shared.statusBarFrame.height
             let SIDE_MARGIN = view.frame.width/20
             let TOP_MARGIN = view.frame.height/60
             let FULL_WIDTH = view.frame.width-SIDE_MARGIN*2
@@ -224,19 +215,14 @@ class DisplayBibleCourseVC: DisplayTemplateVC {
             scrollView.contentSize = CGSize(width: scrollView.frame.width, height: offset)
             view.addSubview(scrollView)
         }
-
-        if hostVC.slider.superview != nil {
-            hostVC.slider.removeFromSuperview()
-        }
+        
+        navigationItem.title = getTitle()
+        navigationItem.leftBarButtonItem = nil
+        navigationItem.rightBarButtonItems = nil
         
         if admin {
-            navBar.addSubview(edit)
+            navigationItem.rightBarButtonItem = edit
         }
-    }
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        edit.removeFromSuperview()
     }
     
     func getTitle() -> String {
@@ -260,7 +246,7 @@ class DisplayBibleCourseVC: DisplayTemplateVC {
         
         let backItem = UIBarButtonItem()
         backItem.title = "Back"
-        navBar.topItem?.backBarButtonItem = backItem
+        navigationItem.backBarButtonItem = backItem
         
         navigationController!.pushViewController(editBC, animated: true)
     }
@@ -268,7 +254,7 @@ class DisplayBibleCourseVC: DisplayTemplateVC {
     @objc func addToCalendar() {
         let backItem = UIBarButtonItem()
         backItem.title = "Back"
-        navBar.topItem?.backBarButtonItem = backItem
+        navigationItem.backBarButtonItem = backItem
         
         let calendarVC = CalendarVC()
         calendarVC.data = data

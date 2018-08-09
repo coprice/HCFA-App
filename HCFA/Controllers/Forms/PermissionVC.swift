@@ -73,8 +73,10 @@ class PermissionVC: FormViewController, TypedRowControllerType {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        title = "Permissions"
-        hostVC.slider.removeFromSuperview()
+        
+        navigationItem.title = "Permissions"
+        navigationItem.leftBarButtonItem = nil
+        navigationItem.rightBarButtonItems = nil
     }
     
     // these are required to conform to TypedRowControllerType

@@ -9,9 +9,7 @@
 import Eureka
 
 class CreateTemplateVC: FormViewController {
-    
-    let done = UIButton()
-    
+
     var navBar: UINavigationBar!
     var hostVC: HostVC!
     var loadingView: LoadingView!
@@ -22,14 +20,6 @@ class CreateTemplateVC: FormViewController {
         view.backgroundColor = lightColor
         navigationAccessoryView.barTintColor = redColor
         navBar = navigationController!.navigationBar
-        
-        done.frame = CGRect(x: navBar.frame.width*0.8, y: 0,
-                            width: navBar.frame.width*0.2, height: navBar.frame.height)
-        done.setTitle("Done", for: .normal)
-        done.titleLabel?.textColor = .white
-        done.titleLabel?.font = UIFont(name: "Georgia", size: navBar.frame.width/21)
-        done.setTitleColor(barHighlightColor, for: .highlighted)
-        
         hostVC = navigationController?.viewControllers.first as! HostVC
         
         loadingView = LoadingView(frame: CGRect(x: view.frame.width*0.375,

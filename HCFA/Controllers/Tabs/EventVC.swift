@@ -12,10 +12,10 @@ import AWSCore
 
 class EventVC: TemplateVC {
     
-    let selectButton = UIButton()
-    let cancel = UIButton()
     let deleteButton = UIButton()
     
+    var select: UIBarButtonItem!
+    var cancel: UIBarButtonItem!
     var loadingView: LoadingView!
     var cellWidth: CGFloat!
     var cellHeight: CGFloat!
@@ -31,29 +31,25 @@ class EventVC: TemplateVC {
         cellWidth = view.frame.width
         cellHeight = view.frame.height*0.175
         
-        let BUTTON_LENGTH = navBar.frame.height*0.6
-        selectButton.frame = CGRect(x: view.frame.width - BUTTON_LENGTH*3,
-                                    y: (navBar.frame.height-BUTTON_LENGTH)/2,
-                                    width: BUTTON_LENGTH, height: BUTTON_LENGTH)
+        let barHeight = navigationController!.navigationBar.frame.height
+        let BUTTON_LENGTH = barHeight*0.6
+        let selectButton = UIButton(frame: CGRect(x: view.frame.width - BUTTON_LENGTH*3,
+                                                  y: (barHeight-BUTTON_LENGTH)/2,
+                                                  width: BUTTON_LENGTH, height: BUTTON_LENGTH))
         selectButton.setImage(UIImage(named: "select"), for: .normal)
         selectButton.imageView?.contentMode = .scaleAspectFit
         selectButton.addTarget(self, action: #selector(self.selectRows), for: .touchUpInside)
+        selectButton.widthAnchor.constraint(equalToConstant: 28).isActive = true
+        selectButton.heightAnchor.constraint(equalToConstant: 28).isActive = true
         
-        cancel.frame = CGRect(x: navBar.frame.width*0.75, y: 0,
-                              width: navBar.frame.width/4, height: navBar.frame.height)
-        cancel.setTitle("Cancel", for: .normal)
-        cancel.titleLabel?.textColor = .white
-        cancel.titleLabel?.font = UIFont(name: "Georgia", size: navBar.frame.width/21)
-        cancel.setTitleColor(barHighlightColor, for: .highlighted)
-        cancel.addTarget(self, action: #selector(self.cancelSelect), for: .touchUpInside)
-        
-        createButton.addTarget(self, action: #selector(self.create), for: .touchUpInside)
+        select = UIBarButtonItem(customView: selectButton)
+        cancel = UIBarButtonItem(title: "Cancel", style: .done, target: self, action: #selector(self.cancelSelect))
         
         let refreshControl = UIRefreshControl(frame: CGRect(x: 0, y: 0, width: view.frame.width, height: 0))
         refreshControl.tintColor = highlightColor
         refreshControl.addTarget(self, action: #selector(self.refresh), for: UIControlEvents.valueChanged)
         
-        let offset = navBar.frame.height + UIApplication.shared.statusBarFrame.height
+        let offset = barHeight + UIApplication.shared.statusBarFrame.height
         tableView = UITableView(frame: CGRect(x: 0, y: offset, width: view.frame.width,
                                               height: view.frame.height - offset), style: .grouped)
         tableView.delegate = self
@@ -88,31 +84,33 @@ class EventVC: TemplateVC {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
+
         if firstAppearance {
             startRefreshControl()
             refresh()
         }
         
-        navBar.topItem?.title = "Events"
+        hostVC.navigationItem.title = "Events"
         
         let backItem = UIBarButtonItem()
-        backItem.title = "Events"
-        navBar.topItem?.backBarButtonItem = backItem
+        backItem.title = hostVC.navigationItem.title
+        hostVC.navigationItem.backBarButtonItem = backItem
 
-        if createButton.superview == nil && (defaults.bool(forKey: "admin") || defaults.bool(forKey: "leader")) {
-            navBar.addSubview(createButton)
-        }
-        
-        if selectButton.superview == nil && defaults.bool(forKey: "admin") && !displayingUpcoming {
-            navBar.addSubview(selectButton)
+        if defaults.bool(forKey: "admin") || defaults.bool(forKey: "leader") {
+            if !displayingUpcoming {
+                hostVC.navigationItem.rightBarButtonItems = [hostVC.create, select]
+            } else {
+                hostVC.navigationItem.rightBarButtonItem = hostVC.create
+            }
+            hostVC.createButton.addTarget(self, action: #selector(self.create), for: .touchUpInside)
         }
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        createButton.removeFromSuperview()
-        selectButton.removeFromSuperview()
+        if defaults.bool(forKey: "admin") || defaults.bool(forKey: "leader") {
+            hostVC.createButton.removeTarget(self, action: #selector(self.create), for: .touchUpInside)
+        }
     }
     
     func startRefreshControl() {
@@ -155,23 +153,19 @@ class EventVC: TemplateVC {
     }
     
     @objc func create() {
-        hostVC.slider.removeFromSuperview()
         navigationController!.pushViewController(CreateEventVC(), animated: true)
     }
     
     @objc func selectRows() {
-        createButton.removeFromSuperview()
-        selectButton.removeFromSuperview()
-        navBar.addSubview(cancel)
+        hostVC.navigationItem.rightBarButtonItems = nil
+        hostVC.navigationItem.rightBarButtonItem = cancel
         tableView.allowsMultipleSelection = true
     }
     
     @objc func cancelSelect() {
-        cancel.removeFromSuperview()
-        deleteButton.removeFromSuperview()
-        navBar.addSubview(createButton)
-        navBar.addSubview(selectButton)
+        hostVC.navigationItem.rightBarButtonItems = [hostVC.create, select]
         tableView.allowsMultipleSelection = false
+        deleteButton.removeFromSuperview()
     }
     
     @objc func deleteSelected() {
@@ -200,14 +194,14 @@ class EventVC: TemplateVC {
             
             self.view.addSubview(self.loadingView)
             self.view.isUserInteractionEnabled = false
-            self.cancel.isUserInteractionEnabled = false
+            self.navigationController!.navigationBar.isUserInteractionEnabled = false
             
             API.deleteEvents(uid: defaults.integer(forKey: "uid"), token: defaults.string(forKey: "token")!,
                              events: events, completionHandler: { response, data in
                                 
                 self.loadingView.removeFromSuperview()
                 self.view.isUserInteractionEnabled = true
-                self.cancel.isUserInteractionEnabled = true
+                self.navigationController!.navigationBar.isUserInteractionEnabled = true
                 self.cancelSelect()
                 
                 switch response {
@@ -274,11 +268,12 @@ class EventVC: TemplateVC {
 
     @objc func displayUpcomingEvents() {
         
-        if displayingUpcoming || tableView.refreshControl!.isRefreshing || cancel.superview != nil { return }
+        if displayingUpcoming || tableView.refreshControl!.isRefreshing { return }
+        
         displayingUpcoming = true
         
-        if selectButton.superview != nil {
-            selectButton.removeFromSuperview()
+        if defaults.bool(forKey: "admin") || defaults.bool(forKey: "leader") {
+            hostVC.navigationItem.rightBarButtonItem = hostVC.create
         }
         
         rows = currentRows()
@@ -290,8 +285,12 @@ class EventVC: TemplateVC {
         if !displayingUpcoming || tableView.refreshControl!.isRefreshing { return }
         displayingUpcoming = false
         
-        if defaults.bool(forKey: "admin") && !pastRows.isEmpty {
-            navBar.addSubview(selectButton)
+        if defaults.bool(forKey: "admin") || defaults.bool(forKey: "leader") {
+            if !pastRows.isEmpty {
+                hostVC.navigationItem.rightBarButtonItems = [hostVC.create, select]
+            } else {
+                hostVC.navigationItem.rightBarButtonItem = hostVC.create
+            }
         }
         
         rows = currentRows()
@@ -299,7 +298,7 @@ class EventVC: TemplateVC {
     }
     
     override func sliderTapped() {
-        if cancel.superview != nil {
+        if tableView.allowsMultipleSelection {
             cancelSelect()
         }
         showSideMenu()
@@ -389,21 +388,17 @@ extension EventVC: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
         
-        if cancel.superview != nil && tableView.indexPathsForSelectedRows == nil {
+        if tableView.allowsMultipleSelection && tableView.indexPathsForSelectedRows == nil {
             deleteButton.removeFromSuperview()
         }
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
-        if cancel.superview == nil {
+        if !tableView.allowsMultipleSelection {
             tableView.deselectRow(at: indexPath, animated: true)
             
             let data = rows[indexPath.row]
-            
-            hostVC.slider.removeFromSuperview()
-            createButton.removeFromSuperview()
-            selectButton.removeFromSuperview()
             
             let displayEvent = DisplayEventVC()
             displayEvent.data = data

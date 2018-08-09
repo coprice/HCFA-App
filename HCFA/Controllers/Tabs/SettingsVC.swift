@@ -11,14 +11,12 @@ import InteractiveSideMenu
 
 class SettingsVC: FormViewController, SideMenuItemContent {
     
-    var navBar: UINavigationBar!
     var hostVC: HostVC!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = lightColor
         
-        navBar = navigationController!.navigationBar
         hostVC = navigationController?.viewControllers.first as! HostVC
         
         if defaults.bool(forKey: "admin") {
@@ -63,22 +61,20 @@ class SettingsVC: FormViewController, SideMenuItemContent {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
+        hostVC.sliderButton.addTarget(self, action: #selector(self.sliderTapped), for: .touchUpInside)
+        hostVC.navigationItem.leftBarButtonItem = hostVC.slider
+        hostVC.navigationItem.rightBarButtonItems = nil
+        
+        hostVC.navigationItem.title = "Settings"
+        
         let backItem = UIBarButtonItem()
-        backItem.title = "Settings"
-        navBar.topItem?.backBarButtonItem = backItem
-        
-        navBar.topItem?.title = "Settings"
-        
-        if hostVC.slider.superview == nil {
-            navBar.addSubview(hostVC.slider)
-        }
-        
-        hostVC.slider.addTarget(self, action: #selector(self.sliderTapped), for: .touchUpInside)
+        backItem.title = hostVC.navigationItem.title
+        hostVC.navigationItem.backBarButtonItem = backItem
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        hostVC.slider.removeTarget(self, action: #selector(self.sliderTapped), for: .touchUpInside)
+        hostVC.sliderButton.removeTarget(self, action: #selector(self.sliderTapped), for: .touchUpInside)
     }
     
     @objc func sliderTapped() {

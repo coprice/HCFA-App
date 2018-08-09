@@ -13,6 +13,7 @@ import AWSS3
 
 class CreateEventVC: CreateTemplateVC {
     
+    var done: UIBarButtonItem!
     var eventVC: EventVC!
     var eventData: [String:Any]!
     var editingEvent = false
@@ -20,7 +21,7 @@ class CreateEventVC: CreateTemplateVC {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        done.addTarget(self, action: #selector(self.doneTapped), for: .touchUpInside)
+        done = UIBarButtonItem(title: "Done", style: .done, target: self, action: #selector(self.doneTapped))
         eventVC = hostVC.contentViewControllers[Tabs.Events] as! EventVC
         
         let today = Calendar.current.date(bySetting: .minute, value: 0, of: Date())
@@ -209,22 +210,18 @@ class CreateEventVC: CreateTemplateVC {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        
         if editingEvent {
             navigationItem.title = "Edit Event"
         } else {
             navigationItem.title = "New Event"
         }
-        if hostVC.slider.superview != nil {
-            hostVC.slider.removeFromSuperview()
-        }
-        navBar.addSubview(done)
+        
+        navigationItem.leftBarButtonItem = nil
+        navigationItem.rightBarButtonItems = nil
+        navigationItem.rightBarButtonItem = done
     }
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        done.removeFromSuperview()
-    }
-    
+
     func editWith(_ data: [String:Any]) {
         editingEvent = true
         eventData = data
@@ -310,6 +307,7 @@ class CreateEventVC: CreateTemplateVC {
             if editingEvent {
                 
                 let eid = eventData["eid"] as! Int
+
                 var imageURL: String? = nil
                 if let _ = values["image"] as? UIImage {
                     imageURL = eventImageURL(eid)
@@ -343,6 +341,10 @@ class CreateEventVC: CreateTemplateVC {
                                 self.backToEvents(title: "Event Updated", message: "")
                             }
                         } else {
+                            // event had an image but update got rid of it
+                            if let _ = self.eventData["image"] as? String {
+                                deleteEventImage(eid)
+                            }
                             self.backToEvents(title: "Event Updated", message: "")
                         }
                     }

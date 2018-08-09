@@ -145,19 +145,22 @@ class ProfileVC: FormViewController, SideMenuItemContent {
     }
     
     override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        hostVC.sliderButton.addTarget(self, action: #selector(self.sliderTapped), for: .touchUpInside)
+        hostVC.navigationItem.leftBarButtonItem = hostVC.slider
+        hostVC.navigationItem.rightBarButtonItems = nil
+        
+        hostVC.navigationItem.title = "Profile"
         
         let backItem = UIBarButtonItem()
-        backItem.title = "Profile"
-        navBar.topItem?.backBarButtonItem = backItem
-
-        if hostVC.slider.superview == nil {
-            navBar.addSubview(hostVC.slider)
-        }
-        hostVC.slider.addTarget(self, action: #selector(self.sliderTapped), for: .touchUpInside)
-        navBar.topItem?.title = "Profile"
+        backItem.title = hostVC.navigationItem.title
+        hostVC.navigationItem.backBarButtonItem = backItem
     }
     
     override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        hostVC.sliderButton.removeTarget(self, action: #selector(self.sliderTapped), for: .touchUpInside)
         
         let first = form.rowBy(tag: "first") as! NameRow
         let last = form.rowBy(tag: "last") as! NameRow
@@ -169,7 +172,7 @@ class ProfileVC: FormViewController, SideMenuItemContent {
         last.updateCell()
         email.updateCell()
         
-        hostVC.slider.removeTarget(self, action: #selector(self.sliderTapped), for: .touchUpInside)
+        hostVC.sliderButton.removeTarget(self, action: #selector(self.sliderTapped), for: .touchUpInside)
         save.removeFromSuperview()
         picture.isUserInteractionEnabled = true
         tableView.endEditing(true)

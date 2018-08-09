@@ -611,7 +611,6 @@
 				E3D795DB1FF591CE003B78F5 /* Frameworks */,
 				E3D795DC1FF591CE003B78F5 /* Resources */,
 				0F8C0521037E489E2B132005 /* [CP] Embed Pods Frameworks */,
-				6B629FFD27291CB33A6F743A /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -765,21 +764,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-HCFA/Pods-HCFA-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		6B629FFD27291CB33A6F743A /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Copy Pods Resources";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-HCFA/Pods-HCFA-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		9CB10D3C11B4003E8611C8E6 /* [CP] Check Pods Manifest.lock */ = {

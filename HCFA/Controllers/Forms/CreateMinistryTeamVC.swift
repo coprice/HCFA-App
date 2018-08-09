@@ -10,6 +10,7 @@ import Eureka
 
 class CreateMinistryTeamVC: CreateTemplateVC {
     
+    var done: UIBarButtonItem!
     var teamVC: MinistryTeamVC!
     var data: [String:Any]!
     var editingMT = false
@@ -18,7 +19,7 @@ class CreateMinistryTeamVC: CreateTemplateVC {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        done.addTarget(self, action: #selector(self.doneTapped), for: .touchUpInside)
+        done = UIBarButtonItem(title: "Done", style: .done, target: self, action: #selector(self.doneTapped))
         teamVC = hostVC.contentViewControllers[Tabs.MinistryTeams] as! MinistryTeamVC
         
         let today = Calendar.current.date(bySetting: .minute, value: 0, of: Date())
@@ -355,17 +356,10 @@ class CreateMinistryTeamVC: CreateTemplateVC {
             navigationItem.title = "New Ministry Team"
         }
         
-        if hostVC.slider.superview != nil {
-            hostVC.slider.removeFromSuperview()
-        }
-        navBar.addSubview(done)
+        navigationItem.leftBarButtonItem = nil
+        navigationItem.rightBarButtonItem = done
     }
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        done.removeFromSuperview()
-    }
-    
+
     func editWith(_ loadedData: [String:Any]) {
         editingMT = true
         data = loadedData

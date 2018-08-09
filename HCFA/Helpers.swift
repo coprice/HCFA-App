@@ -260,7 +260,6 @@ func deleteEventImage(_ eid: Int) {
             print("Error occurred: \(error)")
             return nil
         }
-        print("Deleted successfully.")
         return nil
     }
 }

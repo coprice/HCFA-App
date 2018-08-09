@@ -85,10 +85,8 @@ class FilterVC: FormViewController {
         super.viewWillAppear(animated)
         
         navigationItem.title = "Filter Bible Courses"
-        
-        if hostVC.slider.superview != nil {
-            hostVC.slider.removeFromSuperview()
-        }
+        navigationItem.leftBarButtonItem = nil
+        navigationItem.rightBarButtonItems = nil
     }
     
     override func viewWillDisappear(_ animated: Bool) {
