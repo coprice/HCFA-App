@@ -2,14 +2,6 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>UIAppFonts</key>
-	<array>
-		<string>LeagueGothic-Regular.otf</string>
-	</array>
-	<key>NSCalendarsUsageDescription</key>
-	<string>Used for entering events to your calendar</string>
-	<key>NSCameraUsageDescription</key>
-	<string>Used for setting profile and event pictures</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleExecutable</key>
@@ -28,6 +20,14 @@
 	<string>1</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSCalendarsUsageDescription</key>
+	<string>Used for entering events to your calendar</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Used for setting profile and event pictures</string>
+	<key>UIAppFonts</key>
+	<array>
+		<string>LeagueGothic-Regular.otf</string>
+	</array>
 	<key>UIRequiredDeviceCapabilities</key>
 	<array>
 		<string>armv7</string>
