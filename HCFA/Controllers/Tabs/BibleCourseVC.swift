@@ -41,8 +41,8 @@ class BibleCourseVC: TemplateVC {
         let filterButton = UIButton(frame: CGRect(x: 0, y: 0, width: BUTTON_LENGTH, height: BUTTON_LENGTH))
         filterButton.setImage(UIImage(named: "filter"), for: .normal)
         filterButton.imageView?.contentMode = .scaleAspectFit
-        filterButton.addTarget(self, action: #selector(self.toggleFilter), for: .touchUpInside)
-        filterButton.widthAnchor.constraint(equalToConstant: 28).isActive = true
+        filterButton.addTarget(self, action: #selector(toggleFilter), for: .touchUpInside)
+        filterButton.widthAnchor.constraint(equalToConstant: 40).isActive = true
         filterButton.heightAnchor.constraint(equalToConstant: 28).isActive = true
         
         filter = UIBarButtonItem(customView: filterButton)
@@ -53,7 +53,7 @@ class BibleCourseVC: TemplateVC {
         
         let refreshControl = UIRefreshControl(frame: CGRect(x: 0, y: 0, width: view.frame.width, height: 0))
         refreshControl.tintColor = highlightColor
-        refreshControl.addTarget(self, action: #selector(self.refresh), for: UIControlEvents.valueChanged)
+        refreshControl.addTarget(self, action: #selector(refresh), for: UIControlEvents.valueChanged)
         
         tableView = UITableView(frame: CGRect(x: 0, y: offset, width: view.frame.width,
                                               height: view.frame.height - offset), style: .grouped)
@@ -65,6 +65,7 @@ class BibleCourseVC: TemplateVC {
         tableView.refreshControl = refreshControl
         tableView.separatorStyle = .none
         view.addSubview(tableView)
+        view.addSubview(upButton)
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -86,7 +87,7 @@ class BibleCourseVC: TemplateVC {
             } else {
                 hostVC.navigationItem.rightBarButtonItem = hostVC.create
             }
-            hostVC.createButton.addTarget(self, action: #selector(self.create), for: .touchUpInside)
+            hostVC.createButton.addTarget(self, action: #selector(create), for: .touchUpInside)
         } else {
             if !displayingYours {
                 hostVC.navigationItem.rightBarButtonItem = filter
@@ -97,7 +98,7 @@ class BibleCourseVC: TemplateVC {
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         if defaults.bool(forKey: "admin") {
-            hostVC.createButton.removeTarget(self, action: #selector(self.create), for: .touchUpInside)
+            hostVC.createButton.removeTarget(self, action: #selector(create), for: .touchUpInside)
         }
     }
     
@@ -273,8 +274,6 @@ class BibleCourseVC: TemplateVC {
     }
     
     @objc func create() {
-//        hostVC.slider.removeFromSuperview()
-//        createButton.removeFromSuperview()
         navigationController!.pushViewController(CreateBibleCourseVC(), animated: true)
     }
     
@@ -283,8 +282,7 @@ class BibleCourseVC: TemplateVC {
         displayingYours = true
         
         if defaults.bool(forKey: "admin") {
-            hostVC.navigationItem.rightBarButtonItems = nil
-            hostVC.navigationItem.rightBarButtonItem = hostVC.create
+            hostVC.navigationItem.rightBarButtonItems = [hostVC.create]
         }
         
         tableView.reloadData()
@@ -295,7 +293,6 @@ class BibleCourseVC: TemplateVC {
         displayingYours = false
         
         if defaults.bool(forKey: "admin") {
-            hostVC.navigationItem.rightBarButtonItem = nil
             hostVC.navigationItem.rightBarButtonItems = [hostVC.create, filter]
         } else {
             hostVC.navigationItem.rightBarButtonItem = filter
@@ -372,7 +369,7 @@ extension BibleCourseVC: UITableViewDelegate {
             your.titleLabel?.font = UIFont(name: "Baskerville", size: TOGGLE_WIDTH/5)
             your.layer.borderWidth = TOGGLE_HEIGHT/20
             your.layer.borderColor = redColor.cgColor
-            your.addTarget(self, action: #selector(self.displayUsersBCs), for: .touchUpInside)
+            your.addTarget(self, action: #selector(displayUsersBCs), for: .touchUpInside)
             
             let join = UIButton(frame: CGRect(x: cellWidth/2 - TOGGLE_HEIGHT/40 + 2, y: view.frame.height/20 - TOGGLE_HEIGHT/2, width: TOGGLE_WIDTH, height: TOGGLE_HEIGHT))
             
@@ -388,7 +385,7 @@ extension BibleCourseVC: UITableViewDelegate {
             join.titleLabel?.font = UIFont(name: "Baskerville", size: TOGGLE_WIDTH/5)
             join.layer.borderWidth = TOGGLE_HEIGHT/20
             join.layer.borderColor = redColor.cgColor
-            join.addTarget(self, action: #selector(self.displayBCs), for: .touchUpInside)
+            join.addTarget(self, action: #selector(displayBCs), for: .touchUpInside)
             
             let headerView = UIView()
             headerView.backgroundColor = .clear

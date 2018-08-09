@@ -20,7 +20,7 @@ class DisplayMinistryTeamVC: DisplayTemplateVC {
             firstAppearance = false
             hostVC = navigationController!.viewControllers.first as! HostVC
             
-            edit = UIBarButtonItem(title: "Edit", style: .done, target: self, action: #selector(self.editTapped))
+            edit = UIBarButtonItem(title: "Edit", style: .done, target: self, action: #selector(editTapped))
             
             var offset = navigationController!.navigationBar.frame.height + UIApplication.shared.statusBarFrame.height
             let SIDE_MARGIN = view.frame.width/20
@@ -145,7 +145,7 @@ class DisplayMinistryTeamVC: DisplayTemplateVC {
                                                                    width: buttonLength, height: buttonLength))
                         groupmeButton.setBackgroundImage(UIImage(named: "groupme"), for: .normal)
                         groupmeButton.imageView?.contentMode = .scaleAspectFit
-                        groupmeButton.addTarget(self, action: #selector(self.groupmeLink), for: .touchUpInside)
+                        groupmeButton.addTarget(self, action: #selector(groupmeLink), for: .touchUpInside)
                         scrollView.addSubview(groupmeButton)
                         
                         let calendarButton = UIButton(frame: CGRect(x: (view.frame.width - buttonLength*0.8)*0.3,
@@ -153,7 +153,7 @@ class DisplayMinistryTeamVC: DisplayTemplateVC {
                                                                     width: buttonLength, height: buttonLength))
                         calendarButton.setBackgroundImage(UIImage(named: "calendar"), for: .normal)
                         calendarButton.imageView?.contentMode = .scaleAspectFit
-                        calendarButton.addTarget(self, action: #selector(self.addToCalendar), for: .touchUpInside)
+                        calendarButton.addTarget(self, action: #selector(addToCalendar), for: .touchUpInside)
                         scrollView.addSubview(calendarButton)
                         
                         offset += buttonLength + TOP_MARGIN*1.5
@@ -164,7 +164,7 @@ class DisplayMinistryTeamVC: DisplayTemplateVC {
                                                                     width: buttonLength, height: buttonLength))
                         calendarButton.setBackgroundImage(UIImage(named: "calendar"), for: .normal)
                         calendarButton.imageView?.contentMode = .scaleAspectFit
-                        calendarButton.addTarget(self, action: #selector(self.addToCalendar), for: .touchUpInside)
+                        calendarButton.addTarget(self, action: #selector(addToCalendar), for: .touchUpInside)
                         scrollView.addSubview(calendarButton)
                         
                         offset += buttonLength + TOP_MARGIN*1.5
@@ -178,7 +178,7 @@ class DisplayMinistryTeamVC: DisplayTemplateVC {
                                                                width: buttonLength, height: buttonLength))
                     groupmeButton.setBackgroundImage(UIImage(named: "groupme"), for: .normal)
                     groupmeButton.imageView?.contentMode = .scaleAspectFit
-                    groupmeButton.addTarget(self, action: #selector(self.groupmeLink), for: .touchUpInside)
+                    groupmeButton.addTarget(self, action: #selector(groupmeLink), for: .touchUpInside)
                     scrollView.addSubview(groupmeButton)
                     
                     offset += buttonLength + TOP_MARGIN*1.5
@@ -197,7 +197,7 @@ class DisplayMinistryTeamVC: DisplayTemplateVC {
                     leaveButton.setTitle("Leave Team", for: .normal)
                     leaveButton.setTitleColor(redColor, for: .normal)
                     leaveButton.titleLabel?.font = infoFont
-                    leaveButton.addTarget(self, action: #selector(self.leaveMT), for: .touchUpInside)
+                    leaveButton.addTarget(self, action: #selector(leaveMT), for: .touchUpInside)
                     offset += leaveButton.frame.height + TOP_MARGIN*2
                     scrollView.addSubview(leaveButton)
                 }
@@ -212,7 +212,7 @@ class DisplayMinistryTeamVC: DisplayTemplateVC {
                 joinButton.setTitle("Request to Join", for: .normal)
                 joinButton.setTitleColor(redColor, for: .normal)
                 joinButton.titleLabel?.font = infoFont
-                joinButton.addTarget(self, action: #selector(self.joinMT), for: .touchUpInside)
+                joinButton.addTarget(self, action: #selector(joinMT), for: .touchUpInside)
                 offset += joinButton.frame.height + TOP_MARGIN
                 scrollView.addSubview(joinButton)
             }

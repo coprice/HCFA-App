@@ -18,7 +18,7 @@ class DisplayEventVC: DisplayTemplateVC {
             hostVC = navigationController!.viewControllers.first as! HostVC
             firstAppearance = false
             
-            edit = UIBarButtonItem(title: "Edit", style: .done, target: self, action: #selector(self.editTapped))
+            edit = UIBarButtonItem(title: "Edit", style: .done, target: self, action: #selector(editTapped))
             
             var offset = navigationController!.navigationBar.frame.height + UIApplication.shared.statusBarFrame.height
             let SIDE_MARGIN = view.frame.width/20
@@ -156,7 +156,7 @@ class DisplayEventVC: DisplayTemplateVC {
                                                         width: calendarLength, height: calendarLength))
             calendarButton.setBackgroundImage(UIImage(named: "calendar"), for: .normal)
             calendarButton.imageView?.contentMode = .scaleAspectFit
-            calendarButton.addTarget(self, action: #selector(self.addToCalendar), for: .touchUpInside)
+            calendarButton.addTarget(self, action: #selector(addToCalendar), for: .touchUpInside)
             scrollView.addSubview(calendarButton)
             
             offset += calendarLength + TOP_MARGIN

@@ -40,11 +40,11 @@ class SignInVC: UIViewController {
         
         navigationAccessory.barTintColor = redColor
         navigationAccessory.previousButton.target = self
-        navigationAccessory.previousButton.action = #selector(self.previousPressed)
+        navigationAccessory.previousButton.action = #selector(previousPressed)
         navigationAccessory.nextButton.target = self
-        navigationAccessory.nextButton.action = #selector(self.nextPressed)
+        navigationAccessory.nextButton.action = #selector(nextPressed)
         navigationAccessory.doneButton.target = self
-        navigationAccessory.doneButton.action = #selector(self.donePressed)
+        navigationAccessory.doneButton.action = #selector(donePressed)
     }
     
     func prepareDisplay() {
@@ -75,7 +75,7 @@ class SignInVC: UIViewController {
         login.backgroundColor = redColor
         login.layer.borderWidth = BUTTON_HEIGHT/20
         login.layer.borderColor = redColor.cgColor
-        login.addTarget(self, action: #selector(self.loginPressed), for: .touchUpInside)
+        login.addTarget(self, action: #selector(loginPressed), for: .touchUpInside)
         
         register.frame = CGRect(x: view.frame.midX + 2, y: TOGGLE_Y,
                                 width: BUTTON_WIDTH, height: BUTTON_HEIGHT)
@@ -89,7 +89,7 @@ class SignInVC: UIViewController {
         register.backgroundColor = highlightColor
         register.layer.borderWidth = BUTTON_HEIGHT/20
         register.layer.borderColor = redColor.cgColor
-        register.addTarget(self, action: #selector(self.registerPressed), for: .touchUpInside)
+        register.addTarget(self, action: #selector(registerPressed), for: .touchUpInside)
         
         firstName.font = UIFont(name: "Baskerville", size: TEXT_SIZE)
         firstName.alpha = 0.0
@@ -156,7 +156,7 @@ class SignInVC: UIViewController {
         submit.titleLabel?.font = UIFont(name: "Baskerville", size: BUTTON_WIDTH/5)
         submit.setBackgroundImage(roundedImage(color: highlightColor, width: BUTTON_WIDTH, height: BUTTON_HEIGHT,
                                                cornerRadius: submit.layer.cornerRadius), for: .highlighted)
-        submit.addTarget(self, action: #selector(self.submitPressed), for: .touchUpInside)
+        submit.addTarget(self, action: #selector(submitPressed), for: .touchUpInside)
         
         forgot.alpha = 0.0
         forgot.setTitle("Forgot Password?", for: .normal)
@@ -166,7 +166,7 @@ class SignInVC: UIViewController {
         forgot.titleLabel?.baselineAdjustment = .alignCenters
         forgot.titleLabel?.adjustsFontSizeToFitWidth = true
         forgot.titleLabel?.font = UIFont(name: "Baskerville", size: BUTTON_WIDTH*0.175)
-        forgot.addTarget(self, action: #selector(self.forgotTapped), for: .touchUpInside)
+        forgot.addTarget(self, action: #selector(forgotTapped), for: .touchUpInside)
         
         scrollView.frame = CGRect(x: 0, y: view.frame.height*0.31,
                                   width: view.frame.width, height: view.frame.height*0.665)

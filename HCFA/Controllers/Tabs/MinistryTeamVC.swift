@@ -31,7 +31,7 @@ class MinistryTeamVC: TemplateVC {
         
         let refreshControl = UIRefreshControl(frame: CGRect(x: 0, y: 0, width: view.frame.width, height: 0))
         refreshControl.tintColor = highlightColor
-        refreshControl.addTarget(self, action: #selector(self.refresh), for: UIControlEvents.valueChanged)
+        refreshControl.addTarget(self, action: #selector(refresh), for: UIControlEvents.valueChanged)
         
         tableView = UITableView(frame: CGRect(x: 0, y: offset, width: view.frame.width,
                                               height: view.frame.height - offset), style: .grouped)
@@ -43,6 +43,7 @@ class MinistryTeamVC: TemplateVC {
         tableView.refreshControl = refreshControl
         tableView.separatorStyle = .none
         view.addSubview(tableView)
+        view.addSubview(upButton)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -60,13 +61,13 @@ class MinistryTeamVC: TemplateVC {
         
         if defaults.bool(forKey: "admin") {
             hostVC.navigationItem.rightBarButtonItem = hostVC.create
-            hostVC.createButton.addTarget(self, action: #selector(self.create), for: .touchUpInside)
+            hostVC.createButton.addTarget(self, action: #selector(create), for: .touchUpInside)
         }
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        hostVC.createButton.removeTarget(self, action: #selector(self.create), for: .touchUpInside)
+        hostVC.createButton.removeTarget(self, action: #selector(create), for: .touchUpInside)
     }
     
     func startRefreshControl() {
@@ -183,7 +184,7 @@ extension MinistryTeamVC: UITableViewDelegate {
             your.titleLabel?.font = UIFont(name: "Baskerville", size: TOGGLE_WIDTH/5)
             your.layer.borderWidth = TOGGLE_HEIGHT/20
             your.layer.borderColor = redColor.cgColor
-            your.addTarget(self, action: #selector(self.displayUsersMTs), for: .touchUpInside)
+            your.addTarget(self, action: #selector(displayUsersMTs), for: .touchUpInside)
             
             let join = UIButton(frame: CGRect(x: cellWidth/2 + 2, y: view.frame.height/20 - TOGGLE_HEIGHT/2,
                                               width: TOGGLE_WIDTH, height: TOGGLE_HEIGHT))
@@ -200,7 +201,7 @@ extension MinistryTeamVC: UITableViewDelegate {
             join.titleLabel?.font = UIFont(name: "Baskerville", size: TOGGLE_WIDTH/5)
             join.layer.borderWidth = TOGGLE_HEIGHT/20
             join.layer.borderColor = redColor.cgColor
-            join.addTarget(self, action: #selector(self.displayMTs), for: .touchUpInside)
+            join.addTarget(self, action: #selector(displayMTs), for: .touchUpInside)
             
             let headerView = UIView()
             headerView.backgroundColor = .clear

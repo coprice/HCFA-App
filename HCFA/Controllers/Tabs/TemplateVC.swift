@@ -7,13 +7,14 @@
 //
 
 import UIKit
-import InteractiveSideMenu
 
-class TemplateVC: UIViewController, SideMenuItemContent {
+class TemplateVC: UIViewController {
     
+    var upButton: UpButton!
     var hostVC: HostVC!
     var navBar: UINavigationBar!
     var tableView: UITableView!
+    var showingUpButton = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -21,18 +22,20 @@ class TemplateVC: UIViewController, SideMenuItemContent {
         
         navBar = navigationController!.navigationBar
         hostVC = navigationController?.viewControllers.first as! HostVC
+        
+        let barHeight = navigationController!.navigationBar.frame.height
+        let BUTTON_LENGTH = barHeight*0.6
+        let offset = barHeight + UIApplication.shared.statusBarFrame.height
+        
+        upButton = UpButton(frame: CGRect(x: view.frame.width, y: offset*1.2,
+                                          width: BUTTON_LENGTH*1.1, height: BUTTON_LENGTH*1.1))
+        upButton.addTarget(self, action: #selector(toTop), for: .touchDown)
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        hostVC.sliderButton.addTarget(self, action: #selector(self.sliderTapped), for: .touchUpInside)
         hostVC.navigationItem.leftBarButtonItem = hostVC.slider
         hostVC.navigationItem.rightBarButtonItems = nil
-    }
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        hostVC.sliderButton.removeTarget(self, action: #selector(self.sliderTapped), for: .touchUpInside)
     }
     
     func backToSignIn() {
@@ -43,7 +46,51 @@ class TemplateVC: UIViewController, SideMenuItemContent {
         })
     }
     
-    @objc func sliderTapped() {
-        showSideMenu()
+    func showUpButton() {
+        showingUpButton = true
+        UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.5, initialSpringVelocity: 0, options: .curveLinear, animations: {
+            self.upButton.transform = CGAffineTransform(translationX: -self.upButton.frame.width*1.5, y: 0)
+        }, completion: {_ in })
+    }
+    
+    func hideUpButton() {
+        showingUpButton = false
+        UIView.beginAnimations(nil, context: nil)
+        UIView.setAnimationDuration(0.05)
+        UIView.setAnimationCurve(.linear)
+        UIView.setAnimationBeginsFromCurrentState(true)
+        upButton.transform = CGAffineTransform(translationX: upButton.frame.width*1.5, y: 0)
+        UIView.commitAnimations()
+    }
+    
+    @objc func toTop() {
+        tableView.setContentOffset(CGPoint.zero, animated: true)
+        hideUpButton()
+    }
+}
+
+extension TemplateVC: UIScrollViewDelegate {
+    
+    func scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView) {
+        scrollingFinish()
+    }
+    
+    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+        scrollingFinish()
+    }
+    
+    func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+        if !decelerate {
+            scrollingFinish()
+        }
+    }
+    
+    func scrollingFinish() -> Void {
+        if tableView.contentOffset.y > tableView.frame.height/2 && !showingUpButton {
+            showUpButton()
+            
+        } else if tableView.contentOffset.y < tableView.frame.height/2 && showingUpButton {
+            hideUpButton()
+        }
     }
 }

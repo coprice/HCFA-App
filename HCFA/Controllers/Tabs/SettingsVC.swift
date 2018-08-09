@@ -7,9 +7,8 @@
 //
 
 import Eureka
-import InteractiveSideMenu
 
-class SettingsVC: FormViewController, SideMenuItemContent {
+class SettingsVC: FormViewController {
     
     var hostVC: HostVC!
     
@@ -61,7 +60,6 @@ class SettingsVC: FormViewController, SideMenuItemContent {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        hostVC.sliderButton.addTarget(self, action: #selector(self.sliderTapped), for: .touchUpInside)
         hostVC.navigationItem.leftBarButtonItem = hostVC.slider
         hostVC.navigationItem.rightBarButtonItems = nil
         
@@ -70,14 +68,5 @@ class SettingsVC: FormViewController, SideMenuItemContent {
         let backItem = UIBarButtonItem()
         backItem.title = hostVC.navigationItem.title
         hostVC.navigationItem.backBarButtonItem = backItem
-    }
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        hostVC.sliderButton.removeTarget(self, action: #selector(self.sliderTapped), for: .touchUpInside)
-    }
-    
-    @objc func sliderTapped() {
-        showSideMenu()
     }
 }

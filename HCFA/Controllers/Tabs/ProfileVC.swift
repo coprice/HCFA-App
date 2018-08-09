@@ -7,15 +7,14 @@
 //
 
 import Eureka
-import InteractiveSideMenu
 import AWSCore
 import AWSS3
 
-class ProfileVC: FormViewController, SideMenuItemContent {
-    
-    let save = UIButton()
+class ProfileVC: FormViewController {
+
     let picture = UIButton()
     
+    var save: UIBarButtonItem!
     var hostVC: HostVC!
     var sideMenu: SideMenuVC!
     var profileCell: ProfileCell!
@@ -23,6 +22,7 @@ class ProfileVC: FormViewController, SideMenuItemContent {
     var camera: DSCameraHandler!
     var loadingView: LoadingView!
     var cameraLoaded = false
+    var displayingSave = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -39,13 +39,7 @@ class ProfileVC: FormViewController, SideMenuItemContent {
                                                 y: view.frame.height/2 - view.frame.width*0.125,
                                                 width: view.frame.width*0.25, height: view.frame.width*0.25))
         
-        save.frame = CGRect(x: navBar.frame.width*0.8, y: 0,
-                            width: navBar.frame.width*0.2, height: navBar.frame.height)
-        save.setTitle("Save", for: .normal)
-        save.titleLabel?.textColor = .white
-        save.titleLabel?.font = UIFont(name: "Georgia", size: navBar.frame.width/21)
-        save.setTitleColor(barHighlightColor, for: .highlighted)
-        save.addTarget(self, action: #selector(self.saveTapped), for: .touchUpInside)
+        save = UIBarButtonItem(title: "Save", style: .done, target: self, action: #selector(saveTapped))
         
         picture.frame = CGRect(x: view.frame.width*0.25, y: view.frame.width*0.05,
                                width: view.frame.width*0.5, height: view.frame.width*0.5)
@@ -55,8 +49,7 @@ class ProfileVC: FormViewController, SideMenuItemContent {
         picture.layer.cornerRadius = picture.frame.width/2
         picture.layer.borderColor = UIColor.black.cgColor
         picture.layer.borderWidth = 1
-        picture.addGestureRecognizer(UITapGestureRecognizer(target: self,
-                                                            action: #selector(self.imageTapped)))
+        picture.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(imageTapped)))
         if let urlString = defaults.string(forKey: "image") {
             if let data = defaults.object(forKey: "profile") as? Data {
                 picture.setImage(UIImage(data: data), for: .normal)
@@ -147,10 +140,8 @@ class ProfileVC: FormViewController, SideMenuItemContent {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        hostVC.sliderButton.addTarget(self, action: #selector(self.sliderTapped), for: .touchUpInside)
         hostVC.navigationItem.leftBarButtonItem = hostVC.slider
         hostVC.navigationItem.rightBarButtonItems = nil
-        
         hostVC.navigationItem.title = "Profile"
         
         let backItem = UIBarButtonItem()
@@ -160,7 +151,6 @@ class ProfileVC: FormViewController, SideMenuItemContent {
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        hostVC.sliderButton.removeTarget(self, action: #selector(self.sliderTapped), for: .touchUpInside)
         
         let first = form.rowBy(tag: "first") as! NameRow
         let last = form.rowBy(tag: "last") as! NameRow
@@ -172,21 +162,21 @@ class ProfileVC: FormViewController, SideMenuItemContent {
         last.updateCell()
         email.updateCell()
         
-        hostVC.sliderButton.removeTarget(self, action: #selector(self.sliderTapped), for: .touchUpInside)
-        save.removeFromSuperview()
         picture.isUserInteractionEnabled = true
         tableView.endEditing(true)
     }
     
     func handleChange() {
         if valuesAllSame() {
-            if save.superview != nil {
-                save.removeFromSuperview()
+            if displayingSave {
+                displayingSave = false
+                hostVC.navigationItem.rightBarButtonItem = nil
                 picture.isUserInteractionEnabled = true
             }
         } else {
-            if save.superview == nil {
-                navBar.addSubview(save)
+            if !displayingSave {
+                displayingSave = true
+                hostVC.navigationItem.rightBarButtonItem = save
                 picture.isUserInteractionEnabled = false
             }
         }
@@ -268,10 +258,6 @@ class ProfileVC: FormViewController, SideMenuItemContent {
         }
     }
     
-    @objc func sliderTapped(sender: UIButton) {
-        showSideMenu()
-    }
-    
     @objc func saveTapped(sender: UIButton) {
         
         tableView.endEditing(true)
@@ -317,7 +303,8 @@ class ProfileVC: FormViewController, SideMenuItemContent {
                     defaults.set(first, forKey: "first")
                     defaults.set(last, forKey: "last")
                     defaults.set(email, forKey: "email")
-                    self.save.removeFromSuperview()
+                    self.displayingSave = false
+                    self.hostVC.navigationItem.rightBarButtonItem = nil
                     self.picture.isUserInteractionEnabled = true
                     createAlert(title: "Account Updated", message: "",
                                 view: self.navigationController!.viewControllers.last!)

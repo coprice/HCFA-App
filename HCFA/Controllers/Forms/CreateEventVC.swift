@@ -21,7 +21,7 @@ class CreateEventVC: CreateTemplateVC {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        done = UIBarButtonItem(title: "Done", style: .done, target: self, action: #selector(self.doneTapped))
+        done = UIBarButtonItem(title: "Done", style: .done, target: self, action: #selector(doneTapped))
         eventVC = hostVC.contentViewControllers[Tabs.Events] as! EventVC
         
         let today = Calendar.current.date(bySetting: .minute, value: 0, of: Date())
@@ -92,7 +92,7 @@ class CreateEventVC: CreateTemplateVC {
             }
         }
             
-            <<< DateTimeInlineRow() { row in
+        <<< DateTimeInlineRow() { row in
             row.title = "End"
             row.tag = "end"
             row.minuteInterval = 5

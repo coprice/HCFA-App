@@ -38,16 +38,16 @@ class EventVC: TemplateVC {
                                                   width: BUTTON_LENGTH, height: BUTTON_LENGTH))
         selectButton.setImage(UIImage(named: "select"), for: .normal)
         selectButton.imageView?.contentMode = .scaleAspectFit
-        selectButton.addTarget(self, action: #selector(self.selectRows), for: .touchUpInside)
-        selectButton.widthAnchor.constraint(equalToConstant: 28).isActive = true
+        selectButton.addTarget(self, action: #selector(selectRows), for: .touchUpInside)
+        selectButton.widthAnchor.constraint(equalToConstant: 44).isActive = true
         selectButton.heightAnchor.constraint(equalToConstant: 28).isActive = true
         
         select = UIBarButtonItem(customView: selectButton)
-        cancel = UIBarButtonItem(title: "Cancel", style: .done, target: self, action: #selector(self.cancelSelect))
+        cancel = UIBarButtonItem(title: "Cancel", style: .done, target: self, action: #selector(cancelSelect))
         
         let refreshControl = UIRefreshControl(frame: CGRect(x: 0, y: 0, width: view.frame.width, height: 0))
         refreshControl.tintColor = highlightColor
-        refreshControl.addTarget(self, action: #selector(self.refresh), for: UIControlEvents.valueChanged)
+        refreshControl.addTarget(self, action: #selector(refresh), for: UIControlEvents.valueChanged)
         
         let offset = barHeight + UIApplication.shared.statusBarFrame.height
         tableView = UITableView(frame: CGRect(x: 0, y: offset, width: view.frame.width,
@@ -75,11 +75,12 @@ class EventVC: TemplateVC {
         deleteButton.titleLabel?.font = UIFont(name: "Baskerville", size: view.frame.width/20)
         deleteButton.layer.borderWidth = 1
         deleteButton.layer.borderColor = redColor.cgColor
-        deleteButton.addTarget(self, action: #selector(self.deleteSelected), for: .touchUpInside)
+        deleteButton.addTarget(self, action: #selector(deleteSelected), for: .touchUpInside)
     
         loadingView = LoadingView(frame: CGRect(x: view.frame.width*0.375,
                                                 y: view.frame.height/2 - view.frame.width*0.125,
                                                 width: view.frame.width*0.25, height: view.frame.width*0.25))
+        view.addSubview(upButton)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -102,19 +103,25 @@ class EventVC: TemplateVC {
             } else {
                 hostVC.navigationItem.rightBarButtonItem = hostVC.create
             }
-            hostVC.createButton.addTarget(self, action: #selector(self.create), for: .touchUpInside)
+            hostVC.createButton.addTarget(self, action: #selector(create), for: .touchUpInside)
         }
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
+        
+        if tableView.allowsMultipleSelection {
+            cancelSelect()
+        }
+        
         if defaults.bool(forKey: "admin") || defaults.bool(forKey: "leader") {
-            hostVC.createButton.removeTarget(self, action: #selector(self.create), for: .touchUpInside)
+            hostVC.createButton.removeTarget(self, action: #selector(create), for: .touchUpInside)
         }
     }
     
     func startRefreshControl() {
-        tableView.setContentOffset(CGPoint(x: 0, y: -(tableView.refreshControl?.frame.size.height)!), animated: true)
+        tableView.setContentOffset(CGPoint(x: 0, y: -(tableView.refreshControl?.frame.size.height)!),
+                                   animated: false)
         tableView.refreshControl?.beginRefreshing()
     }
     
@@ -157,8 +164,7 @@ class EventVC: TemplateVC {
     }
     
     @objc func selectRows() {
-        hostVC.navigationItem.rightBarButtonItems = nil
-        hostVC.navigationItem.rightBarButtonItem = cancel
+        hostVC.navigationItem.rightBarButtonItems = [cancel]
         tableView.allowsMultipleSelection = true
     }
     
@@ -273,7 +279,7 @@ class EventVC: TemplateVC {
         displayingUpcoming = true
         
         if defaults.bool(forKey: "admin") || defaults.bool(forKey: "leader") {
-            hostVC.navigationItem.rightBarButtonItem = hostVC.create
+            hostVC.navigationItem.rightBarButtonItems = [hostVC.create]
         }
         
         rows = currentRows()
@@ -295,13 +301,6 @@ class EventVC: TemplateVC {
         
         rows = currentRows()
         tableView.reloadData()
-    }
-    
-    override func sliderTapped() {
-        if tableView.allowsMultipleSelection {
-            cancelSelect()
-        }
-        showSideMenu()
     }
 }
 
@@ -333,7 +332,7 @@ extension EventVC: UITableViewDelegate {
             upcoming.titleLabel?.font = UIFont(name: "Baskerville", size: TOGGLE_WIDTH/5)
             upcoming.layer.borderWidth = TOGGLE_HEIGHT/20
             upcoming.layer.borderColor = redColor.cgColor
-            upcoming.addTarget(self, action: #selector(self.displayUpcomingEvents), for: .touchUpInside)
+            upcoming.addTarget(self, action: #selector(displayUpcomingEvents), for: .touchUpInside)
             
             let past = UIButton(frame: CGRect(x: cellWidth/2 + 2, y: view.frame.height/20 - TOGGLE_HEIGHT/2,
                                               width: TOGGLE_WIDTH, height: TOGGLE_HEIGHT))
@@ -352,7 +351,7 @@ extension EventVC: UITableViewDelegate {
             past.titleLabel?.font = UIFont(name: "Baskerville", size: TOGGLE_WIDTH/5)
             past.layer.borderWidth = TOGGLE_HEIGHT/20
             past.layer.borderColor = redColor.cgColor
-            past.addTarget(self, action: #selector(self.displayPastEvents), for: .touchUpInside)
+            past.addTarget(self, action: #selector(displayPastEvents), for: .touchUpInside)
             
             let headerView = UIView()
             headerView.backgroundColor = .clear

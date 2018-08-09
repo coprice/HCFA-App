@@ -29,6 +29,7 @@ class HostVC: MenuContainerViewController {
         sliderButton.contentMode = .scaleAspectFit
         sliderButton.widthAnchor.constraint(equalToConstant: 28).isActive = true
         sliderButton.heightAnchor.constraint(equalToConstant: 28).isActive = true
+        sliderButton.addTarget(self, action: #selector(sliderTapped), for: .touchUpInside)
 
         createButton.frame = CGRect(x: 0, y: 0, width: BUTTON_LENGTH, height: BUTTON_LENGTH)
         createButton.setImage(UIImage(named: "create"), for: .normal)
@@ -47,5 +48,9 @@ class HostVC: MenuContainerViewController {
         
         menuViewController = SideMenuVC()
         menuViewController.menuContainerViewController = self
+    }
+    
+    @objc func sliderTapped() {
+        showSideMenu()
     }
 }

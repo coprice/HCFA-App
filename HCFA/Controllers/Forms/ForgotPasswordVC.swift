@@ -26,7 +26,7 @@ class ForgotPasswordVC: FormViewController {
         cancel.titleLabel?.textColor = .white
         cancel.titleLabel?.font = UIFont(name: "Georgia", size: navBar.frame.width/21)
         cancel.setTitleColor(barHighlightColor, for: .highlighted)
-        cancel.addTarget(self, action: #selector(self.cancelTapped), for: .touchUpInside)
+        cancel.addTarget(self, action: #selector(cancelTapped), for: .touchUpInside)
         
         loadingView = LoadingView(frame: CGRect(x: view.frame.width*0.375,
                                                 y: view.frame.height/2 - view.frame.width*0.125,
