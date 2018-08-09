@@ -10,7 +10,8 @@ import UIKit
 
 class TemplateVC: UIViewController {
     
-    var upButton: UpButton!
+    let upButton = UIButton()
+
     var hostVC: HostVC!
     var navBar: UINavigationBar!
     var tableView: UITableView!
@@ -27,8 +28,15 @@ class TemplateVC: UIViewController {
         let BUTTON_LENGTH = barHeight*0.6
         let offset = barHeight + UIApplication.shared.statusBarFrame.height
         
-        upButton = UpButton(frame: CGRect(x: view.frame.width, y: offset*1.2,
-                                          width: BUTTON_LENGTH*1.1, height: BUTTON_LENGTH*1.1))
+        upButton.frame = CGRect(x: view.frame.width, y: offset*1.2,
+                                width: BUTTON_LENGTH*1.1, height: BUTTON_LENGTH*1.1)
+        upButton.backgroundColor = UIColor(red: 0.4, green: 0.4, blue: 0.4, alpha: 1.0)
+        upButton.layer.cornerRadius = upButton.frame.width/2
+        
+        let arrow = UIImage(named: "arrow")
+        upButton.setImage(arrow, for: .normal)
+        upButton.setImage(arrow, for: .highlighted)
+        upButton.contentMode = .scaleAspectFit
         upButton.addTarget(self, action: #selector(toTop), for: .touchDown)
     }
     
