@@ -26,6 +26,8 @@ class HostVC: MenuContainerViewController {
         let BUTTON_LENGTH = navBar.frame.height*0.6
         sliderButton.frame = CGRect(x: 0, y: 0, width: BUTTON_LENGTH, height: BUTTON_LENGTH)
         sliderButton.setImage(UIImage(named: "slider"), for: .normal)
+        sliderButton.setImage(UIImage(named: "slider")?.withRenderingMode(.alwaysTemplate), for: .highlighted)
+        sliderButton.tintColor = barHighlightColor
         sliderButton.contentMode = .scaleAspectFit
         sliderButton.widthAnchor.constraint(equalToConstant: 28).isActive = true
         sliderButton.heightAnchor.constraint(equalToConstant: 28).isActive = true
@@ -33,6 +35,8 @@ class HostVC: MenuContainerViewController {
 
         createButton.frame = CGRect(x: 0, y: 0, width: BUTTON_LENGTH, height: BUTTON_LENGTH)
         createButton.setImage(UIImage(named: "create"), for: .normal)
+        createButton.setImage(UIImage(named: "create")?.withRenderingMode(.alwaysTemplate), for: .highlighted)
+        createButton.tintColor = barHighlightColor
         createButton.imageView?.contentMode = .scaleAspectFit
         createButton.widthAnchor.constraint(equalToConstant: 28).isActive = true
         createButton.heightAnchor.constraint(equalToConstant: 28).isActive = true

@@ -25,6 +25,7 @@ class EventImageView: UIImageView {
         
         spinner.activityIndicatorViewStyle = .whiteLarge
         spinner.center = CGPoint(x: frame.width/2, y: frame.height/2)
+        addSubview(spinner)
     }
     
     func initializeReload() {
@@ -44,20 +45,29 @@ class EventImageView: UIImageView {
     }
     
     func displayReload() {
-        spinner.removeFromSuperview()
+        spinner.stopAnimating()
         
         if !isCell {
             isUserInteractionEnabled = true
         }
+        
         addSubview(reload)
+    }
+    
+    func startSpinner() {
+        backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.8)
+        spinner.startAnimating()
+    }
+    
+    func stopSpinner() {
+        backgroundColor = .clear
+        spinner.stopAnimating()
     }
     
     @objc func download() {
         reload.removeFromSuperview()
         isUserInteractionEnabled = false
-        backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.8)
-        spinner.startAnimating()
-        addSubview(spinner)
+        startSpinner()
         
         if let url = URL(string: imageString) {
             getDataFromUrl(url: url) { data, response, error in
@@ -66,11 +76,10 @@ class EventImageView: UIImageView {
                 }
                 
                 DispatchQueue.main.async() {
-                    self.spinner.removeFromSuperview()
-                    
+
                     if let image = UIImage(data: data) {
                         self.image = image
-                        self.backgroundColor = .clear
+                        self.stopSpinner()
                         updateEventImages(self.eid, data)
                     } else {
                         self.displayReload()

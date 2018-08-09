@@ -121,7 +121,7 @@ class SetPermissionVC: FormViewController, TypedRowControllerType {
     func addAdmin(email: String) {
         API.addAdmin(uid: defaults.integer(forKey: "uid"), token: defaults.string(forKey: "token")!, email: email,
                      completionHandler: { response, data in
-                        self.handle(response, data, "Admin Permission Added")
+            self.handle(response, data, "Admin Permission Added")
         })
     }
     

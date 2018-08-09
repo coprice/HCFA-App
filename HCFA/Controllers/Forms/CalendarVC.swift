@@ -36,8 +36,8 @@ class CalendarVC: FormViewController {
             
             let dateFormatter = DateFormatter()
             dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-            startDate = dateFormatter.date(from: (self.data["start"] as! String))!
-            endDate = dateFormatter.date(from: (self.data["end"] as! String))!
+            startDate = dateFormatter.date(from: (data["start"] as! String))!
+            endDate = dateFormatter.date(from: (data["end"] as! String))!
             
             repeatString = "Never"
             notes = (data["description"] as! String)

@@ -283,7 +283,7 @@ class DisplayMinistryTeamVC: DisplayTemplateVC {
         let cancelAction = UIAlertAction(title: "Cancel", style: .cancel) { _ in }
         alert.addAction(leaveAction)
         alert.addAction(cancelAction)
-        self.present(alert, animated: true, completion: nil)
+        present(alert, animated: true, completion: nil)
     }
     
     @objc func joinMT() {

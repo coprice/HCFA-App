@@ -130,20 +130,26 @@ class EventCell: UITableViewCell {
             let eid = data["eid"] as! Int
             imageView.eid = eid
             imageView.imageString = imageString
-    
-            if let eventImages = defaults.dictionary(forKey: "eventImages") as? [String:Data] {
-                if let data = eventImages[String(eid)] {
-                    if let image = UIImage(data: data) {
-                        imageView.image = image
+            imageView.startSpinner()
+            view.addSubview(imageView)
+            
+            DispatchQueue.main.async {
+                if let eventImages = defaults.dictionary(forKey: "eventImages") as? [String:Data] {
+                    if let data = eventImages[String(eid)] {
+                        if let image = UIImage(data: data) {
+                            imageView.image = image
+                            imageView.stopSpinner()
+                        } else {
+                            imageView.download()
+                        }
+                    } else {
+                        imageView.download()
                     }
                 } else {
                     imageView.download()
                 }
-            } else {
-                imageView.download()
             }
             
-            view.addSubview(imageView)
         }
         
         view.addSubview(title)

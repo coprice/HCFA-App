@@ -37,6 +37,8 @@ class EventVC: TemplateVC {
                                                   y: (barHeight-BUTTON_LENGTH)/2,
                                                   width: BUTTON_LENGTH, height: BUTTON_LENGTH))
         selectButton.setImage(UIImage(named: "select"), for: .normal)
+        selectButton.setImage(UIImage(named: "select")?.withRenderingMode(.alwaysTemplate), for: .highlighted)
+        selectButton.tintColor = barHighlightColor
         selectButton.imageView?.contentMode = .scaleAspectFit
         selectButton.addTarget(self, action: #selector(selectRows), for: .touchUpInside)
         selectButton.widthAnchor.constraint(equalToConstant: 44).isActive = true

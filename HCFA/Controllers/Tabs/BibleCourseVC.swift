@@ -40,6 +40,8 @@ class BibleCourseVC: TemplateVC {
         
         let filterButton = UIButton(frame: CGRect(x: 0, y: 0, width: BUTTON_LENGTH, height: BUTTON_LENGTH))
         filterButton.setImage(UIImage(named: "filter"), for: .normal)
+        filterButton.setImage(UIImage(named: "filter")?.withRenderingMode(.alwaysTemplate), for: .highlighted)
+        filterButton.tintColor = barHighlightColor
         filterButton.imageView?.contentMode = .scaleAspectFit
         filterButton.addTarget(self, action: #selector(toggleFilter), for: .touchUpInside)
         filterButton.widthAnchor.constraint(equalToConstant: 40).isActive = true

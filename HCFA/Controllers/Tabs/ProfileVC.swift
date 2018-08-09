@@ -50,11 +50,14 @@ class ProfileVC: FormViewController {
         picture.layer.borderColor = UIColor.black.cgColor
         picture.layer.borderWidth = 1
         picture.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(imageTapped)))
-        if let urlString = defaults.string(forKey: "image") {
-            if let data = defaults.object(forKey: "profile") as? Data {
-                picture.setImage(UIImage(data: data), for: .normal)
-            } else if let url = URL(string: urlString) {
-                downloadImage(url: url, button: picture)
+        
+        DispatchQueue.main.async {
+            if let urlString = defaults.string(forKey: "image") {
+                if let data = defaults.object(forKey: "profile") as? Data {
+                    self.picture.setImage(UIImage(data: data), for: .normal)
+                } else if let url = URL(string: urlString) {
+                    downloadImage(url: url, button: self.picture)
+                }
             }
         }
         
@@ -196,7 +199,7 @@ class ProfileVC: FormViewController {
     
     func backToSignIn() {
         resetDefaults()
-        let signInVC = self.navigationController!.presentingViewController!
+        let signInVC = navigationController!.presentingViewController!
         dismiss(animated: true, completion: {
             createAlert(title: "Session Expired", message: "", view: signInVC)
         })
@@ -317,7 +320,7 @@ class ProfileVC: FormViewController {
         tableView.endEditing(true)
         
         let optionMenu = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
-        optionMenu.popoverPresentationController?.sourceView = self.view
+        optionMenu.popoverPresentationController?.sourceView = view
         
         let takePhoto = UIAlertAction(title: "Take Photo", style: .default) { (alert : UIAlertAction!) in
             self.camera.getCameraOn(self, canEdit: true)
@@ -330,7 +333,7 @@ class ProfileVC: FormViewController {
         optionMenu.addAction(takePhoto)
         optionMenu.addAction(sharePhoto)
         optionMenu.addAction(cancelAction)
-        self.present(optionMenu, animated: true, completion: nil)
+        present(optionMenu, animated: true, completion: nil)
     }
 }
 

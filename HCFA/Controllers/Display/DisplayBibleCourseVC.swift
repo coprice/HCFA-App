@@ -268,7 +268,8 @@ class DisplayBibleCourseVC: DisplayTemplateVC {
                                       preferredStyle: .alert)
         let leaveAction = UIAlertAction(title: "Leave", style: .destructive) { _ in
             
-            API.leaveCourse(uid: defaults.integer(forKey: "uid"), token: defaults.string(forKey: "token")!, cid: self.data["cid"] as! Int, completionHandler: { response, data in
+            API.leaveCourse(uid: defaults.integer(forKey: "uid"), token: defaults.string(forKey: "token")!,
+                            cid: self.data["cid"] as! Int, completionHandler: { response, data in
                 
                 switch response {
                 case .NotConnected:
@@ -293,7 +294,7 @@ class DisplayBibleCourseVC: DisplayTemplateVC {
         let cancelAction = UIAlertAction(title: "Cancel", style: .cancel) { _ in }
         alert.addAction(leaveAction)
         alert.addAction(cancelAction)
-        self.present(alert, animated: true, completion: nil)
+        present(alert, animated: true, completion: nil)
     }
     
     @objc func joinBC() {

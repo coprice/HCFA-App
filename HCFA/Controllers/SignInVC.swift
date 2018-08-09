@@ -57,8 +57,8 @@ class SignInVC: UIViewController {
         loginActive = true
         switchingMenu = false
         
-        let BUTTON_WIDTH = self.view.frame.width/4
-        let BUTTON_HEIGHT = self.view.frame.height*0.05625
+        let BUTTON_WIDTH = view.frame.width/4
+        let BUTTON_HEIGHT = view.frame.height*0.05625
         let TEXT_SIZE = view.frame.width*0.05
         
         let TOGGLE_Y = view.frame.height*0.225
@@ -292,8 +292,8 @@ class SignInVC: UIViewController {
     
     func displayLoginForm(duration: Double, completion: ((Bool) -> Void)?) {
         
-        let FIELD_WIDTH = self.view.frame.width*0.55
-        let FIELD_HEIGHT = self.view.frame.height*0.075
+        let FIELD_WIDTH = view.frame.width*0.55
+        let FIELD_HEIGHT = view.frame.height*0.075
         let BUTTON_WIDTH = FIELD_WIDTH/2
         let BUTTON_HEIGHT = FIELD_HEIGHT*0.75
         
@@ -397,7 +397,7 @@ class SignInVC: UIViewController {
     @objc func forgotTapped() {
         presentingPassword = true
         let nav = UINavigationController(rootViewController: ForgotPasswordVC())
-        self.present(nav, animated: true, completion: nil)
+        present(nav, animated: true, completion: nil)
     }
     
     @objc func submitPressed() {
