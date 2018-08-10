@@ -80,7 +80,11 @@ class ForgotPasswordVC: FormViewController {
                 case .Error:
                     createAlert(title: "Error", message: data as! String, view: self)
                 case .InternalError:
-                    createAlert(title: "Internal Server Error", message: "Something went wrong", view: self)
+                    if let msg = data as? String {
+                        createAlert(title: "Internal Server Error", message: msg, view: self)
+                    } else {
+                        createAlert(title: "Internal Server Error", message: "Something went wrong", view: self)
+                    }
                 default:
                     let signInVC = self.navigationController!.presentingViewController!
                     self.dismiss(animated: true, completion: {

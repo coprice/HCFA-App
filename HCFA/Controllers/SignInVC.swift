@@ -187,6 +187,7 @@ class SignInVC: UIViewController {
             presentingPassword = false
             return
         }
+        
         if defaults.integer(forKey: "uid") == 0 {
             handleLogin()
             

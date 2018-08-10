@@ -320,6 +320,9 @@ extension API {
                 if errorMessage == "Session Expired" {
                     return completionHandler(.InvalidSession, nil)
                 }
+                if response?.statusCode == 500 {
+                    return completionHandler(.InternalError, errorMessage)
+                }
                 return completionHandler(.Error, errorMessage)
             }
             

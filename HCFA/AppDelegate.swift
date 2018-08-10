@@ -41,13 +41,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
                                                                                   size: window!.frame.width/21)!],
                                               for: .highlighted)
         
-        window?.rootViewController = SignInVC()
-        window?.makeKeyAndVisible()
-        
         if let notification = launchOptions?[.remoteNotification] as? [String: AnyObject] {
             let aps = notification["aps"] as! [String: AnyObject]
             print(aps)
         }
+        
+        window?.rootViewController = SignInVC()
+        window?.makeKeyAndVisible()
         
         // Instantiate AWSMobileClient to establish AWS user credentials
         return AWSMobileClient.sharedInstance().interceptApplication(application, didFinishLaunchingWithOptions: launchOptions)
@@ -99,21 +99,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         print("Failed to register for remote notifications with error: \(error)")
     }
     
-    func getNotificationSettings() {
-        UNUserNotificationCenter.current().getNotificationSettings { (settings) in
-            print("Notification settings: \(settings)")
-            guard settings.authorizationStatus == .authorized else { return }
-            UIApplication.shared.registerForRemoteNotifications()
-        }
-    }
-    
     func registerForPushNotifications() {
         UNUserNotificationCenter.current().delegate = self
         UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound, .badge]) {
             (granted, error) in
             print("Permission granted for push notifications: \(granted)")
             guard granted else { return }
-            self.getNotificationSettings()
+            DispatchQueue.main.async {
+                UIApplication.shared.registerForRemoteNotifications()
+            }
         }
     }
 }
