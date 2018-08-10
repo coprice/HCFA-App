@@ -48,6 +48,7 @@ func resetDefaults() {
     defaults.set([], forKey: "courses")
     defaults.set(nil, forKey: "image")
     defaults.set(nil, forKey: "profile")
+    defaults.set(nil, forKey: "userAPNToken")
 }
 
 // -- Colors --

@@ -88,16 +88,31 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         let tokenParts = deviceToken.map { data -> String in
             return String(format: "%02.2hhx", data)
         }
-        let token = tokenParts.joined()
+        let loadedToken = tokenParts.joined()
 
-        print("Device Token: \(token)")
+        print("Device Token: \(loadedToken)")
         
-        defaults.set(token, forKey: "apnToken")
+        defaults.set(loadedToken, forKey: "loadedAPNToken")
+        
+        if let userToken = defaults.string(forKey: "userAPNToken") {
+            let uid = defaults.integer(forKey: "uid")
+            if loadedToken != userToken && uid != 0 {
+                API.updateAPNToken(uid: 0, token: defaults.string(forKey: "token")!, apnToken: loadedToken) {
+                    response, data in
+                    
+                    if response == .Success {
+                        defaults.set(loadedToken, forKey: "userAPNToken")
+                    }
+                }
+            }
+        }
     }
     
     func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
         // 1. Print out error if PNs registration not successful
         print("Failed to register for remote notifications with error: \(error)")
+        
+        // defaults.set("98fefd9eb3ab038e041332f0ad8dea051c1f534e3991d1ab689c5a3d4a4ecefd", forKey: "loadedAPNToken")
     }
     
     func registerForPushNotifications() {

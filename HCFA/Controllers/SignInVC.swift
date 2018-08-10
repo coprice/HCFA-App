@@ -195,12 +195,12 @@ class SignInVC: UIViewController {
             API.validate(uid: defaults.integer(forKey: "uid"), token: defaults.string(forKey: "token")!,
                          completionHandler: { response, _ in
                 
-                switch response {
-                case.Success:
+                if response == .Success {
                     self.atLaunch = false
                     let nav = UINavigationController(rootViewController: HostVC())
                     self.present(nav, animated: true, completion: nil)
-                default:
+                
+                } else {
                     resetDefaults()
                     self.handleLogin()
                 }
@@ -395,6 +395,15 @@ class SignInVC: UIViewController {
         spinner.stopAnimating()
     }
     
+    func updateAPNToken(_ apnToken: String) {
+        API.updateAPNToken(uid: defaults.integer(forKey: "uid"), token: defaults.string(forKey: "token")!, apnToken: apnToken, completionHandler: { response, data in
+            
+            if response == .Success {
+                defaults.set(apnToken, forKey: "userAPNToken")
+            }
+        })
+    }
+    
     @objc func forgotTapped() {
         presentingPassword = true
         let nav = UINavigationController(rootViewController: ForgotPasswordVC())
@@ -448,6 +457,23 @@ class SignInVC: UIViewController {
                             defaults.set(nil, forKey: "image")
                             defaults.set(nil, forKey: "profile")
                         }
+                        
+                        if let apnToken = data["apn_token"] as? String {
+                            defaults.set(apnToken, forKey: "userAPNToken")
+                        }
+                        
+                        DispatchQueue.main.async {
+                            if let loadedToken = defaults.string(forKey: "loadedAPNToken") {
+                                if let apnToken = data["apn_token"] as? String {
+                                    if apnToken != loadedToken {
+                                        self.updateAPNToken(loadedToken)
+                                    }
+                                } else {
+                                    self.updateAPNToken(loadedToken)
+                                }
+                            }
+                        }
+
                         self.loadHomePage(duration: 0.5)
                     }
                 })
@@ -503,8 +529,14 @@ class SignInVC: UIViewController {
                         defaults.set(data["admin"] as! Bool, forKey: "admin")
                         defaults.set(data["leader"] as! Bool, forKey: "leader")
                         defaults.set(data["token"] as! String, forKey: "token")
-                        defaults.set("", forKey: "image")
+                        defaults.set(nil, forKey: "image")
                         defaults.set(nil, forKey: "profile")
+                        
+                        DispatchQueue.main.async {
+                            if let loadedToken = defaults.string(forKey: "loadedAPNToken") {
+                                self.updateAPNToken(loadedToken)
+                            }
+                        }
                         
                         self.loadHomePage(duration: 0.5)
                     }
