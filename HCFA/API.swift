@@ -107,6 +107,15 @@ class API {
                            completionHandler: completionHandler)
     }
     
+    class func updateAPNToken(uid: Int, token: String, apnToken: String,
+                              completionHandler: @escaping (URLResponses, Any?) -> Void) {
+        
+        let json = ["uid": uid, "token": token, "apn_token": apnToken] as [String:Any]
+        
+        API.performRequest(requestType: "POST", urlPath: "/users/update/apn", json: json,
+                           completionHandler: completionHandler)
+    }
+    
     class func sendPasswordRequest(email: String, completionHandler: @escaping (URLResponses, Any?) -> Void) {
         
         let json = ["email": email]

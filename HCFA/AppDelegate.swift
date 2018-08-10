@@ -91,7 +91,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         let token = tokenParts.joined()
 
         print("Device Token: \(token)")
-        // save this token to userdefaults
+        
+        defaults.set(token, forKey: "apnToken")
     }
     
     func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
