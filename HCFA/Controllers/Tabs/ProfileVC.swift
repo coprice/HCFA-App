@@ -325,7 +325,7 @@ class ProfileVC: FormViewController {
         let takePhoto = UIAlertAction(title: "Take Photo", style: .default) { (alert : UIAlertAction!) in
             self.camera.getCameraOn(self, canEdit: true)
         }
-        let sharePhoto = UIAlertAction(title: "Photo Libray", style: .default) { (alert : UIAlertAction!) in
+        let sharePhoto = UIAlertAction(title: "Photo Library", style: .default) { (alert : UIAlertAction!) in
             self.camera.getPhotoLibraryOn(self, canEdit: true)
         }
         let cancelAction = UIAlertAction(title: "Cancel", style: .cancel) { (alert : UIAlertAction!) in

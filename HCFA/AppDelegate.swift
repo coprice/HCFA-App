@@ -10,6 +10,7 @@ import UIKit
 import AWSCore
 import AWSMobileClient
 import UserNotifications
+import EventKit
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterDelegate {
@@ -106,13 +107,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
                 }
             }
         }
+        
+        EKEventStore().requestAccess(to: .event, completion: {_, _ in })
     }
     
     func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
         // 1. Print out error if PNs registration not successful
         print("Failed to register for remote notifications with error: \(error)")
         
-        // defaults.set("98fefd9eb3ab038e041332f0ad8dea051c1f534e3991d1ab689c5a3d4a4ecefd", forKey: "loadedAPNToken")
+        EKEventStore().requestAccess(to: .event, completion: {_, _ in })
     }
     
     func registerForPushNotifications() {

@@ -211,14 +211,15 @@ class CalendarVC: FormViewController {
         }
         .onCellSelection({ _cell, _row in
             
-            self.navigationController!.popViewController(animated: true)
+            let hostVC = self.navigationController!.viewControllers.first!
+            self.navigationController!.popToViewController(hostVC, animated: true)
             
             self.eventStore.requestAccess(to: .event) { (granted, error) in
 
                 if !granted {
                     createAlert(title: "Access not granted",
                                 message: "Go to Settings > HCFA > toggle Calendars on",
-                                view: self.navigationController!.viewControllers.last!)
+                                view: hostVC)
                 } else if error == nil {
 
                     let values = self.form.values()
@@ -264,22 +265,21 @@ class CalendarVC: FormViewController {
                         try self.eventStore.save(event, span: .thisEvent)
                     } catch let error as NSError {
                         createAlert(title: "Error: \(String(describing: error))", message: "Failed to save event",
-                                    view: self.navigationController!.viewControllers.last!)
+                                    view: hostVC)
                     }
                     if self.type == .Event {
-                        createAlert(title: "Success!", message: "Event is now in your calendar",
-                                    view: self.navigationController!.viewControllers.last!)
+                        createAlert(title: "Success!", message: "Event is now in your calendar", view: hostVC)
                     } else if self.type == .Course {
                         createAlert(title: "Success!", message: "This bible course is now in your calendar",
-                                    view: self.navigationController!.viewControllers.last!)
+                                    view: hostVC)
                     } else if self.type == .Team {
                         createAlert(title: "Success!", message: "This ministry team meeting is now in your calendar",
-                                    view: self.navigationController!.viewControllers.last!)
+                                    view: hostVC)
                     }
 
                 } else {
                     createAlert(title: "Error: \(String(describing: error))", message: "Failed to create event",
-                                view: self.navigationController!.viewControllers.last!)
+                                view: hostVC)
                 }
             }
         })
