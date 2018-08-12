@@ -48,50 +48,47 @@ class SignInVC: UIViewController {
     }
     
     func prepareDisplay() {
-        let BANNER_HEIGHT = view.frame.width*(54/233)
+        let BANNER_WIDTH = view.frame.width*(20/32)
+        let BANNER_HEIGHT = BANNER_WIDTH*(110/200)
         banner = UIImageView(image: UIImage(named: "banner"))
-        banner.frame = CGRect(x: 0.0, y: view.frame.midY - BANNER_HEIGHT/2,
-                              width: view.frame.width, height: BANNER_HEIGHT)
+        banner.frame = CGRect(x: view.frame.midX - BANNER_WIDTH/2, y: view.frame.midY - BANNER_HEIGHT/2,
+                              width: BANNER_WIDTH, height: BANNER_HEIGHT)
         banner.contentMode = .scaleAspectFit
         
         loginActive = true
         switchingMenu = false
         
-        let BUTTON_WIDTH = view.frame.width/4
-        let BUTTON_HEIGHT = view.frame.height*0.05625
-        let TEXT_SIZE = view.frame.width*0.05
+        let BUTTON_WIDTH = view.frame.width*0.275
+        let BUTTON_HEIGHT = view.frame.height*0.06
+        let TEXT_SIZE = view.frame.width*0.04
         
         let TOGGLE_Y = view.frame.height*0.225
         
         login.frame = CGRect(x: view.frame.midX - BUTTON_WIDTH - 2, y: TOGGLE_Y,
                              width: BUTTON_WIDTH, height: BUTTON_HEIGHT)
-        login.layer.cornerRadius = BUTTON_HEIGHT/5
+        login.layer.cornerRadius = BUTTON_HEIGHT*0.25
         login.setBackgroundImage(roundedImage(color: redColor, width: BUTTON_WIDTH, height: BUTTON_HEIGHT,
                                               cornerRadius: login.layer.cornerRadius),
                                  for: .highlighted)
         login.alpha = 0
-        login.setTitle("Log In", for: .normal)
-        login.titleLabel?.font =  UIFont(name: "Baskerville", size: BUTTON_WIDTH/5)
+        login.setTitle("LOG IN", for: .normal)
+        login.titleLabel?.font = UIFont(name: "Montserrat-Light", size: view.frame.width/22)
         login.backgroundColor = redColor
-        login.layer.borderWidth = BUTTON_HEIGHT/20
-        login.layer.borderColor = redColor.cgColor
         login.addTarget(self, action: #selector(loginPressed), for: .touchUpInside)
         
         register.frame = CGRect(x: view.frame.midX + 2, y: TOGGLE_Y,
                                 width: BUTTON_WIDTH, height: BUTTON_HEIGHT)
-        register.layer.cornerRadius = BUTTON_HEIGHT/5
+        register.layer.cornerRadius = BUTTON_HEIGHT*0.25
         register.setBackgroundImage(roundedImage(color: redColor, width: BUTTON_WIDTH, height: BUTTON_HEIGHT,
                                                  cornerRadius: register.layer.cornerRadius),
                                     for: .highlighted)
         register.alpha = 0
-        register.setTitle("Register", for: .normal)
-        register.titleLabel?.font =  UIFont(name: "Baskerville", size: BUTTON_WIDTH/5)
+        register.setTitle("REGISTER", for: .normal)
+        register.titleLabel?.font = UIFont(name: "Montserrat-Light", size: view.frame.width/22)
         register.backgroundColor = highlightColor
-        register.layer.borderWidth = BUTTON_HEIGHT/20
-        register.layer.borderColor = redColor.cgColor
         register.addTarget(self, action: #selector(registerPressed), for: .touchUpInside)
         
-        firstName.font = UIFont(name: "Baskerville", size: TEXT_SIZE)
+        firstName.font = UIFont(name: "Montserrat-Regular", size: TEXT_SIZE)
         firstName.alpha = 0.0
         firstName.placeholder = "First"
         firstName.borderStyle = .roundedRect
@@ -100,7 +97,7 @@ class SignInVC: UIViewController {
         firstName.autocorrectionType = .no
         firstName.tag = 1
         
-        lastName.font = UIFont(name: "Baskerville", size: TEXT_SIZE)
+        lastName.font = UIFont(name: "Montserrat-Regular", size: TEXT_SIZE)
         lastName.alpha = 0.0
         lastName.placeholder = "Last"
         lastName.borderStyle = .roundedRect
@@ -109,7 +106,7 @@ class SignInVC: UIViewController {
         lastName.autocorrectionType = .no
         lastName.tag = 2
         
-        email.font = UIFont(name: "Baskerville", size: TEXT_SIZE)
+        email.font = UIFont(name: "Montserrat-Regular", size: TEXT_SIZE)
         email.alpha = 0.0
         email.placeholder = "Email"
         email.borderStyle = .roundedRect
@@ -119,7 +116,7 @@ class SignInVC: UIViewController {
         email.autocorrectionType = .no
         email.tag = 3
         
-        password.font = UIFont(name: "Baskerville", size: TEXT_SIZE)
+        password.font = UIFont(name: "Montserrat-Regular", size: TEXT_SIZE)
         password.alpha = 0.0
         password.placeholder = "Password"
         password.borderStyle = .roundedRect
@@ -129,7 +126,7 @@ class SignInVC: UIViewController {
         password.autocorrectionType = .no
         password.tag = 4
         
-        confirm.font = UIFont(name: "Baskerville", size: TEXT_SIZE)
+        confirm.font = UIFont(name: "Montserrat-Regular", size: TEXT_SIZE)
         confirm.alpha = 0.0
         confirm.placeholder = "Confirm Password"
         confirm.borderStyle = .roundedRect
@@ -150,12 +147,15 @@ class SignInVC: UIViewController {
         }
         
         submit.alpha = 0.0
-        submit.layer.cornerRadius = BUTTON_HEIGHT/10
-        submit.backgroundColor = redColor
-        submit.setTitle("Submit", for: .normal)
-        submit.titleLabel?.font = UIFont(name: "Baskerville", size: BUTTON_WIDTH/5)
-        submit.setBackgroundImage(roundedImage(color: highlightColor, width: BUTTON_WIDTH, height: BUTTON_HEIGHT,
+        submit.layer.cornerRadius = BUTTON_HEIGHT*0.25
+        submit.setTitle("LOG IN", for: .normal)
+        submit.titleLabel?.font = UIFont(name: "Montserrat-Medium", size: view.frame.width/22)
+        
+        let FIELD_WIDTH = view.frame.width*0.55
+        submit.setBackgroundImage(roundedImage(color: highlightColor, width: FIELD_WIDTH, height: BUTTON_HEIGHT,
                                                cornerRadius: submit.layer.cornerRadius), for: .highlighted)
+        submit.setBackgroundImage(roundedImage(color: redColor, width: FIELD_WIDTH, height: BUTTON_HEIGHT,
+                                               cornerRadius: submit.layer.cornerRadius), for: .normal)
         submit.addTarget(self, action: #selector(submitPressed), for: .touchUpInside)
         
         forgot.alpha = 0.0
@@ -165,7 +165,7 @@ class SignInVC: UIViewController {
         forgot.titleLabel?.textAlignment = .center
         forgot.titleLabel?.baselineAdjustment = .alignCenters
         forgot.titleLabel?.adjustsFontSizeToFitWidth = true
-        forgot.titleLabel?.font = UIFont(name: "Baskerville", size: BUTTON_WIDTH*0.175)
+        forgot.titleLabel?.font = UIFont(name: "Montserrat-Regular", size: BUTTON_WIDTH*0.175)
         forgot.addTarget(self, action: #selector(forgotTapped), for: .touchUpInside)
         
         scrollView.frame = CGRect(x: 0, y: view.frame.height*0.31,
@@ -183,6 +183,7 @@ class SignInVC: UIViewController {
     }
     
     override func viewDidAppear(_ animated: Bool) {
+        
         if presentingPassword {
             presentingPassword = false
             return
@@ -212,12 +213,13 @@ class SignInVC: UIViewController {
         if !animationComplete {
             prepareDisplay()
             
+            
             if atLaunch {
-                DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(1), execute: {
-                    self.moveImage(self.banner, duration: 1, curve: .linear, x: 0, y: -self.view.frame.height * 0.35)
+                DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(500), execute: {
+                    self.moveImage(1.5)
                 })
                 animationComplete = true
-                DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(2), execute: {
+                DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(1), execute: {
                     self.displayToggles(duration: 0.5)
                     self.displayLoginForm(duration: 0.5, completion: nil)
                 })
@@ -227,8 +229,8 @@ class SignInVC: UIViewController {
                 UIView.animate(withDuration: 0.5, delay: 0.0, options: .curveEaseIn, animations: {
                     self.banner.alpha = 1.0
                 }, completion: { _ in
-                    self.moveImage(self.banner, duration: 1, curve: .linear, x: 0, y: -self.view.frame.height * 0.35)
-                    DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(1), execute: {
+                    self.moveImage(1.5)
+                    DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(500), execute: {
                         self.displayToggles(duration: 0.5)
                         self.displayLoginForm(duration: 0.5, completion: nil)
                     })
@@ -257,8 +259,12 @@ class SignInVC: UIViewController {
             view.addSubview(forgot)
             
             banner.alpha = 0.0
-            banner.frame = CGRect(x: 0, y: view.frame.midY - view.frame.height*0.35 - banner.frame.height/2,
-                                  width: banner.frame.width, height: banner.frame.height)
+            
+            let bannerWidth = self.view.frame.width*0.4
+            let bannerHeight = bannerWidth*11/20
+            banner.frame = CGRect(x: view.frame.midX - bannerWidth/2,
+                                  y: view.frame.midY - view.frame.height*0.37 - bannerHeight/2,
+                                  width: bannerWidth, height: bannerHeight)
             displayToggles(duration: 0.5)
             displayLoginForm(duration: 0.5, completion: nil)
             UIView.animate(withDuration: 0.5, delay: 0.0, options: .curveEaseIn, animations: {
@@ -267,18 +273,16 @@ class SignInVC: UIViewController {
         }
     }
     
-    func moveImage(_ image: UIImageView, duration: TimeInterval, curve: UIViewAnimationCurve,
-                   x: CGFloat, y: CGFloat) {
-        
-        UIView.beginAnimations(nil, context: nil)
-        UIView.setAnimationDuration(duration)
-        UIView.setAnimationCurve(curve)
-        UIView.setAnimationBeginsFromCurrentState(true)
-        
-        let transform = CGAffineTransform(translationX: x, y: y)
-        image.transform = transform
-        
-        UIView.commitAnimations()
+    func moveImage(_ duration: Double) {
+        UIView.animate(withDuration: duration, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 0,
+                       options: .curveLinear, animations: {
+                        
+            let newWidth = self.view.frame.width*0.4
+            let newHeight = newWidth*11/20
+            self.banner.frame = CGRect(x: self.view.frame.midX - newWidth/2,
+                                       y: self.view.frame.midY - self.view.frame.height*0.37 - newHeight/2,
+                                       width: newWidth, height: newHeight)
+        })
     }
     
     func displayToggles(duration: Double) {
@@ -295,7 +299,6 @@ class SignInVC: UIViewController {
         
         let FIELD_WIDTH = view.frame.width*0.55
         let FIELD_HEIGHT = view.frame.height*0.075
-        let BUTTON_WIDTH = FIELD_WIDTH/2
         let BUTTON_HEIGHT = FIELD_HEIGHT*0.75
         
         email.frame = CGRect(x: view.frame.midX - FIELD_WIDTH/2, y: view.frame.height*0.32,
@@ -304,12 +307,14 @@ class SignInVC: UIViewController {
         password.frame = CGRect(x: view.frame.midX - FIELD_WIDTH/2, y: view.frame.height*0.42,
                                 width: FIELD_WIDTH, height: FIELD_HEIGHT)
         
-        forgot.frame = CGRect(x: view.frame.midX - BUTTON_WIDTH*0.625,
-                              y: password.frame.height + password.frame.origin.y + BUTTON_HEIGHT/8,
-                              width: BUTTON_WIDTH*1.25, height: BUTTON_HEIGHT*0.75)
+        submit.frame = CGRect(x: view.frame.midX - FIELD_WIDTH/2, y: view.frame.height*0.53,
+                              width: FIELD_WIDTH, height: BUTTON_HEIGHT)
         
-        submit.frame = CGRect(x: view.frame.midX - BUTTON_WIDTH/2, y: BUTTON_HEIGHT*0.875 + view.frame.height*0.52,
-                              width: BUTTON_WIDTH, height: BUTTON_HEIGHT)
+        forgot.frame = CGRect(x: view.frame.midX - FIELD_WIDTH*0.3125,
+                              y: submit.frame.origin.y + BUTTON_HEIGHT*9/8,
+                              width: FIELD_WIDTH*0.625, height: BUTTON_HEIGHT*0.75)
+        
+        submit.setTitle("LOG IN", for: .normal)
         
         UIView.animate(withDuration: duration, delay: 0.0, options: .curveEaseIn, animations: {
             self.email.alpha = 1.0
@@ -323,7 +328,6 @@ class SignInVC: UIViewController {
         
         let FIELD_WIDTH = view.frame.width*0.55
         let FIELD_HEIGHT = view.frame.height*0.075
-        let BUTTON_WIDTH = view.frame.width/4
         let BUTTON_HEIGHT = FIELD_HEIGHT*0.75
         
         view.addSubview(scrollView)
@@ -341,8 +345,10 @@ class SignInVC: UIViewController {
         
         confirm.frame = CGRect(x: startingX, y: view.frame.height*0.31, width: FIELD_WIDTH, height: FIELD_HEIGHT)
         
-        submit.frame = CGRect(x: (scrollView.frame.width - BUTTON_WIDTH)/2, y: view.frame.height*0.41,
-                              width: BUTTON_WIDTH, height: BUTTON_HEIGHT)
+        submit.frame = CGRect(x: (scrollView.frame.width - FIELD_WIDTH)/2, y: view.frame.height*0.41,
+                              width: FIELD_WIDTH, height: BUTTON_HEIGHT)
+        
+        submit.setTitle("REGISTER", for: .normal)
         
         UIView.animate(withDuration: duration, delay: 0.0, options: .curveEaseIn, animations: {
             self.firstName.alpha = 1.0

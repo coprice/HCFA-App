@@ -35,7 +35,7 @@ class EventImageView: UIImageView {
             reload.setTitle("Refresh Page", for: .normal)
             reload.setTitleColor(.white, for: .normal)
             reload.titleLabel?.baselineAdjustment = .alignCenters
-            reload.titleLabel?.font = UIFont(name: "Baskerville", size: frame.width/16)
+            reload.titleLabel?.font = UIFont(name: "Montserrat-Regular", size: frame.width/18)
         } else {
             reload.frame = CGRect(x: frame.width*0.35, y: frame.height*0.3,
                                   width: frame.width*0.3, height: frame.width*0.3)

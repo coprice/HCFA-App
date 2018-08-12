@@ -32,8 +32,8 @@ class CreateMinistryTeamVC: CreateTemplateVC {
                 row.value = (data["name"] as! String)
             }
             row.cellUpdate { cell, row in
-                cell.textLabel?.font = UIFont(name: "Baskerville", size: self.view.frame.width/20)
-                cell.textField.font = UIFont(name: "Baskerville", size: self.view.frame.width/20)
+                cell.textLabel?.font = formFont
+                cell.textField.font = formFont
             }
             row.onCellHighlightChanged { cell, row in
                 cell.textLabel?.textColor = redColor
@@ -48,8 +48,8 @@ class CreateMinistryTeamVC: CreateTemplateVC {
                 row.value = (data["description"] as! String)
             }
             row.cellUpdate { cell, row in
-                cell.placeholderLabel?.font = UIFont(name: "Baskerville", size: self.view.frame.width/20)
-                cell.textView.font = UIFont(name: "Baskerville", size: self.view.frame.width/20)
+                cell.placeholderLabel?.font = formFont
+                cell.textView.font = formFont
             }
         }
             
@@ -68,10 +68,13 @@ class CreateMinistryTeamVC: CreateTemplateVC {
         }
         .onPresent({(from, to) in
             to.enableDeselection = false
+            to.selectableRowCellUpdate = { cell, row in
+                cell.textLabel?.font = formFont
+            }
         })
         .cellUpdate({cell, row in
-            cell.textLabel?.font = UIFont(name: "Baskerville", size: self.view.frame.width/20)
-            cell.detailTextLabel?.font = UIFont(name: "Baskerville", size: self.view.frame.width/20)
+            cell.textLabel?.font = formFont
+            cell.detailTextLabel?.font = formFont
             cell.detailTextLabel?.textColor = .black
             self.form.rowBy(tag: "start")?.evaluateHidden()
             self.form.rowBy(tag: "end")?.evaluateHidden()
@@ -93,8 +96,8 @@ class CreateMinistryTeamVC: CreateTemplateVC {
                 row.value = today
             }
             row.cellUpdate { cell, row in
-                cell.textLabel?.font = UIFont(name: "Baskerville", size: self.view.frame.width/20)
-                cell.detailTextLabel?.font = UIFont(name: "Baskerville", size: self.view.frame.width/20)
+                cell.textLabel?.font = formFont
+                cell.detailTextLabel?.font = formFont
                 cell.detailTextLabel?.textColor = .black
             }
             row.onExpandInlineRow { cell, row, _ in
@@ -122,8 +125,8 @@ class CreateMinistryTeamVC: CreateTemplateVC {
                 row.value = today
             }
             row.cellUpdate { cell, row in
-                cell.textLabel?.font = UIFont(name: "Baskerville", size: self.view.frame.width/20)
-                cell.detailTextLabel?.font = UIFont(name: "Baskerville", size: self.view.frame.width/20)
+                cell.textLabel?.font = formFont
+                cell.detailTextLabel?.font = formFont
                 cell.detailTextLabel?.textColor = .black
             }
             row.onExpandInlineRow { cell, row, _ in
@@ -146,8 +149,8 @@ class CreateMinistryTeamVC: CreateTemplateVC {
                 row.value = (data["location"] as! String)
             }
             row.cellUpdate { cell, row in
-                cell.textLabel?.font = UIFont(name: "Baskerville", size: self.view.frame.width/20)
-                cell.textField.font = UIFont(name: "Baskerville", size: self.view.frame.width/20)
+                cell.textLabel?.font = formFont
+                cell.textField.font = formFont
             }
             row.onCellHighlightChanged { cell, row in
                 cell.textLabel?.textColor = redColor
@@ -168,8 +171,8 @@ class CreateMinistryTeamVC: CreateTemplateVC {
                 row.value = "https://groupme.com/join_group/"
             }
             row.cellUpdate { cell, row in
-                cell.textLabel?.font = UIFont(name: "Baskerville", size: self.view.frame.width/20)
-                cell.textField.font = UIFont(name: "Baskerville", size: self.view.frame.width/20)
+                cell.textLabel?.font = formFont
+                cell.textField.font = formFont
             }
             row.onCellHighlightChanged { cell, row in
                 cell.textLabel?.textColor = redColor
@@ -181,7 +184,7 @@ class CreateMinistryTeamVC: CreateTemplateVC {
                 return ButtonRow() { row in
                     row.title = "Add Leader"
                     row.cellUpdate { cell, _ in
-                        cell.textLabel?.font = UIFont(name: "Baskerville", size: self.view.frame.width/20)
+                        cell.textLabel?.font = formFont
                         cell.textLabel?.textColor = redColor
                     }
                 }
@@ -191,7 +194,7 @@ class CreateMinistryTeamVC: CreateTemplateVC {
                     row.placeholder = "Leader's Name"
                     row.tag = "leaderName\(index)"
                     row.cellUpdate { cell, _ in
-                        cell.textField.font = UIFont(name: "Baskerville", size: self.view.frame.width/20)
+                        cell.textField.font = formFont
                     }
                 }
             }
@@ -204,7 +207,7 @@ class CreateMinistryTeamVC: CreateTemplateVC {
                         row.tag = "leaderName\(idx)"
                         idx += 1
                         row.cellUpdate { cell, _ in
-                            cell.textField.font = UIFont(name: "Baskerville", size: self.view.frame.width/20)
+                            cell.textField.font = formFont
                         }
                     }
                 }
@@ -213,7 +216,7 @@ class CreateMinistryTeamVC: CreateTemplateVC {
                     row.placeholder = "Leader's Name"
                     row.tag = "leaderName0"
                     row.cellUpdate { cell, _ in
-                        cell.textField.font = UIFont(name: "Baskerville", size: self.view.frame.width/20)
+                        cell.textField.font = formFont
                     }
                 }
             }
@@ -224,7 +227,7 @@ class CreateMinistryTeamVC: CreateTemplateVC {
                 return ButtonRow() { row in
                     row.title = "Add Member"
                     row.cellUpdate { cell, _ in
-                        cell.textLabel?.font = UIFont(name: "Baskerville", size: self.view.frame.width/20)
+                        cell.textLabel?.font = formFont
                         cell.textLabel?.textColor = redColor
                     }
                 }
@@ -234,7 +237,7 @@ class CreateMinistryTeamVC: CreateTemplateVC {
                     row.placeholder = "Member's Email"
                     row.tag = "memberEmail\(index)"
                     row.cellUpdate { cell, _ in
-                        cell.textField.font = UIFont(name: "Baskerville", size: self.view.frame.width/20)
+                        cell.textField.font = formFont
                     }
                 }
             }
@@ -247,7 +250,7 @@ class CreateMinistryTeamVC: CreateTemplateVC {
                         row.tag = "memberEmail\(idx)"
                         idx += 1
                         row.cellUpdate { cell, _ in
-                            cell.textField.font = UIFont(name: "Baskerville", size: self.view.frame.width/20)
+                            cell.textField.font = formFont
                         }
                     }
                 }
@@ -259,7 +262,7 @@ class CreateMinistryTeamVC: CreateTemplateVC {
                 return ButtonRow() { row in
                     row.title = "Add Team Admin"
                     row.cellUpdate { cell, _ in
-                        cell.textLabel?.font = UIFont(name: "Baskerville", size: self.view.frame.width/20)
+                        cell.textLabel?.font = formFont
                         cell.textLabel?.textColor = redColor
                     }
                 }
@@ -269,7 +272,7 @@ class CreateMinistryTeamVC: CreateTemplateVC {
                     row.placeholder = "Admin's Email"
                     row.tag = "adminEmail\(index)"
                     row.cellUpdate { cell, _ in
-                        cell.textField.font = UIFont(name: "Baskerville", size: self.view.frame.width/20)
+                        cell.textField.font = formFont
                     }
                 }
             }
@@ -282,7 +285,7 @@ class CreateMinistryTeamVC: CreateTemplateVC {
                         row.tag = "adminEmail\(idx)"
                         idx += 1
                         row.cellUpdate { cell, _ in
-                            cell.textField.font = UIFont(name: "Baskerville", size: self.view.frame.width/20)
+                            cell.textField.font = formFont
                         }
                     }
                 }
@@ -291,7 +294,7 @@ class CreateMinistryTeamVC: CreateTemplateVC {
                     row.placeholder = "Admin's Email"
                     row.tag = "adminEmail0"
                     row.cellUpdate { cell, _ in
-                        cell.textField.font = UIFont(name: "Baskerville", size: self.view.frame.width/20)
+                        cell.textField.font = formFont
                     }
                 }
             }
@@ -303,7 +306,7 @@ class CreateMinistryTeamVC: CreateTemplateVC {
                 row.title = "Delete Team"
             }
             .cellUpdate { cell, _row in
-                cell.textLabel?.font = UIFont(name: "Baskerville", size: self.view.frame.width/20)
+                cell.textLabel?.font = formFont
                 cell.textLabel?.textColor = .red
             }
             .onCellSelection { _, _ in
@@ -345,6 +348,12 @@ class CreateMinistryTeamVC: CreateTemplateVC {
         }
         
         animateScroll = true
+    }
+    
+    func tableView(_: UITableView, willDisplayHeaderView view: UIView, forSection: Int) {
+        if let view = view as? UITableViewHeaderFooterView {
+            view.textLabel?.font = formHeaderFont
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {

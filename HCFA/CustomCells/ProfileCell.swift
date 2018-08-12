@@ -30,8 +30,6 @@ class ProfileCell: UITableViewCell {
         picture.contentMode = .scaleAspectFill
         picture.layer.cornerRadius = picture.frame.width/2
         picture.layer.masksToBounds = true
-        picture.layer.borderColor = UIColor.black.cgColor
-        picture.layer.borderWidth = 1
         addSubview(picture)
         
         DispatchQueue.main.async {
@@ -50,7 +48,7 @@ class ProfileCell: UITableViewCell {
                                          width: cellWidth, height: (cellHeight - y)*0.8))
         name.text = "\(defaults.string(forKey: "first")!) \(defaults.string(forKey: "last")!)"
         name.textColor = .black
-        name.font = UIFont(name: "Baskerville", size: cellWidth/12)
+        name.font = UIFont(name: "Montserrat-Regular", size: cellWidth/15)
         name.textAlignment = .center
         name.baselineAdjustment = .alignBaselines
         addSubview(name)

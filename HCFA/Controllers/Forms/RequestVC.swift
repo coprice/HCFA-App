@@ -19,7 +19,7 @@ class RequestVC: FormViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        view.backgroundColor = lightColor
+        tableView.backgroundColor = lightColor
         navigationAccessoryView.barTintColor = redColor
         hostVC = navigationController?.viewControllers.first as! HostVC
         navBar = navigationController!.navigationBar
@@ -39,8 +39,8 @@ class RequestVC: FormViewController {
                 row.tag = "message"
                 row.value = nil
                 row.cellUpdate { cell, row in
-                    cell.placeholderLabel?.font = UIFont(name: "Baskerville", size: self.view.frame.width/20)
-                    cell.textView.font = UIFont(name: "Baskerville", size: self.view.frame.width/20)
+                    cell.placeholderLabel?.font = formFont
+                    cell.textView.font = formFont
                 }
             }
             
@@ -49,7 +49,7 @@ class RequestVC: FormViewController {
             row.title = "Send Request"
         }
         .cellUpdate { cell, _row in
-            cell.textLabel?.font = UIFont(name: "Baskerville", size: self.view.frame.width/20)
+            cell.textLabel?.font = formFont
             cell.textLabel?.textColor = redColor
         }
         .onCellSelection { _cell, _row in

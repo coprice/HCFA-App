@@ -17,6 +17,7 @@ class PasswordViewController: FormViewController, TypedRowControllerType {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        tableView.backgroundColor = lightColor
         hostVC = navigationController?.viewControllers.first as! HostVC
         navBar = navigationController!.navigationBar
         loadingView = LoadingView(frame: CGRect(x: view.frame.width*0.375,
@@ -29,8 +30,8 @@ class PasswordViewController: FormViewController, TypedRowControllerType {
             row.tag = "current"
             row.placeholder = "Current Password"
             row.cellUpdate { cell, row in
-                cell.textLabel?.font = UIFont(name: "Baskerville", size: self.view.frame.width/20)
-                cell.textField.font = UIFont(name: "Baskerville", size: self.view.frame.width/20)
+                cell.textLabel?.font = formFont
+                cell.textField.font = formFont
             }
             row.onCellHighlightChanged { cell, row in
                 cell.textLabel?.textColor = redColor
@@ -42,8 +43,8 @@ class PasswordViewController: FormViewController, TypedRowControllerType {
             row.tag = "password"
             row.placeholder = "New Password"
             row.cellUpdate { cell, row in
-                cell.textLabel?.font = UIFont(name: "Baskerville", size: self.view.frame.width/20)
-                cell.textField.font = UIFont(name: "Baskerville", size: self.view.frame.width/20)
+                cell.textLabel?.font = formFont
+                cell.textField.font = formFont
             }
             row.onCellHighlightChanged { cell, row in
                 cell.textLabel?.textColor = redColor
@@ -55,8 +56,8 @@ class PasswordViewController: FormViewController, TypedRowControllerType {
             row.tag = "confirm"
             row.placeholder = "New Password"
             row.cellUpdate { cell, row in
-                cell.textLabel?.font = UIFont(name: "Baskerville", size: self.view.frame.width/20)
-                cell.textField.font = UIFont(name: "Baskerville", size: self.view.frame.width/20)
+                cell.textLabel?.font = formFont
+                cell.textField.font = formFont
             }
             row.onCellHighlightChanged { cell, row in
                 cell.textLabel?.textColor = redColor
@@ -68,7 +69,7 @@ class PasswordViewController: FormViewController, TypedRowControllerType {
             row.title = "Change Password"
         }
         .cellUpdate { cell, _row in
-            cell.textLabel?.font = UIFont(name: "Baskerville", size: self.view.frame.width/20)
+            cell.textLabel?.font = formFont
             cell.textLabel?.textColor = redColor
         }
         .onCellSelection { _, _ in

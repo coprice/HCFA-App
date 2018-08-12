@@ -18,6 +18,7 @@ class SetPermissionVC: FormViewController, TypedRowControllerType {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        tableView.backgroundColor = lightColor
         navBar = navigationController!.navigationBar
         loadingView = LoadingView(frame: CGRect(x: view.frame.width*0.375,
                                                 y: view.frame.height/2 - view.frame.width*0.125,
@@ -28,8 +29,8 @@ class SetPermissionVC: FormViewController, TypedRowControllerType {
             row.placeholder = "Email"
             row.tag = "email"
             row.cellUpdate { cell, row in
-                cell.textLabel?.font = UIFont(name: "Baskerville", size: self.view.frame.width/20)
-                cell.textField.font = UIFont(name: "Baskerville", size: self.view.frame.width/20)
+                cell.textLabel?.font = formFont
+                cell.textField.font = formFont
             }
             row.onCellHighlightChanged { cell, row in
                 cell.textLabel?.textColor = redColor
@@ -49,7 +50,7 @@ class SetPermissionVC: FormViewController, TypedRowControllerType {
             }
         }
         .cellUpdate { cell, _row in
-            cell.textLabel?.font = UIFont(name: "Baskerville", size: self.view.frame.width/20)
+            cell.textLabel?.font = formFont
             cell.textLabel?.textColor = redColor
         }
         .onCellSelection { _, _ in

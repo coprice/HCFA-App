@@ -53,11 +53,14 @@ func resetDefaults() {
 
 // -- Colors --
 
-let redColor = UIColor(red: 176/255, green: 35/255, blue: 61/255, alpha: 1)
-let highlightColor = UIColor(red: 215/255, green: 130/255, blue: 130/255, alpha: 1)
-let lightColor = UIColor(red: 240/255, green: 240/255, blue: 240/255, alpha: 1)
+let redColor = UIColor(red: 220/255, green: 0/255, blue: 19/255, alpha: 1)
+let highlightColor = UIColor(red: 237/255, green: 127/255, blue: 137/255, alpha: 1)
+let lightColor = UIColor(red: 248/255, green: 250/255, blue: 253/255, alpha: 1)
 let sideMenuColor = UIColor(red: 180/255, green: 150/255, blue: 150/255, alpha: 1)
 let barHighlightColor = UIColor(red: 197/255, green: 104/255, blue: 122/255, alpha: 1)
+
+let formFont = UIFont(name: "Montserrat-Light", size: UIScreen.main.bounds.width/24)
+let formHeaderFont = UIFont(name: "Montserrat-Regular", size: UIScreen.main.bounds.width/24)
 
 // -- Alerts --
 

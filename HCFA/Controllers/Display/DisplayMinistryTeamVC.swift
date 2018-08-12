@@ -16,6 +16,8 @@ class DisplayMinistryTeamVC: DisplayTemplateVC {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
+        let mainFont = UIFont(name: "Montserrat-Regular", size: view.frame.width/20)!
+        
         if firstAppearance {
             firstAppearance = false
             hostVC = navigationController!.viewControllers.first as! HostVC
@@ -33,12 +35,10 @@ class DisplayMinistryTeamVC: DisplayTemplateVC {
             
             offset = TOP_MARGIN
             
-            let categoryFont = UIFont(name: "Baskerville", size: view.frame.width/12)!
-            let infoFont = UIFont(name: "Baskerville", size: view.frame.width/20)!
             let categoryHeight = calcLabelHeight(text: "Location",
                                                  frame: CGRect(x: SIDE_MARGIN, y: offset + TOP_MARGIN,
                                                                width: FULL_WIDTH, height: .greatestFiniteMagnitude),
-                                                 font: categoryFont)
+                                                 font: mainFont)
             
             let leaderList = data["leaders"] as! [String]
             
@@ -46,34 +46,24 @@ class DisplayMinistryTeamVC: DisplayTemplateVC {
                 let labelOne = UILabel(frame: CGRect(x: SIDE_MARGIN, y: offset + TOP_MARGIN/4,
                                                      width: FULL_WIDTH, height: categoryHeight))
                 createListLabel(label: labelOne, text: "\(leaderList[0...1].joined(separator: ", ")),",
-                                font: infoFont, color: .black, view: scrollView)
+                                font: mainFont, color: .black, view: scrollView)
                 scrollView.addSubview(labelOne)
                 offset += labelOne.frame.height
                 
                 let labelTwo = UILabel(frame: CGRect(x: SIDE_MARGIN, y: offset - TOP_MARGIN/4,
                                                      width: FULL_WIDTH, height: categoryHeight))
-                createListLabel(label: labelTwo, text: leaderList[2...].joined(separator: ", "), font: infoFont,
+                createListLabel(label: labelTwo, text: leaderList[2...].joined(separator: ", "), font: mainFont,
                                 color: .black, view: scrollView)
                 scrollView.addSubview(labelTwo)
                 offset += labelTwo.frame.height
             } else {
                 let label = UILabel(frame: CGRect(x: SIDE_MARGIN, y: offset,
                                                   width: FULL_WIDTH, height: categoryHeight))
-                createListLabel(label: label, text: leaderList.joined(separator: ", "), font: infoFont,
+                createListLabel(label: label, text: leaderList.joined(separator: ", "), font: mainFont,
                                 color: .black, view: scrollView)
                 scrollView.addSubview(label)
                 offset += label.frame.height
             }
-            
-            offset += TOP_MARGIN/2
-            addLine(x: SIDE_MARGIN, y: offset, width: FULL_WIDTH, view: scrollView)
-            offset += TOP_MARGIN/2
-            
-            let description = UITextView(frame: CGRect(x: SIDE_MARGIN, y: offset, width: FULL_WIDTH, height: 0))
-            createTextView(description, font: infoFont, text: (data["description"] as! String),
-                           color:  UIColor(red: 0, green: 0, blue: 0, alpha: 0.75), textAlignment: .left)
-            offset += description.frame.height + TOP_MARGIN
-            scrollView.addSubview(description)
             
             offset += TOP_MARGIN/2
             addLine(x: SIDE_MARGIN, y: offset, width: FULL_WIDTH, view: scrollView)
@@ -85,11 +75,20 @@ class DisplayMinistryTeamVC: DisplayTemplateVC {
             var text = "Meetings TBD"
             if let day = data["day"] as? String {
                 isMeeting = true
-                text = "Meetings are \(day)s \(data["start"] as! String)-\(data["end"] as! String)\n\(data["location"] as! String)"
+                text = "\(day)s \(data["start"] as! String)-\(data["end"] as! String)\n\(data["location"] as! String)"
             }
-            createTextView(meetingInfo, font: infoFont, text: text, color: .black, textAlignment: .center)
+            createTextView(meetingInfo, font: mainFont, text: text, color: .darkGray, textAlignment: .center)
             offset += meetingInfo.frame.height + TOP_MARGIN/2
             scrollView.addSubview(meetingInfo)
+            
+            addLine(x: SIDE_MARGIN, y: offset, width: FULL_WIDTH, view: scrollView)
+            offset += TOP_MARGIN/2
+            
+            let description = UITextView(frame: CGRect(x: SIDE_MARGIN, y: offset, width: FULL_WIDTH, height: 0))
+            createTextView(description, font: UIFont(name: "OpenSans-Light", size: view.frame.width/20)!,
+                           text: (data["description"] as! String), color:  .black, textAlignment: .left)
+            offset += description.frame.height + TOP_MARGIN
+            scrollView.addSubview(description)
             
             addLine(x: SIDE_MARGIN, y: offset, width: FULL_WIDTH, view: scrollView)
             
@@ -104,7 +103,7 @@ class DisplayMinistryTeamVC: DisplayTemplateVC {
                             downloadImage(url: url, view: imageView)
                         }
                     }
-                    imageView.frame = CGRect(x: SIDE_MARGIN + FULL_WIDTH*0.25, y: offset, width: FULL_WIDTH/8, height: FULL_WIDTH/8)
+                    imageView.frame = CGRect(x: SIDE_MARGIN + FULL_WIDTH*0.235, y: offset, width: FULL_WIDTH/8, height: FULL_WIDTH/8)
                     imageView.layer.cornerRadius = imageView.frame.width/2
                     imageView.contentMode = .scaleAspectFill
                     imageView.layer.masksToBounds = true
@@ -112,9 +111,9 @@ class DisplayMinistryTeamVC: DisplayTemplateVC {
                     imageView.layer.borderWidth = 1
                     scrollView.addSubview(imageView)
                     
-                    let label = UILabel(frame: CGRect(x: SIDE_MARGIN*2 + FULL_WIDTH*0.375 , y: offset,
+                    let label = UILabel(frame: CGRect(x: SIDE_MARGIN*2 + FULL_WIDTH*0.36 , y: offset,
                                                       width: FULL_WIDTH*0.625 - SIDE_MARGIN*3, height: FULL_WIDTH/8))
-                    createListLabel(label: label, text: member[0]!, font: infoFont, color: .black, view: scrollView)
+                    createListLabel(label: label, text: member[0]!, font: mainFont, color: .black, view: scrollView)
                     label.textAlignment = .left
                     
                     if i + 1 != members.count {
@@ -129,7 +128,7 @@ class DisplayMinistryTeamVC: DisplayTemplateVC {
                     offset += TOP_MARGIN/2
                     let label = UILabel(frame: CGRect(x: SIDE_MARGIN, y: offset,
                                                       width: FULL_WIDTH, height: categoryHeight))
-                    createListLabel(label: label, text: "There are no members", font: infoFont, color: .gray,
+                    createListLabel(label: label, text: "There are no members", font: mainFont, color: .gray,
                                     view: scrollView)
                     offset += label.frame.height
                 }
@@ -188,30 +187,25 @@ class DisplayMinistryTeamVC: DisplayTemplateVC {
                 if !admin {
                     offset += TOP_MARGIN/2
                     
-                    let leaveButton = UIButton(frame: CGRect(x: view.frame.width/2 - FULL_WIDTH/2, y: offset + TOP_MARGIN/2,
-                                                             width: FULL_WIDTH, height: categoryHeight))
-                    leaveButton.backgroundColor = lightColor
-                    leaveButton.setBackgroundImage(squareImage(color: .lightGray, width: leaveButton.frame.width,
-                                                               height: leaveButton.frame.height),
-                                                   for: .highlighted)
+                    let leaveButton = UIButton(frame: CGRect(x: view.frame.width/2 - FULL_WIDTH/4,
+                                                             y: offset + TOP_MARGIN,
+                                                             width: FULL_WIDTH/2, height: categoryHeight))
                     leaveButton.setTitle("Leave Team", for: .normal)
                     leaveButton.setTitleColor(redColor, for: .normal)
-                    leaveButton.titleLabel?.font = infoFont
+                    leaveButton.setTitleColor(highlightColor, for: .highlighted)
+                    leaveButton.titleLabel?.font = mainFont
                     leaveButton.addTarget(self, action: #selector(leaveMT), for: .touchUpInside)
                     offset += leaveButton.frame.height + TOP_MARGIN*2
                     scrollView.addSubview(leaveButton)
                 }
                 
             } else {
-                let joinButton = UIButton(frame: CGRect(x: view.frame.width/2 - FULL_WIDTH/2, y: offset + TOP_MARGIN/2,
-                                                        width: FULL_WIDTH, height: categoryHeight))
-                joinButton.backgroundColor = lightColor
-                joinButton.setBackgroundImage(squareImage(color: .lightGray, width: joinButton.frame.width,
-                                                          height: joinButton.frame.height),
-                                              for: .highlighted)
+                let joinButton = UIButton(frame: CGRect(x: view.frame.width/2 - FULL_WIDTH/4, y: offset + TOP_MARGIN,
+                                                        width: FULL_WIDTH/2, height: categoryHeight))
                 joinButton.setTitle("Request to Join", for: .normal)
                 joinButton.setTitleColor(redColor, for: .normal)
-                joinButton.titleLabel?.font = infoFont
+                joinButton.setTitleColor(highlightColor, for: .highlighted)
+                joinButton.titleLabel?.font = mainFont
                 joinButton.addTarget(self, action: #selector(joinMT), for: .touchUpInside)
                 offset += joinButton.frame.height + TOP_MARGIN
                 scrollView.addSubview(joinButton)

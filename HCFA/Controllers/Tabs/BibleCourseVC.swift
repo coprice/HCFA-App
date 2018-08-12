@@ -51,7 +51,7 @@ class BibleCourseVC: TemplateVC {
         
         let offset = barHeight + UIApplication.shared.statusBarFrame.height
         cellWidth = view.frame.width
-        cellHeight = view.frame.height*0.175
+        cellHeight = view.frame.height*0.15
         
         let refreshControl = UIRefreshControl(frame: CGRect(x: 0, y: 0, width: view.frame.width, height: 0))
         refreshControl.tintColor = highlightColor
@@ -354,39 +354,40 @@ extension BibleCourseVC: UITableViewDelegate {
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         
         if section == 0 {
-            let TOGGLE_HEIGHT = view.frame.height/20
-            let TOGGLE_WIDTH = view.frame.width/4
+            let TOGGLE_HEIGHT = view.frame.height*0.06
+            let TOGGLE_WIDTH = view.frame.width*0.275
             
-            let your = UIButton(frame: CGRect(x: cellWidth/2 - TOGGLE_WIDTH - 2, y: view.frame.height/20 - TOGGLE_HEIGHT/2, width: TOGGLE_WIDTH, height: TOGGLE_HEIGHT))
+            let your = UIButton(frame: CGRect(x: cellWidth/2 - TOGGLE_WIDTH - 2,
+                                              y: view.frame.height/20 - TOGGLE_HEIGHT/2,
+                                              width: TOGGLE_WIDTH, height: TOGGLE_HEIGHT))
             
             if displayingYours {
                 your.backgroundColor = redColor
             } else {
                 your.backgroundColor = highlightColor
             }
-            your.layer.cornerRadius = TOGGLE_HEIGHT/5
-            your.setBackgroundImage(roundedImage(color: redColor, width: TOGGLE_WIDTH, height: TOGGLE_HEIGHT, cornerRadius: your.layer.cornerRadius), for: .highlighted)
             
-            your.setTitle("Your", for: .normal)
-            your.titleLabel?.font = UIFont(name: "Baskerville", size: TOGGLE_WIDTH/5)
-            your.layer.borderWidth = TOGGLE_HEIGHT/20
-            your.layer.borderColor = redColor.cgColor
+            your.layer.cornerRadius = view.frame.height*0.015
+            your.setBackgroundImage(roundedImage(color: redColor, width: TOGGLE_WIDTH, height: TOGGLE_HEIGHT, cornerRadius: your.layer.cornerRadius), for: .highlighted)
+            your.setTitle("MY COURSES", for: .normal)
+            your.titleLabel?.font = UIFont(name: "Montserrat-Regular", size: view.frame.width*0.035)
             your.addTarget(self, action: #selector(displayUsersBCs), for: .touchUpInside)
             
-            let join = UIButton(frame: CGRect(x: cellWidth/2 - TOGGLE_HEIGHT/40 + 2, y: view.frame.height/20 - TOGGLE_HEIGHT/2, width: TOGGLE_WIDTH, height: TOGGLE_HEIGHT))
+            let join = UIButton(frame: CGRect(x: cellWidth/2 + 2, y: view.frame.height/20 - TOGGLE_HEIGHT/2,
+                                              width: TOGGLE_WIDTH, height: TOGGLE_HEIGHT))
             
             if displayingYours {
                 join.backgroundColor = highlightColor
             } else {
                 join.backgroundColor = redColor
             }
-            join.layer.cornerRadius = TOGGLE_HEIGHT/5
-            join.setBackgroundImage(roundedImage(color: redColor, width: TOGGLE_WIDTH, height: TOGGLE_HEIGHT, cornerRadius: join.layer.cornerRadius), for: .highlighted)
             
-            join.setTitle("All", for: .normal)
-            join.titleLabel?.font = UIFont(name: "Baskerville", size: TOGGLE_WIDTH/5)
-            join.layer.borderWidth = TOGGLE_HEIGHT/20
-            join.layer.borderColor = redColor.cgColor
+            join.layer.cornerRadius = view.frame.height*0.015
+            join.setBackgroundImage(roundedImage(color: redColor, width: TOGGLE_WIDTH, height: TOGGLE_HEIGHT,
+                                                 cornerRadius: join.layer.cornerRadius), for: .highlighted)
+            
+            join.setTitle("ALL COURSES", for: .normal)
+            join.titleLabel?.font = UIFont(name: "Montserrat-Regular", size: view.frame.width*0.035)
             join.addTarget(self, action: #selector(displayBCs), for: .touchUpInside)
             
             let headerView = UIView()
@@ -404,7 +405,7 @@ extension BibleCourseVC: UITableViewDelegate {
                 underline.addAttribute(NSAttributedStringKey.underlineStyle, value: 1,
                                        range: NSMakeRange(0, underline.length))
                 firstSection.attributedText = underline
-                firstSection.font = UIFont(name: "Baskerville", size: view.frame.width/18)
+                firstSection.font = UIFont(name: "Montserrat-Regular", size: view.frame.width/24)
                 firstSection.textAlignment = .center
                 firstSection.baselineAdjustment = .alignCenters
                 firstSection.textColor = .darkGray
@@ -427,7 +428,7 @@ extension BibleCourseVC: UITableViewDelegate {
             underline.addAttribute(NSAttributedStringKey.underlineStyle, value: 1,
                                    range: NSMakeRange(0, underline.length))
             nextSection.attributedText = underline
-            nextSection.font = UIFont(name: "Baskerville", size: view.frame.width/18)
+            nextSection.font = UIFont(name: "Montserrat-Regular", size: view.frame.width/24)
             nextSection.textAlignment = .center
             nextSection.baselineAdjustment = .alignCenters
             nextSection.textColor = .darkGray
@@ -543,7 +544,8 @@ extension BibleCourseVC: UITableViewDataSource {
         if displayingYours {
             if yourRows.isEmpty {
                 let cell = EmptyCell()
-                cell.load(width: cellWidth, height: cellHeight/4, text: "You are not in any bible courses", color: .gray)
+                cell.load(width: cellWidth, height: cellHeight/4, text: "You are not in any bible courses",
+                          color: .gray, font: UIFont(name: "Montserrat-Regular", size: cellWidth/18)!)
                 cell.isUserInteractionEnabled = false
                 return cell
             }
@@ -558,7 +560,8 @@ extension BibleCourseVC: UITableViewDataSource {
         } else {
             if rows.isEmpty {
                 let cell = EmptyCell()
-                cell.load(width: cellWidth, height: cellHeight/4, text: "No bible courses to display", color: .gray)
+                cell.load(width: cellWidth, height: cellHeight/4, text: "No bible courses to display",
+                          color: .gray, font: UIFont(name: "Montserrat-Regular", size: cellWidth/18)!)
                 cell.isUserInteractionEnabled = false
                 return cell
             }
@@ -566,7 +569,8 @@ extension BibleCourseVC: UITableViewDataSource {
             let currentRows = getRowsBySection(indexPath.section)
             if currentRows.isEmpty {
                 let cell = EmptyCell()
-                cell.load(width: cellWidth, height: cellHeight/4, text: "Bible courses TBD", color: redColor)
+                cell.load(width: cellWidth, height: cellHeight/4, text: "Bible courses TBD", color: redColor,
+                          font: UIFont(name: "Montserrat-Regular", size: cellWidth/20)!)
                 cell.isUserInteractionEnabled = false
                 cell.selectionStyle = .none
                 return cell

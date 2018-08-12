@@ -44,8 +44,8 @@ class CreateEventVC: CreateTemplateVC {
                 row.value = (eventData["title"] as! String)
             }
             row.cellUpdate { cell, row in
-                cell.textLabel?.font = UIFont(name: "Baskerville", size: self.view.frame.width/20)
-                cell.textField.font = UIFont(name: "Baskerville", size: self.view.frame.width/20)
+                cell.textLabel?.font = formFont
+                cell.textField.font = formFont
             }
             row.onCellHighlightChanged { cell, row in
                 cell.textLabel?.textColor = redColor
@@ -59,8 +59,8 @@ class CreateEventVC: CreateTemplateVC {
                 row.value = (eventData["location"] as! String)
             }
             row.cellUpdate { cell, row in
-                cell.textLabel?.font = UIFont(name: "Baskerville", size: self.view.frame.width/20)
-                cell.textField.font = UIFont(name: "Baskerville", size: self.view.frame.width/20)
+                cell.textLabel?.font = formFont
+                cell.textField.font = formFont
             }
             row.onCellHighlightChanged { cell, row in
                 cell.textLabel?.textColor = redColor
@@ -78,8 +78,8 @@ class CreateEventVC: CreateTemplateVC {
                 row.value = today
             }
             row.cellUpdate { cell, row in
-                cell.textLabel?.font = UIFont(name: "Baskerville", size: self.view.frame.width/20)
-                cell.detailTextLabel?.font = UIFont(name: "Baskerville", size: self.view.frame.width/20)
+                cell.textLabel?.font = formFont
+                cell.detailTextLabel?.font = formFont
                 cell.detailTextLabel?.textColor = .black
             }
             row.onExpandInlineRow { cell, row, _ in
@@ -103,8 +103,8 @@ class CreateEventVC: CreateTemplateVC {
                 row.value = today
             }
             row.cellUpdate { cell, row in
-                cell.textLabel?.font = UIFont(name: "Baskerville", size: self.view.frame.width/20)
-                cell.detailTextLabel?.font = UIFont(name: "Baskerville", size: self.view.frame.width/20)
+                cell.textLabel?.font = formFont
+                cell.detailTextLabel?.font = formFont
                 cell.detailTextLabel?.textColor = .black
             }
             row.onExpandInlineRow { cell, row, _ in
@@ -126,8 +126,8 @@ class CreateEventVC: CreateTemplateVC {
                 row.value = (eventData["description"] as! String)
             }
             row.cellUpdate { cell, row in
-                cell.placeholderLabel?.font = UIFont(name: "Baskerville", size: self.view.frame.width/20)
-                cell.textView.font = UIFont(name: "Baskerville", size: self.view.frame.width/20)
+                cell.placeholderLabel?.font = formFont
+                cell.textView.font = formFont
             }
         }
         
@@ -148,7 +148,7 @@ class CreateEventVC: CreateTemplateVC {
                 }
             }
             row.cellUpdate { cell, row in
-                cell.textLabel?.font = UIFont(name: "Baskerville", size: self.view.frame.width/20)
+                cell.textLabel?.font = formFont
             }
         }
         
@@ -158,7 +158,7 @@ class CreateEventVC: CreateTemplateVC {
                 row.title = "Delete Event"
             }
             .cellUpdate { cell, _row in
-                cell.textLabel?.font = UIFont(name: "Baskerville", size: self.view.frame.width/20)
+                cell.textLabel?.font = formFont
                 cell.textLabel?.textColor = .red
             }
             .onCellSelection { _cell, _row in
@@ -207,7 +207,7 @@ class CreateEventVC: CreateTemplateVC {
     
     func tableView(_: UITableView, willDisplayHeaderView view: UIView, forSection: Int) {
         if let view = view as? UITableViewHeaderFooterView {
-            view.textLabel?.font = UIFont(name: "Baskerville", size: view.frame.width/24)
+            view.textLabel?.font = formHeaderFont
         }
     }
     

@@ -16,8 +16,8 @@ class CreateTemplateVC: FormViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        view.backgroundColor = lightColor
+
+        tableView.backgroundColor = lightColor
         navigationAccessoryView.barTintColor = redColor
         navBar = navigationController!.navigationBar
         hostVC = navigationController?.viewControllers.first as! HostVC

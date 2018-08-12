@@ -17,7 +17,7 @@ class DisplayTemplateVC: UIViewController {
       
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = lightColor
+        view.backgroundColor = .white
     }
     
     func backToSignIn() {

@@ -16,7 +16,7 @@ class FilterVC: FormViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        view.backgroundColor = lightColor
+        tableView.backgroundColor = lightColor
         hostVC = navigationController?.viewControllers.first as! HostVC
         courseVC = hostVC.contentViewControllers[Tabs.BibleCourses] as! BibleCourseVC
         
@@ -57,6 +57,10 @@ class FilterVC: FormViewController {
                 if option == gender {
                     listRow.value = gender
                 }
+                
+                listRow.cellUpdate { cell, row in
+                    cell.textLabel?.font = formFont
+                }
             }
         }
     
@@ -74,11 +78,21 @@ class FilterVC: FormViewController {
                 if option == year {
                     listRow.value = year
                 }
+                
+                listRow.cellUpdate { cell, row in
+                    cell.textLabel?.font = formFont
+                }
             }
         }
         
         genderSection.tag = "gender"
         yearSection.tag = "year"
+    }
+    
+    func tableView(_: UITableView, willDisplayHeaderView view: UIView, forSection: Int) {
+        if let view = view as? UITableViewHeaderFooterView {
+            view.textLabel?.font = formHeaderFont
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {

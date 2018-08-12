@@ -10,7 +10,7 @@ import UIKit
 
 class EmptyCell: UITableViewCell {
     
-    func load(width: CGFloat, height: CGFloat, text: String, color: UIColor) {
+    func load(width: CGFloat, height: CGFloat, text: String, color: UIColor, font: UIFont) {
         backgroundColor = .clear
         
         let SIDE_MARGIN = width/40
@@ -21,7 +21,7 @@ class EmptyCell: UITableViewCell {
         notice.text = text
         notice.textColor = color
         notice.textAlignment = .center
-        notice.font = UIFont(name: "Baskerville", size: width/18)
+        notice.font = font
         notice.adjustsFontSizeToFitWidth = true
         self.addSubview(notice)
         

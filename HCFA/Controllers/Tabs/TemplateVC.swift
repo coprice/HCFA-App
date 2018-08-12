@@ -19,8 +19,8 @@ class TemplateVC: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = lightColor
         
+        view.backgroundColor = lightColor
         navBar = navigationController!.navigationBar
         hostVC = navigationController?.viewControllers.first as! HostVC
         

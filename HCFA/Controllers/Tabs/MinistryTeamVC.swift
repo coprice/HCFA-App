@@ -27,7 +27,7 @@ class MinistryTeamVC: TemplateVC {
         
         let offset = navigationController!.navigationBar.frame.height + UIApplication.shared.statusBarFrame.height
         cellWidth = view.frame.width
-        cellHeight = view.frame.height/5
+        cellHeight = view.frame.height*0.2
         
         let refreshControl = UIRefreshControl(frame: CGRect(x: 0, y: 0, width: view.frame.width, height: 0))
         refreshControl.tintColor = highlightColor
@@ -165,8 +165,8 @@ extension MinistryTeamVC: UITableViewDelegate {
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         
         if section == 0 {
-            let TOGGLE_HEIGHT = view.frame.height/20
-            let TOGGLE_WIDTH = view.frame.width/4
+            let TOGGLE_HEIGHT = view.frame.height*0.06
+            let TOGGLE_WIDTH = view.frame.width*0.275
             
             let your = UIButton(frame: CGRect(x: cellWidth/2 - TOGGLE_WIDTH - 2,
                                               y: view.frame.height/20 - TOGGLE_HEIGHT/2,
@@ -180,10 +180,8 @@ extension MinistryTeamVC: UITableViewDelegate {
             your.layer.cornerRadius = TOGGLE_HEIGHT/5
             your.setBackgroundImage(roundedImage(color: redColor, width: TOGGLE_WIDTH, height: TOGGLE_HEIGHT,
                                                  cornerRadius: your.layer.cornerRadius), for: .highlighted)
-            your.setTitle("Your", for: .normal)
-            your.titleLabel?.font = UIFont(name: "Baskerville", size: TOGGLE_WIDTH/5)
-            your.layer.borderWidth = TOGGLE_HEIGHT/20
-            your.layer.borderColor = redColor.cgColor
+            your.setTitle("MY TEAMS", for: .normal)
+            your.titleLabel?.font = UIFont(name: "Montserrat-Regular", size: view.frame.width*0.035)
             your.addTarget(self, action: #selector(displayUsersMTs), for: .touchUpInside)
             
             let join = UIButton(frame: CGRect(x: cellWidth/2 + 2, y: view.frame.height/20 - TOGGLE_HEIGHT/2,
@@ -197,10 +195,8 @@ extension MinistryTeamVC: UITableViewDelegate {
             join.layer.cornerRadius = TOGGLE_HEIGHT/5
             join.setBackgroundImage(roundedImage(color: redColor, width: TOGGLE_WIDTH, height: TOGGLE_HEIGHT,
                                                  cornerRadius: join.layer.cornerRadius), for: .highlighted)
-            join.setTitle("All", for: .normal)
-            join.titleLabel?.font = UIFont(name: "Baskerville", size: TOGGLE_WIDTH/5)
-            join.layer.borderWidth = TOGGLE_HEIGHT/20
-            join.layer.borderColor = redColor.cgColor
+            join.setTitle("ALL TEAMS", for: .normal)
+            join.titleLabel?.font = UIFont(name: "Montserrat-Regular", size: view.frame.width*0.035)
             join.addTarget(self, action: #selector(displayMTs), for: .touchUpInside)
             
             let headerView = UIView()
@@ -284,7 +280,8 @@ extension MinistryTeamVC: UITableViewDataSource {
             } else {
                 text = "No ministry teams to display"
             }
-            cell.load(width: cellWidth, height: cellHeight/4, text: text, color: .gray)
+            cell.load(width: cellWidth, height: cellHeight/4, text: text, color: .gray,
+                      font: UIFont(name: "Montserrat-Regular", size: cellWidth/18)!)
             cell.isUserInteractionEnabled = false
             return cell
         }

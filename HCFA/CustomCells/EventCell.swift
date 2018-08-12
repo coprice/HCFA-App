@@ -16,28 +16,42 @@ class EventCell: UITableViewCell {
     
     func load(data: [String:Any]) {
         
-        let SIDE_MARGIN = width/40
-        let TOP_MARGIN = height/40
-        let FULL_WIDTH = width-SIDE_MARGIN*4
+        let SIDE_MARGIN = width/20
+        let TOP_MARGIN = height/20
+        let FULL_WIDTH = width-SIDE_MARGIN*3
+        let FULL_HEIGHT = height - TOP_MARGIN*2
         
         backgroundColor = .clear
         
         if let _ = data["image"] as? String {
             frame = CGRect(x: 0, y: 0, width: width, height: height*3.1)
-            view.frame = CGRect(x: SIDE_MARGIN, y: 0, width: width-SIDE_MARGIN*2, height: height*3)
+            view.frame = CGRect(x: SIDE_MARGIN/2, y: 0, width: width-SIDE_MARGIN, height: height*3)
         } else {
             frame = CGRect(x: 0, y: 0, width: width, height: height*1.1)
-            view.frame = CGRect(x: SIDE_MARGIN, y: 0, width: width-SIDE_MARGIN*2, height: height)
+            view.frame = CGRect(x: SIDE_MARGIN/2, y: 0, width: width-SIDE_MARGIN, height: height)
         }
         
         view.backgroundColor = .white
         view.layer.cornerRadius = SIDE_MARGIN
 
-        let title = UILabel(frame: CGRect(x: SIDE_MARGIN, y: TOP_MARGIN, width: FULL_WIDTH*0.63, height: height*2/5))
+        let title = UILabel(frame: CGRect(x: SIDE_MARGIN, y: TOP_MARGIN, width: FULL_WIDTH,
+                                          height: FULL_HEIGHT*0.4))
         title.text = (data["title"] as! String)
-        title.font = UIFont(name: "Baskerville", size: FULL_WIDTH*0.1)
-        title.baselineAdjustment = .alignCenters
-        title.adjustsFontSizeToFitWidth = true
+        title.font = UIFont(name: "Montserrat-Medium", size: FULL_WIDTH*0.08)
+        title.baselineAdjustment = .alignBaselines
+        
+        let location = UILabel(frame: CGRect(x: SIDE_MARGIN, y: title.frame.height + FULL_HEIGHT*0.1,
+                                             width: FULL_WIDTH, height: FULL_HEIGHT*0.25))
+        location.text = (data["location"] as! String)
+        location.font = UIFont(name: "Montserrat-Light", size: view.frame.width/22)
+        location.baselineAdjustment = .alignCenters
+        location.textColor = UIColor(red: 43/255, green: 50/255, blue: 53/255, alpha: 1.0)
+        
+        let date = UILabel(frame: CGRect(x: SIDE_MARGIN, y: location.frame.origin.y + location.frame.height,
+                                         width: FULL_WIDTH, height: location.frame.height))
+        date.font = UIFont(name: "Montserrat-Light", size: view.frame.width/22)
+        date.baselineAdjustment = .alignCenters
+        date.textColor = UIColor(red: 128/255, green: 130/255, blue: 133/255, alpha: 1.0)
         
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
@@ -53,77 +67,22 @@ class EventCell: UITableViewCell {
         let endDateString = dateFormatter.string(from: endDate)
         
         if startDateString == endDateString {
-            
             dateFormatter.dateFormat = "MMM d, YYYY"
-            
-            let time = UILabel(frame: CGRect(x: view.frame.width - FULL_WIDTH*0.34 - SIDE_MARGIN, y: TOP_MARGIN,
-                                             width: FULL_WIDTH*0.34, height: height/5))
-            time.text = "\(startTime)-\(endTime)"
-            time.font = UIFont.findAdaptiveFont(withName: "Baskerville", forUILabel: time.frame.size, withMinimumSize: 8)
-            time.textColor = .gray
-            time.adjustsFontSizeToFitWidth = true
-            
-            let date = UILabel(frame:CGRect(x: time.frame.origin.x, y: TOP_MARGIN + height/6,
-                                            width: time.frame.width, height: time.frame.height))
-            date.text = dateFormatter.string(from: startDate)
-            date.font = UIFont.findAdaptiveFont(withName: "Baskerville", forUILabel: date.frame.size, withMinimumSize: 8)
-            date.adjustsFontSizeToFitWidth = true
-            
-            view.addSubview(time)
-            view.addSubview(date)
+            date.text = "\(dateFormatter.string(from: startDate)) | \(startTime)-\(endTime)"
 
         } else {
-            
-            dateFormatter.dateFormat = "M/d/YY"
+            dateFormatter.dateFormat = "MMM d"
             let startString = dateFormatter.string(from: startDate)
             let endString = dateFormatter.string(from: endDate)
-
-            let start = UILabel(frame: CGRect(x: view.frame.width - FULL_WIDTH*0.34 - SIDE_MARGIN, y: TOP_MARGIN,
-                                              width: FULL_WIDTH*0.34, height: height/5))
-            start.text = "\(startTime), \(startString)"
-            start.font = UIFont.findAdaptiveFont(withName: "Baskerville", forUILabel: start.frame.size, withMinimumSize: 8)
-            start.textColor = .gray
-            start.adjustsFontSizeToFitWidth = true
-            
-            let dash = UILabel(frame: CGRect(x: start.frame.origin.x, y: TOP_MARGIN + height*0.11,
-                                             width: start.frame.width, height: start.frame.height))
-            dash.text = "—"
-            dash.font = UIFont(name: "Baskerville", size: dash.frame.width/10)
-            dash.textAlignment = .center
-            dash.textColor = .black
-            
-            let end = UILabel(frame:CGRect(x: start.frame.origin.x, y: TOP_MARGIN + height/6,
-                                           width: start.frame.width, height: start.frame.height))
-            end.text = "\(endTime), \(endString)"
-            end.font = UIFont.findAdaptiveFont(withName: "Baskerville", forUILabel: start.frame.size, withMinimumSize: 8)
-            end.textColor = .gray
-            end.adjustsFontSizeToFitWidth = true
-            
-            view.addSubview(start)
-            view.addSubview(dash)
-            view.addSubview(end)
+            date.text = "\(startString) (\(startTime)) - \(endString) (\(endTime))"
         }
         
-        let location = UILabel(frame: CGRect(x: SIDE_MARGIN, y: height*2/5, width: FULL_WIDTH, height: height/5))
-        location.text = (data["location"] as! String)
-        location.font = UIFont(name: "Baskerville", size: view.frame.width/20)
-        location.textColor = .gray
-        location.textAlignment = .center
-        
-        let description = UILabel(frame: CGRect(x: SIDE_MARGIN, y: height*3/5,
-                                                width: FULL_WIDTH, height: height*2/5))
-        description.text = (data["description"] as! String)
-        description.font = UIFont(name: "Baskerville", size: view.frame.width/20)
-        description.textColor = redColor
-        description.numberOfLines = 2
-        description.textAlignment = .center
-        
+        view.addSubview(date)
         
         if let imageString = data["image"] as? String {
 
-            let imageView = EventImageView(frame: CGRect(x: SIDE_MARGIN*2, y: height+TOP_MARGIN,
-                                                         width: FULL_WIDTH-SIDE_MARGIN*2,
-                                                         height: height*2-TOP_MARGIN*2))
+            let imageView = EventImageView(frame: CGRect(x: SIDE_MARGIN, y: height + TOP_MARGIN/2,
+                                                         width: FULL_WIDTH, height: height*2-TOP_MARGIN*2))
             imageView.isCell = true
             imageView.initializeReload()
             
@@ -154,11 +113,9 @@ class EventCell: UITableViewCell {
         
         view.addSubview(title)
         view.addSubview(location)
-        view.addSubview(description)
-        addSubview(view)
-    
         view.highlightedImage = roundedImage(color: .lightGray, width: view.frame.width,
                                              height: view.frame.height, cornerRadius: SIDE_MARGIN)
+        addSubview(view)
         
         let backgroundView = UIView()
         backgroundView.backgroundColor = .clear

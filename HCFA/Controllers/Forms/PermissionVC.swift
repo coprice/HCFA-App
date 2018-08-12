@@ -15,6 +15,7 @@ class PermissionVC: FormViewController, TypedRowControllerType {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        tableView.backgroundColor = lightColor
         navigationAccessoryView.barTintColor = redColor
         hostVC = navigationController?.viewControllers.first as! HostVC
         
@@ -28,7 +29,7 @@ class PermissionVC: FormViewController, TypedRowControllerType {
                 return vc
             }, onDismiss: nil)
             row.cellUpdate { cell, row in
-                cell.textLabel?.font = UIFont(name: "Baskerville", size: self.view.frame.width/20)
+                cell.textLabel?.font = formFont
             }
         }
         <<< ButtonRowWithPresent<SetPermissionVC> { row in
@@ -40,7 +41,7 @@ class PermissionVC: FormViewController, TypedRowControllerType {
                 return vc
             }, onDismiss: nil)
             row.cellUpdate { cell, row in
-                cell.textLabel?.font = UIFont(name: "Baskerville", size: self.view.frame.width/20)
+                cell.textLabel?.font = formFont
             }
         }
         
@@ -54,7 +55,7 @@ class PermissionVC: FormViewController, TypedRowControllerType {
                 return vc
             }, onDismiss: nil)
             row.cellUpdate { cell, row in
-                cell.textLabel?.font = UIFont(name: "Baskerville", size: self.view.frame.width/20)
+                cell.textLabel?.font = formFont
             }
         }
         <<< ButtonRowWithPresent<SetPermissionVC> { row in
@@ -66,7 +67,7 @@ class PermissionVC: FormViewController, TypedRowControllerType {
                 return vc
             }, onDismiss: nil)
             row.cellUpdate { cell, row in
-                cell.textLabel?.font = UIFont(name: "Baskerville", size: self.view.frame.width/20)
+                cell.textLabel?.font = formFont
             }
         }
     }

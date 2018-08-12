@@ -34,8 +34,8 @@ class CreateBibleCourseVC: CreateTemplateVC {
                 row.value = data["leader_first"] as? String
             }
             row.cellUpdate { cell, row in
-                cell.textLabel?.font = UIFont(name: "Baskerville", size: self.view.frame.width/20)
-                cell.textField.font = UIFont(name: "Baskerville", size: self.view.frame.width/20)
+                cell.textLabel?.font = formFont
+                cell.textField.font = formFont
             }
             row.onCellHighlightChanged { cell, row in
                 cell.textLabel?.textColor = redColor
@@ -49,8 +49,8 @@ class CreateBibleCourseVC: CreateTemplateVC {
                 row.value = data["leader_last"] as? String
             }
             row.cellUpdate { cell, row in
-                cell.textLabel?.font = UIFont(name: "Baskerville", size: self.view.frame.width/20)
-                cell.textField.font = UIFont(name: "Baskerville", size: self.view.frame.width/20)
+                cell.textLabel?.font = formFont
+                cell.textField.font = formFont
             }
             row.onCellHighlightChanged { cell, row in
                 cell.textLabel?.textColor = redColor
@@ -70,10 +70,13 @@ class CreateBibleCourseVC: CreateTemplateVC {
         }
         .onPresent({(from, to) in
             to.enableDeselection = false
+            to.selectableRowCellUpdate = { cell, row in
+                cell.textLabel?.font = formFont
+            }
         })
         .cellUpdate({cell, row in
-            cell.textLabel?.font = UIFont(name: "Baskerville", size: self.view.frame.width/20)
-            cell.detailTextLabel?.font = UIFont(name: "Baskerville", size: self.view.frame.width/20)
+            cell.textLabel?.font = formFont
+            cell.detailTextLabel?.font = formFont
             cell.detailTextLabel?.textColor = .black
         })
             
@@ -89,10 +92,13 @@ class CreateBibleCourseVC: CreateTemplateVC {
         }
         .onPresent({(from, to) in
             to.enableDeselection = false
+            to.selectableRowCellUpdate = { cell, row in
+                cell.textLabel?.font = formFont
+            }
         })
         .cellUpdate({cell, row in
-            cell.textLabel?.font = UIFont(name: "Baskerville", size: self.view.frame.width/20)
-            cell.detailTextLabel?.font = UIFont(name: "Baskerville", size: self.view.frame.width/20)
+            cell.textLabel?.font = formFont
+            cell.detailTextLabel?.font = formFont
             cell.detailTextLabel?.textColor = .black
         })
             
@@ -104,8 +110,8 @@ class CreateBibleCourseVC: CreateTemplateVC {
                 row.value = data["location"] as? String
             }
             row.cellUpdate { cell, row in
-                cell.textLabel?.font = UIFont(name: "Baskerville", size: self.view.frame.width/20)
-                cell.textField.font = UIFont(name: "Baskerville", size: self.view.frame.width/20)
+                cell.textLabel?.font = formFont
+                cell.textField.font = formFont
             }
             row.onCellHighlightChanged { cell, row in
                 cell.textLabel?.textColor = redColor
@@ -119,8 +125,8 @@ class CreateBibleCourseVC: CreateTemplateVC {
                 row.value = data["material"] as? String
             }
             row.cellUpdate { cell, row in
-                cell.placeholderLabel?.font = UIFont(name: "Baskerville", size: self.view.frame.width/20)
-                cell.textView.font = UIFont(name: "Baskerville", size: self.view.frame.width/20)
+                cell.placeholderLabel?.font = formFont
+                cell.textView.font = formFont
             }
         }
     
@@ -137,10 +143,13 @@ class CreateBibleCourseVC: CreateTemplateVC {
         }
         .onPresent({(from, to) in
             to.enableDeselection = false
+            to.selectableRowCellUpdate = { cell, row in
+                cell.textLabel?.font = formFont
+            }
         })
         .cellUpdate({cell, row in
-            cell.textLabel?.font = UIFont(name: "Baskerville", size: self.view.frame.width/20)
-            cell.detailTextLabel?.font = UIFont(name: "Baskerville", size: self.view.frame.width/20)
+            cell.textLabel?.font = formFont
+            cell.detailTextLabel?.font = formFont
             cell.detailTextLabel?.textColor = .black
             self.form.rowBy(tag: "start")?.evaluateHidden()
             self.form.rowBy(tag: "end")?.evaluateHidden()
@@ -162,8 +171,8 @@ class CreateBibleCourseVC: CreateTemplateVC {
                 return (form.rowBy(tag: "day")?.value == "TBD")})
             
             row.cellUpdate { cell, row in
-                cell.textLabel?.font = UIFont(name: "Baskerville", size: self.view.frame.width/20)
-                cell.detailTextLabel?.font = UIFont(name: "Baskerville", size: self.view.frame.width/20)
+                cell.textLabel?.font = formFont
+                cell.detailTextLabel?.font = formFont
                 cell.detailTextLabel?.textColor = .black
             }
             row.onExpandInlineRow { cell, row, _ in
@@ -190,8 +199,8 @@ class CreateBibleCourseVC: CreateTemplateVC {
                 return (form.rowBy(tag: "day")?.value == "TBD")})
             
             row.cellUpdate { cell, row in
-                cell.textLabel?.font = UIFont(name: "Baskerville", size: self.view.frame.width/20)
-                cell.detailTextLabel?.font = UIFont(name: "Baskerville", size: self.view.frame.width/20)
+                cell.textLabel?.font = formFont
+                cell.detailTextLabel?.font = formFont
                 cell.detailTextLabel?.textColor = .black
             }
             row.onExpandInlineRow { cell, row, _ in
@@ -218,8 +227,8 @@ class CreateBibleCourseVC: CreateTemplateVC {
                 row.value = "https://groupme.com/join_group/"
             }
             row.cellUpdate { cell, row in
-                cell.textLabel?.font = UIFont(name: "Baskerville", size: self.view.frame.width/20)
-                cell.textField.font = UIFont(name: "Baskerville", size: self.view.frame.width/20)
+                cell.textLabel?.font = formFont
+                cell.textField.font = formFont
             }
             row.onCellHighlightChanged { cell, row in
                 cell.textLabel?.textColor = redColor
@@ -231,7 +240,7 @@ class CreateBibleCourseVC: CreateTemplateVC {
                 return ButtonRow() { row in
                     row.title = "Add ABCL"
                     row.cellUpdate { cell, _ in
-                        cell.textLabel?.font = UIFont(name: "Baskerville", size: self.view.frame.width/20)
+                        cell.textLabel?.font = formFont
                         cell.textLabel?.textColor = redColor
                     }
                 }
@@ -241,7 +250,7 @@ class CreateBibleCourseVC: CreateTemplateVC {
                     row.placeholder = "ABCL's Name"
                     row.tag = "abclName\(index)"
                     row.cellUpdate { cell, _ in
-                        cell.textField.font = UIFont(name: "Baskerville", size: self.view.frame.width/20)
+                        cell.textField.font = formFont
                     }
                 }
             }
@@ -254,7 +263,7 @@ class CreateBibleCourseVC: CreateTemplateVC {
                         row.tag = "abclName\(idx)"
                         idx += 1
                         row.cellUpdate { cell, _ in
-                            cell.textField.font = UIFont(name: "Baskerville", size: self.view.frame.width/20)
+                            cell.textField.font = formFont
                         }
                     }
                 }
@@ -266,7 +275,7 @@ class CreateBibleCourseVC: CreateTemplateVC {
                 return ButtonRow() { row in
                     row.title = "Add Member"
                     row.cellUpdate { cell, _ in
-                        cell.textLabel?.font = UIFont(name: "Baskerville", size: self.view.frame.width/20)
+                        cell.textLabel?.font = formFont
                         cell.textLabel?.textColor = redColor
                     }
                 }
@@ -276,7 +285,7 @@ class CreateBibleCourseVC: CreateTemplateVC {
                     row.placeholder = "Member's Email"
                     row.tag = "memberEmail\(index)"
                     row.cellUpdate { cell, _ in
-                        cell.textField.font = UIFont(name: "Baskerville", size: self.view.frame.width/20)
+                        cell.textField.font = formFont
                     }
                 }
             }
@@ -289,7 +298,7 @@ class CreateBibleCourseVC: CreateTemplateVC {
                         row.tag = "memberEmail\(idx)"
                         idx += 1
                         row.cellUpdate { cell, _ in
-                            cell.textField.font = UIFont(name: "Baskerville", size: self.view.frame.width/20)
+                            cell.textField.font = formFont
                         }
                     }
                 }
@@ -301,7 +310,7 @@ class CreateBibleCourseVC: CreateTemplateVC {
                 return ButtonRow() { row in
                     row.title = "Add Course Admin"
                     row.cellUpdate { cell, _ in
-                        cell.textLabel?.font = UIFont(name: "Baskerville", size: self.view.frame.width/20)
+                        cell.textLabel?.font = formFont
                         cell.textLabel?.textColor = redColor
                     }
                 }
@@ -311,7 +320,7 @@ class CreateBibleCourseVC: CreateTemplateVC {
                     row.placeholder = "Admin's Email"
                     row.tag = "adminEmail\(index)"
                     row.cellUpdate { cell, _ in
-                        cell.textField.font = UIFont(name: "Baskerville", size: self.view.frame.width/20)
+                        cell.textField.font = formFont
                     }
                 }
             }
@@ -324,7 +333,7 @@ class CreateBibleCourseVC: CreateTemplateVC {
                         row.tag = "adminEmail\(idx)"
                         idx += 1
                         row.cellUpdate { cell, _ in
-                            cell.textField.font = UIFont(name: "Baskerville", size: self.view.frame.width/20)
+                            cell.textField.font = formFont
                         }
                     }
                 }
@@ -333,7 +342,7 @@ class CreateBibleCourseVC: CreateTemplateVC {
                     row.placeholder = "Admin's Email"
                     row.tag = "adminEmail0"
                     row.cellUpdate { cell, _ in
-                        cell.textField.font = UIFont(name: "Baskerville", size: self.view.frame.width/20)
+                        cell.textField.font = formFont
                     }
                 }
             }
@@ -345,7 +354,7 @@ class CreateBibleCourseVC: CreateTemplateVC {
                 row.title = "Delete Course"
             }
             .cellUpdate { cell, _row in
-                cell.textLabel?.font = UIFont(name: "Baskerville", size: self.view.frame.width/20)
+                cell.textLabel?.font = formFont
                 cell.textLabel?.textColor = .red
             }
             .onCellSelection { _cell, _row in
@@ -390,7 +399,7 @@ class CreateBibleCourseVC: CreateTemplateVC {
     
     func tableView(_: UITableView, willDisplayHeaderView view: UIView, forSection: Int) {
         if let view = view as? UITableViewHeaderFooterView {
-            view.textLabel?.font = UIFont(name: "Baskerville", size: self.view.frame.width/24)
+            view.textLabel?.font = formHeaderFont
         }
     }
     

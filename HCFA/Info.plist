@@ -26,7 +26,11 @@
 	<string>Used for setting profile and event pictures</string>
 	<key>UIAppFonts</key>
 	<array>
-		<string>LeagueGothic-Regular.otf</string>
+		<string>Montserrat-Regular.ttf</string>
+		<string>Montserrat-Bold.ttf</string>
+		<string>Montserrat-Light.ttf</string>
+		<string>Montserrat-Medium.ttf</string>
+		<string>OpenSans-Light.ttf</string>
 	</array>
 	<key>UIBackgroundModes</key>
 	<array>

@@ -16,7 +16,8 @@ class ForgotPasswordVC: FormViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = lightColor
+        
+        tableView.backgroundColor = lightColor
         navigationAccessoryView.tintColor = redColor
         navBar = navigationController!.navigationBar
         
@@ -41,8 +42,8 @@ class ForgotPasswordVC: FormViewController {
             row.placeholder = "Email"
             row.tag = "email"
             row.cellUpdate { cell, row in
-                cell.textLabel?.font = UIFont(name: "Baskerville", size: self.view.frame.width/20)
-                cell.textField.font = UIFont(name: "Baskerville", size: self.view.frame.width/20)
+                cell.textLabel?.font = formFont
+                cell.textField.font = formFont
             }
             row.onCellHighlightChanged { cell, row in
                 cell.textLabel?.textColor = redColor
@@ -54,7 +55,7 @@ class ForgotPasswordVC: FormViewController {
             row.title = "Send Request"
         }
         .cellUpdate { cell, _row in
-            cell.textLabel?.font = UIFont(name: "Baskerville", size: self.view.frame.width/20)
+            cell.textLabel?.font = formFont
             cell.textLabel?.textColor = redColor
         }
         .onCellSelection { _, _ in

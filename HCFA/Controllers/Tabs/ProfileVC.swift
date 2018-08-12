@@ -26,8 +26,8 @@ class ProfileVC: FormViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = lightColor
         
+        tableView.backgroundColor = lightColor
         navBar = navigationController!.navigationBar
         hostVC = navigationController?.viewControllers.first as! HostVC
         sideMenu = hostVC.menuViewController as! SideMenuVC
@@ -47,8 +47,6 @@ class ProfileVC: FormViewController {
         picture.imageView?.contentMode = .scaleAspectFill
         picture.layer.masksToBounds = true
         picture.layer.cornerRadius = picture.frame.width/2
-        picture.layer.borderColor = UIColor.black.cgColor
-        picture.layer.borderWidth = 1
         picture.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(imageTapped)))
         
         DispatchQueue.main.async {
@@ -76,8 +74,8 @@ class ProfileVC: FormViewController {
             row.tag = "first"
             row.value = defaults.string(forKey: "first")!
             row.cellUpdate { cell, row in
-                cell.textLabel?.font = UIFont(name: "Baskerville", size: self.view.frame.width/20)
-                cell.textField.font = UIFont(name: "Baskerville", size: self.view.frame.width/20)
+                cell.textLabel?.font = formFont
+                cell.textField.font = formFont
             }
             row.onCellHighlightChanged { cell, row in
                 cell.textLabel?.textColor = redColor
@@ -92,8 +90,8 @@ class ProfileVC: FormViewController {
             row.tag = "last"
             row.value = defaults.string(forKey: "last")!
             row.cellUpdate { cell, row in
-                cell.textLabel?.font = UIFont(name: "Baskerville", size: self.view.frame.width/20)
-                cell.textField.font = UIFont(name: "Baskerville", size: self.view.frame.width/20)
+                cell.textLabel?.font = formFont
+                cell.textField.font = formFont
             }
             row.onCellHighlightChanged { cell, row in
                 cell.textLabel?.textColor = redColor
@@ -108,8 +106,8 @@ class ProfileVC: FormViewController {
             row.tag = "email"
             row.value = defaults.string(forKey: "email")!
             row.cellUpdate { cell, row in
-                cell.textLabel?.font = UIFont(name: "Baskerville", size: self.view.frame.width/20)
-                cell.textField.font = UIFont(name: "Baskerville", size: self.view.frame.width/20)
+                cell.textLabel?.font = formFont
+                cell.textField.font = formFont
             }
             row.onCellHighlightChanged { cell, row in
                 cell.textLabel?.textColor = redColor
@@ -125,7 +123,7 @@ class ProfileVC: FormViewController {
                 return PasswordViewController()
             }, onDismiss: nil)
             row.cellUpdate { cell, row in
-                cell.textLabel?.font = UIFont(name: "Baskerville", size: self.view.frame.width/20)
+                cell.textLabel?.font = formFont
             }
         }
         

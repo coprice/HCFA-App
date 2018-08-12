@@ -29,17 +29,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         barAppearance.backgroundColor = redColor
         barAppearance.titleTextAttributes =
             [NSAttributedStringKey.foregroundColor: UIColor.white,
-             NSAttributedStringKey.font: UIFont(name: "Baskerville", size: window!.frame.width/16)!]
+             NSAttributedStringKey.font: UIFont(name: "Montserrat-Medium", size: window!.frame.width/18)!]
         
         // Navigation bar button appearances
         let itemAppearance = UIBarButtonItem.appearance()
         itemAppearance.tintColor = .white
         itemAppearance.setTitleTextAttributes([NSAttributedStringKey.foregroundColor: UIColor.white,
-                                               NSAttributedStringKey.font: UIFont(name: "Baskerville",
-                                                                                  size: window!.frame.width/21)!],
+                                               NSAttributedStringKey.font: UIFont(name: "Montserrat-Medium",
+                                                                                  size: window!.frame.width/24)!],
                                               for: .normal)
-        itemAppearance.setTitleTextAttributes([NSAttributedStringKey.font: UIFont(name: "Baskerville",
-                                                                                  size: window!.frame.width/21)!],
+        itemAppearance.setTitleTextAttributes([NSAttributedStringKey.font: UIFont(name: "Montserrat-Medium",
+                                                                                  size: window!.frame.width/24)!],
                                               for: .highlighted)
         
         if let notification = launchOptions?[.remoteNotification] as? [String: AnyObject] {

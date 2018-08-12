@@ -24,6 +24,8 @@ class CalendarVC: FormViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        tableView.backgroundColor = lightColor
+        
         title = "Add to Calendar"
         
         var titleString: String!
@@ -65,8 +67,8 @@ class CalendarVC: FormViewController {
                 row.tag = "title"
                 row.value = titleString
                 row.cellUpdate { cell, row in
-                    cell.textLabel?.font = UIFont(name: "Baskerville", size: self.view.frame.width/20)
-                    cell.textField.font = UIFont(name: "Baskerville", size: self.view.frame.width/20)
+                    cell.textLabel?.font = formFont
+                    cell.textField.font = formFont
                 }
             }
             <<< NameRow() { row in
@@ -74,8 +76,8 @@ class CalendarVC: FormViewController {
                 row.tag = "location"
                 row.value = (data["location"] as! String)
                 row.cellUpdate { cell, row in
-                    cell.textLabel?.font = UIFont(name: "Baskerville", size: self.view.frame.width/20)
-                    cell.textField.font = UIFont(name: "Baskerville", size: self.view.frame.width/20)
+                    cell.textLabel?.font = formFont
+                    cell.textField.font = formFont
                 }
             }
             
@@ -85,8 +87,8 @@ class CalendarVC: FormViewController {
                 row.tag = "start"
                 row.value = startDate
                 row.cellUpdate { cell, row in
-                    cell.textLabel?.font = UIFont(name: "Baskerville", size: self.view.frame.width/20)
-                    cell.detailTextLabel?.font = UIFont(name: "Baskerville", size: self.view.frame.width/20)
+                    cell.textLabel?.font = formFont
+                    cell.detailTextLabel?.font = formFont
                 }
                 row.onExpandInlineRow { cell, row, _ in
                     cell.detailTextLabel?.textColor = redColor
@@ -102,8 +104,8 @@ class CalendarVC: FormViewController {
                 row.tag = "end"
                 row.value = endDate
                 row.cellUpdate { cell, row in
-                    cell.textLabel?.font = UIFont(name: "Baskerville", size: self.view.frame.width/20)
-                    cell.detailTextLabel?.font = UIFont(name: "Baskerville", size: self.view.frame.width/20)
+                    cell.textLabel?.font = formFont
+                    cell.detailTextLabel?.font = formFont
                 }
                 row.onExpandInlineRow { cell, row, _ in
                     cell.detailTextLabel?.textColor = redColor
@@ -122,10 +124,13 @@ class CalendarVC: FormViewController {
             }
             .onPresent({ from, to in
                 to.enableDeselection = false
+                to.selectableRowCellUpdate = { cell, row in
+                    cell.textLabel?.font = formFont
+                }
             })
             .cellUpdate({ cell, _ in
-                cell.textLabel?.font = UIFont(name: "Baskerville", size: self.view.frame.width/20)
-                cell.detailTextLabel?.font = UIFont(name: "Baskerville", size: self.view.frame.width/20)
+                cell.textLabel?.font = formFont
+                cell.detailTextLabel?.font = formFont
                 self.form.rowBy(tag: "endRepeat")?.evaluateHidden()
             })
             <<< PushRow<String>() { row in
@@ -139,10 +144,13 @@ class CalendarVC: FormViewController {
             }
             .onPresent({ from, to in
                 to.enableDeselection = false
+                to.selectableRowCellUpdate = { cell, row in
+                    cell.textLabel?.font = formFont
+                }
             })
             .cellUpdate({ cell, row in
-                cell.textLabel?.font = UIFont(name: "Baskerville", size: self.view.frame.width/20)
-                cell.detailTextLabel?.font = UIFont(name: "Baskerville", size: self.view.frame.width/20)
+                cell.textLabel?.font = formFont
+                cell.detailTextLabel?.font = formFont
             })
             <<< DatePickerRow() { row in
                 row.tag = "endRepeatDate"
@@ -160,9 +168,15 @@ class CalendarVC: FormViewController {
             row.value = "None"
             row.tag = "alert"
         }
+        .onPresent({ from, to in
+            to.enableDeselection = false
+            to.selectableRowCellUpdate = { cell, row in
+                cell.textLabel?.font = formFont
+            }
+        })
         .cellUpdate({ cell, _ in
-            cell.textLabel?.font = UIFont(name: "Baskerville", size: self.view.frame.width/20)
-            cell.detailTextLabel?.font = UIFont(name: "Baskerville", size: self.view.frame.width/20)
+            cell.textLabel?.font = formFont
+            cell.detailTextLabel?.font = formFont
             self.form.rowBy(tag: "alert2")?.evaluateHidden()
         })
             
@@ -176,9 +190,15 @@ class CalendarVC: FormViewController {
                 return (form.rowBy(tag: "alert")?.value == "None")
             })
         }
+        .onPresent({ from, to in
+            to.enableDeselection = false
+            to.selectableRowCellUpdate = { cell, row in
+                cell.textLabel?.font = formFont
+            }
+        })
         .cellUpdate({ cell, _ in
-            cell.textLabel?.font = UIFont(name: "Baskerville", size: self.view.frame.width/20)
-            cell.detailTextLabel?.font = UIFont(name: "Baskerville", size: self.view.frame.width/20)
+            cell.textLabel?.font = formFont
+            cell.detailTextLabel?.font = formFont
             self.form.rowBy(tag: "alert2")?.evaluateHidden()
         })
             
@@ -188,8 +208,8 @@ class CalendarVC: FormViewController {
             row.tag = "notes"
             row.value = notes
             row.cellUpdate { cell, row in
-                cell.placeholderLabel?.font = UIFont(name: "Baskerville", size: self.view.frame.width/20)
-                cell.textView.font = UIFont(name: "Baskerville", size: self.view.frame.width/20)
+                cell.placeholderLabel?.font = formFont
+                cell.textView.font = formFont
             }
         }
         
@@ -200,12 +220,23 @@ class CalendarVC: FormViewController {
             row.value = eventStore.defaultCalendarForNewEvents?.title
             row.tag = "calendar"
         }
+        .onPresent({ from, to in
+            to.enableDeselection = false
+            to.selectableRowCellUpdate = { cell, row in
+                cell.textLabel?.font = formFont
+            }
+        })
+        .cellUpdate({ cell, _ in
+            cell.textLabel?.font = formFont
+            cell.detailTextLabel?.font = formFont
+            self.form.rowBy(tag: "endRepeat")?.evaluateHidden()
+        })
         
         +++ Section()
         <<< ButtonRow() { row in
             row.title = "Add to Calendar"
             row.cellUpdate { cell, _ in
-                cell.textLabel?.font = UIFont(name: "Baskerville", size: self.view.frame.width/20)
+                cell.textLabel?.font = formFont
                 cell.textLabel?.textColor = redColor
             }
         }
@@ -284,6 +315,12 @@ class CalendarVC: FormViewController {
             }
         })
         animateScroll = true
+    }
+    
+    func tableView(_: UITableView, willDisplayHeaderView view: UIView, forSection: Int) {
+        if let view = view as? UITableViewHeaderFooterView {
+            view.textLabel?.font = formHeaderFont
+        }
     }
 }
 

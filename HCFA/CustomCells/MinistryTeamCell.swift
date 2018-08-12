@@ -15,54 +15,60 @@ class MinistryTeamCell: UITableViewCell {
     let view = UIImageView()
     
     func load(data: [String:Any]) {
-        let SIDE_MARGIN = width/40
-        let TOP_MARGIN = height/40
-        let FULL_WIDTH = width-SIDE_MARGIN*4
+        let SIDE_MARGIN = width/20
+        let TOP_MARGIN = height/20
+        let FULL_WIDTH = width-SIDE_MARGIN*2
+        let FULL_HEIGHT = height - TOP_MARGIN*2
         
         backgroundColor = .clear
         frame = CGRect(x: 0, y: 0, width: width, height: height*1.1)
         
-        view.frame = CGRect(x: SIDE_MARGIN, y: 0, width: width-SIDE_MARGIN*2, height: height)
+        view.frame = CGRect(x: SIDE_MARGIN/2, y: 0, width: width-SIDE_MARGIN, height: height)
         view.backgroundColor = .white
         view.layer.cornerRadius = SIDE_MARGIN
         
-        let title = UILabel(frame: CGRect(x: SIDE_MARGIN, y: TOP_MARGIN, width: FULL_WIDTH, height: height*3/10))
+        let title = UILabel(frame: CGRect(x: SIDE_MARGIN, y: TOP_MARGIN,
+                                          width: FULL_WIDTH, height: FULL_HEIGHT*0.32))
         title.text = (data["name"] as! String)
-        title.font = UIFont(name: "Baskerville", size: FULL_WIDTH*0.09)
+        title.font = UIFont(name: "Montserrat-Medium", size: FULL_WIDTH*0.08)
         title.baselineAdjustment = .alignCenters
         title.textAlignment = .center
-        title.adjustsFontSizeToFitWidth = true
         view.addSubview(title)
         
-        let leaders = UILabel(frame: CGRect(x: SIDE_MARGIN, y: height*3/10, width: FULL_WIDTH, height: height/5))
-        var text = ""
-        for leader in (data["leaders"] as! [String]) {
-            text += leader + ", "
+        let leaders = UILabel(frame: CGRect(x: SIDE_MARGIN, y: title.frame.height + FULL_HEIGHT*0.1,
+                                            width: FULL_WIDTH, height: FULL_HEIGHT*0.35))
+        let leadersList = data["leaders"] as! [String]
+        var text = "MTL \(leadersList[0]),\n"
+        
+        if leadersList.count > 1 {
+            text += leadersList[1...].joined(separator: ", ")
         }
-        if text.isEmpty { text = "Leaders TBD" } else {
-            let endIndex = text.index(text.endIndex, offsetBy: -2)
-            text = String(text[text.startIndex..<endIndex])
-        }
-        leaders.text = text
-        leaders.font = UIFont(name: "Baskerville", size: view.frame.width/20)
-        leaders.textColor = .darkGray
-        leaders.adjustsFontSizeToFitWidth = true
+
+        leaders.lineBreakMode = .byWordWrapping
+        leaders.numberOfLines = 2
+        leaders.attributedText = createLeaderString(from: text, fontSize: view.frame.width/22,
+                                                    color: UIColor(red: 43/255, green: 50/255, blue: 53/255,
+                                                                   alpha: 1.0))
         leaders.textAlignment = .center
         leaders.baselineAdjustment = .alignCenters
         view.addSubview(leaders)
         
-        let description = UILabel(frame: CGRect(x: SIDE_MARGIN, y: height/2, width: FULL_WIDTH, height: height/2))
-        description.text = (data["description"] as! String)
-        description.font = UIFont(name: "Baskerville", size: view.frame.width/20)
-        description.textColor = redColor
-        description.numberOfLines = 3
-        description.textAlignment = .center
-        description.baselineAdjustment = .alignCenters
-        view.addSubview(description)
-        addSubview(view)
+        let meeting =  UILabel(frame: CGRect(x: SIDE_MARGIN, y: leaders.frame.origin.y + leaders.frame.height,
+                                             width: FULL_WIDTH, height: FULL_HEIGHT*0.35))
+        meeting.font = UIFont(name: "Montserrat-Light", size: view.frame.width/22)
+        meeting.baselineAdjustment = .alignCenters
+        meeting.textColor = UIColor(red: 128/255, green: 130/255, blue: 133/255, alpha: 1.0)
+        meeting.textAlignment = .center
         
+        if let day = data["day"] as? String {
+             meeting.text = "\(day)s \(data["start"] as! String)-\(data["end"] as! String)"
+        } else {
+            meeting.text = "Meetings TBD"
+        }
+        view.addSubview(meeting)
         view.highlightedImage = roundedImage(color: .lightGray, width: view.frame.width,
                                              height: view.frame.height, cornerRadius: SIDE_MARGIN)
+        addSubview(view)
         
         let backgroundView = UIView()
         backgroundView.backgroundColor = .clear
@@ -75,5 +81,17 @@ class MinistryTeamCell: UITableViewCell {
     
     func unhighlightView() {
         view.isHighlighted = false
+    }
+
+    func createLeaderString(from string: String, fontSize: CGFloat, color: UIColor) -> NSAttributedString {
+        let boldAttribute: [NSAttributedStringKey : Any] =
+            [.font: UIFont(name: "Montserrat-Bold", size: fontSize) ?? UIFont.systemFont(ofSize: fontSize),
+             .foregroundColor: color]
+        let nonBoldAttribute: [NSAttributedStringKey : Any] =
+            [.font: UIFont(name: "Montserrat-Light" , size: fontSize) ?? UIFont.systemFont(ofSize: fontSize),
+             .foregroundColor: color]
+        let attrStr = NSMutableAttributedString(string: string, attributes: nonBoldAttribute)
+        attrStr.setAttributes(boldAttribute, range: NSMakeRange(0, 3))
+        return attrStr
     }
 }

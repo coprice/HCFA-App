@@ -15,6 +15,8 @@ class DisplayBibleCourseVC: DisplayTemplateVC {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        
+        let mainFont = UIFont(name: "Montserrat-Regular", size: view.frame.width/20)!
 
         if firstAppearance {
             firstAppearance = false
@@ -33,17 +35,15 @@ class DisplayBibleCourseVC: DisplayTemplateVC {
             
             offset = TOP_MARGIN // keep track of total height used
             
-            let categoryFont = UIFont(name: "Baskerville", size: view.frame.width/12)!
-            let infoFont = UIFont(name: "Baskerville", size: view.frame.width/20)!
             let categoryHeight = calcLabelHeight(text: "Location",
                                                  frame: CGRect(x: SIDE_MARGIN, y: offset + TOP_MARGIN,
                                                                width: FULL_WIDTH, height: .greatestFiniteMagnitude),
-                                                 font: categoryFont)
+                                                 font: mainFont)
             
             let leader = UILabel(frame: CGRect(x: SIDE_MARGIN, y: offset, width: FULL_WIDTH, height: categoryHeight))
             leader.text = "Leader: \(data["leader_first"] as! String) \(data["leader_last"] as! String)"
             leader.textAlignment = .center
-            leader.font = infoFont
+            leader.font = mainFont
             leader.textColor = .black
             leader.baselineAdjustment = .alignCenters
             offset += leader.frame.height + TOP_MARGIN
@@ -52,11 +52,11 @@ class DisplayBibleCourseVC: DisplayTemplateVC {
             let abcls = (data["abcls"] as! [String])
             for abcl in abcls {
                 let label = UILabel(frame: CGRect(x: SIDE_MARGIN, y: offset, width: FULL_WIDTH, height: categoryHeight))
-                createListLabel(label: label, text: "ABCL: \(abcl)", font: infoFont, color: .black, view: scrollView)
+                createListLabel(label: label, text: "ABCL: \(abcl)", font: mainFont, color: .black, view: scrollView)
                 offset += label.frame.height
             }
             if !abcls.isEmpty {
-                offset += TOP_MARGIN/2
+                offset += TOP_MARGIN
             }
 
             addLine(x: SIDE_MARGIN, y: offset, width: FULL_WIDTH, view: scrollView)
@@ -68,7 +68,7 @@ class DisplayBibleCourseVC: DisplayTemplateVC {
             }
             
             let location = UITextView(frame: CGRect(x: SIDE_MARGIN, y: offset, width: FULL_WIDTH, height: 0))
-            createTextView(location, font: infoFont,
+            createTextView(location, font: mainFont,
                            text: locationText,
                            color: .darkGray, textAlignment: .center)
             offset += location.frame.height
@@ -79,8 +79,8 @@ class DisplayBibleCourseVC: DisplayTemplateVC {
             offset += TOP_MARGIN/2
             
             let material = UITextView(frame: CGRect(x: SIDE_MARGIN, y: offset, width: FULL_WIDTH, height: 0))
-            createTextView(material, font: infoFont, text: (data["material"] as! String), color: .black,
-                           textAlignment: .left)
+            createTextView(material, font: UIFont(name: "OpenSans-Light", size: view.frame.width/20)!,
+                           text: (data["material"] as! String), color: .black, textAlignment: .left)
             offset += material.frame.height + TOP_MARGIN/2
             scrollView.addSubview(material)
             
@@ -98,7 +98,8 @@ class DisplayBibleCourseVC: DisplayTemplateVC {
                         }
                     }
                     
-                    imageView.frame = CGRect(x: SIDE_MARGIN + FULL_WIDTH*0.25, y: offset, width: FULL_WIDTH/8, height: FULL_WIDTH/8)
+                    imageView.frame = CGRect(x: SIDE_MARGIN + FULL_WIDTH*0.235, y: offset,
+                                             width: FULL_WIDTH/8, height: FULL_WIDTH/8)
                     imageView.layer.cornerRadius = imageView.frame.width/2
                     imageView.contentMode = .scaleAspectFill
                     imageView.layer.masksToBounds = true
@@ -106,9 +107,9 @@ class DisplayBibleCourseVC: DisplayTemplateVC {
                     imageView.layer.borderWidth = 1
                     scrollView.addSubview(imageView)
                     
-                    let label = UILabel(frame: CGRect(x: SIDE_MARGIN*2 + FULL_WIDTH*0.375 , y: offset,
+                    let label = UILabel(frame: CGRect(x: SIDE_MARGIN*2 + FULL_WIDTH*0.36 , y: offset,
                                                       width: FULL_WIDTH*0.625 - SIDE_MARGIN*3, height: FULL_WIDTH/8))
-                    createListLabel(label: label, text: member[0]!, font: infoFont, color: .black, view: scrollView)
+                    createListLabel(label: label, text: member[0]!, font: mainFont, color: .black, view: scrollView)
                     label.textAlignment = .left
                     
                     if i + 1 != members.count {
@@ -123,7 +124,7 @@ class DisplayBibleCourseVC: DisplayTemplateVC {
                     offset += TOP_MARGIN/2
                     let label = UILabel(frame: CGRect(x: SIDE_MARGIN, y: offset,
                                                       width: FULL_WIDTH, height: categoryHeight))
-                    createListLabel(label: label, text: "There are no members", font: infoFont, color: .gray,
+                    createListLabel(label: label, text: "There are no members", font: mainFont, color: .gray,
                                     view: scrollView)
                     offset += label.frame.height
                 }
@@ -182,30 +183,25 @@ class DisplayBibleCourseVC: DisplayTemplateVC {
                 
                 if !admin {
                     offset += TOP_MARGIN/2
-                    let leaveButton = UIButton(frame: CGRect(x: view.frame.width/2 - FULL_WIDTH/2, y: offset + TOP_MARGIN,
-                                                             width: FULL_WIDTH, height: categoryHeight))
-                    leaveButton.backgroundColor = lightColor
-                    leaveButton.setBackgroundImage(squareImage(color: .lightGray, width: leaveButton.frame.width,
-                                                               height: leaveButton.frame.height),
-                                                   for: .highlighted)
+                    let leaveButton = UIButton(frame: CGRect(x: view.frame.width/2 - FULL_WIDTH/4,
+                                                             y: offset + TOP_MARGIN,
+                                                             width: FULL_WIDTH/2, height: categoryHeight))
                     leaveButton.setTitle("Leave Course", for: .normal)
                     leaveButton.setTitleColor(redColor, for: .normal)
-                    leaveButton.titleLabel?.font = infoFont
+                    leaveButton.setTitleColor(highlightColor, for: .highlighted)
+                    leaveButton.titleLabel?.font = mainFont
                     leaveButton.addTarget(self, action: #selector(leaveBC), for: .touchUpInside)
                     offset += leaveButton.frame.height + TOP_MARGIN*2
                     scrollView.addSubview(leaveButton)
                 }
                 
             } else {
-                let joinButton = UIButton(frame: CGRect(x: view.frame.width/2 - FULL_WIDTH/2, y: offset + TOP_MARGIN,
-                                                        width: FULL_WIDTH, height: categoryHeight))
-                joinButton.backgroundColor = lightColor
-                joinButton.setBackgroundImage(squareImage(color: .lightGray, width: joinButton.frame.width,
-                                                          height: joinButton.frame.height),
-                                              for: .highlighted)
+                let joinButton = UIButton(frame: CGRect(x: view.frame.width/2 - FULL_WIDTH/4, y: offset + TOP_MARGIN,
+                                                        width: FULL_WIDTH/2, height: categoryHeight))
                 joinButton.setTitle("Request to Join", for: .normal)
                 joinButton.setTitleColor(redColor, for: .normal)
-                joinButton.titleLabel?.font = infoFont
+                joinButton.setTitleColor(highlightColor, for: .highlighted)
+                joinButton.titleLabel?.font = mainFont
                 joinButton.addTarget(self, action: #selector(joinBC), for: .touchUpInside)
                 offset += joinButton.frame.height + TOP_MARGIN*3
                 scrollView.addSubview(joinButton)

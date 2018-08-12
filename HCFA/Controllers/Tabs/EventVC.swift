@@ -29,7 +29,7 @@ class EventVC: TemplateVC {
         super.viewDidLoad()
         
         cellWidth = view.frame.width
-        cellHeight = view.frame.height*0.175
+        cellHeight = view.frame.height*0.15
         
         let barHeight = navigationController!.navigationBar.frame.height
         let BUTTON_LENGTH = barHeight*0.6
@@ -74,7 +74,7 @@ class EventVC: TemplateVC {
                                         for: .highlighted)
         deleteButton.setTitle("Delete", for: .normal)
         deleteButton.setTitleColor(.red, for: .normal)
-        deleteButton.titleLabel?.font = UIFont(name: "Baskerville", size: view.frame.width/20)
+        deleteButton.titleLabel?.font = UIFont(name: "Montserrat-Regular", size: view.frame.width*0.0375)
         deleteButton.layer.borderWidth = 1
         deleteButton.layer.borderColor = redColor.cgColor
         deleteButton.addTarget(self, action: #selector(deleteSelected), for: .touchUpInside)
@@ -313,8 +313,8 @@ extension EventVC: UITableViewDelegate {
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         
         if section == 0 {
-            let TOGGLE_HEIGHT = view.frame.height/20
-            let TOGGLE_WIDTH = view.frame.width/4
+            let TOGGLE_HEIGHT = view.frame.height*0.06
+            let TOGGLE_WIDTH = view.frame.width*0.275
             
             let upcoming = UIButton(frame: CGRect(x: cellWidth/2 - TOGGLE_WIDTH - 2,
                                                   y: view.frame.height/20 - TOGGLE_HEIGHT/2,
@@ -326,14 +326,12 @@ extension EventVC: UITableViewDelegate {
                 upcoming.backgroundColor = highlightColor
             }
             
-            upcoming.layer.cornerRadius = TOGGLE_HEIGHT/5
+            upcoming.layer.cornerRadius = view.frame.height*0.015
             upcoming.setBackgroundImage(roundedImage(color: redColor, width: TOGGLE_WIDTH, height: TOGGLE_HEIGHT,
                                                      cornerRadius: upcoming.layer.cornerRadius),
                                         for: .highlighted)
-            upcoming.setTitle("Upcoming", for: .normal)
-            upcoming.titleLabel?.font = UIFont(name: "Baskerville", size: TOGGLE_WIDTH/5)
-            upcoming.layer.borderWidth = TOGGLE_HEIGHT/20
-            upcoming.layer.borderColor = redColor.cgColor
+            upcoming.setTitle("UPCOMING", for: .normal)
+            upcoming.titleLabel?.font = UIFont(name: "Montserrat-Regular", size: view.frame.width*0.035)
             upcoming.addTarget(self, action: #selector(displayUpcomingEvents), for: .touchUpInside)
             
             let past = UIButton(frame: CGRect(x: cellWidth/2 + 2, y: view.frame.height/20 - TOGGLE_HEIGHT/2,
@@ -345,14 +343,12 @@ extension EventVC: UITableViewDelegate {
                 past.backgroundColor = redColor
             }
             
-            past.layer.cornerRadius = TOGGLE_HEIGHT/5
+            past.layer.cornerRadius = view.frame.height*0.015
             past.setBackgroundImage(roundedImage(color: redColor, width: TOGGLE_WIDTH, height: TOGGLE_HEIGHT,
                                                  cornerRadius: past.layer.cornerRadius),
                                     for: .highlighted)
-            past.setTitle("Past", for: .normal)
-            past.titleLabel?.font = UIFont(name: "Baskerville", size: TOGGLE_WIDTH/5)
-            past.layer.borderWidth = TOGGLE_HEIGHT/20
-            past.layer.borderColor = redColor.cgColor
+            past.setTitle("PAST", for: .normal)
+            past.titleLabel?.font = UIFont(name: "Montserrat-Regular", size: view.frame.width*0.035)
             past.addTarget(self, action: #selector(displayPastEvents), for: .touchUpInside)
             
             let headerView = UIView()
@@ -462,7 +458,8 @@ extension EventVC: UITableViewDataSource {
                 text = "No past events to display"
             }
             
-            cell.load(width: cellWidth, height: cellHeight/4, text: text, color: .gray)
+            cell.load(width: cellWidth, height: cellHeight/4, text: text, color: .gray,
+                      font: UIFont(name: "Montserrat-Regular", size: cellWidth/18)!)
             cell.isUserInteractionEnabled = false
             return cell
         }

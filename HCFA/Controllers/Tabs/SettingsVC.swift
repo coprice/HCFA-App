@@ -14,8 +14,8 @@ class SettingsVC: FormViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = lightColor
         
+        tableView.backgroundColor = lightColor
         hostVC = navigationController?.viewControllers.first as! HostVC
         
         if defaults.bool(forKey: "admin") {
@@ -26,7 +26,7 @@ class SettingsVC: FormViewController {
                     return PermissionVC()
                 }, onDismiss: nil)
                 row.cellUpdate { cell, row in
-                    cell.textLabel?.font = UIFont(name: "Baskerville", size: self.view.frame.width/20)
+                    cell.textLabel?.font = formFont
                 }
             }
         }
@@ -36,7 +36,7 @@ class SettingsVC: FormViewController {
             row.title = "Sign Out"
         }
         .cellUpdate { cell, _row in
-            cell.textLabel?.font = UIFont(name: "Baskerville", size: self.view.frame.width/20)
+            cell.textLabel?.font = formFont
             cell.textLabel?.textColor = redColor
         }
         .onCellSelection { _, _ in

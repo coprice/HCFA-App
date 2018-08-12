@@ -36,7 +36,7 @@ class SideMenuCell: UITableViewCell {
     
     private func createDisplayWith(text: String, image: UIImage) {
         
-        let IMAGE_LENGTH = frame.height*0.65
+        let IMAGE_LENGTH = frame.height*0.5
         let SIDE_MARGIN = frame.width/20
         
         let imageView = UIImageView(image: image)
@@ -47,7 +47,7 @@ class SideMenuCell: UITableViewCell {
         let label = UILabel(frame: CGRect(x: SIDE_MARGIN*2 + IMAGE_LENGTH, y: (cellHeight-IMAGE_LENGTH)/2,
                                           width: frame.width - SIDE_MARGIN*3 - IMAGE_LENGTH, height: IMAGE_LENGTH))
         label.text = text
-        label.font = UIFont(name: "Baskerville", size: cellWidth/14)
+        label.font = UIFont(name: "Montserrat-Light", size: cellWidth/16)
         label.adjustsFontSizeToFitWidth = true
         
         addSubview(imageView)
