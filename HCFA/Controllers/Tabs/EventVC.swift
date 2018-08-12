@@ -457,7 +457,7 @@ extension EventVC: UITableViewDataSource {
             }
             
             cell.load(width: cellWidth, height: cellHeight/4, text: text, color: .gray,
-                      font: emptyFont)
+                      font: displayFont)
             cell.isUserInteractionEnabled = false
             return cell
         }

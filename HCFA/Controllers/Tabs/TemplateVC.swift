@@ -13,8 +13,6 @@ class TemplateVC: UIViewController {
     let upButton = UIButton()
     let toggleFont = UIFont(name: "Montserrat-Regular", size: UIScreen.main.bounds.width*0.035) ??
         UIFont.systemFont(ofSize: UIScreen.main.bounds.width*0.035)
-    let emptyFont = UIFont(name: "Montserrat-Regular", size: UIScreen.main.bounds.width*0.055) ??
-        UIFont.systemFont(ofSize: UIScreen.main.bounds.width*0.055)
 
     var hostVC: HostVC!
     var tableView: UITableView!

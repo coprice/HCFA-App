@@ -12,9 +12,14 @@ class DisplayMinistryTeamVC: DisplayTemplateVC {
     
     var joined = false
     var admin = false
+    var loadingView: LoadingView!
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        
+        loadingView = LoadingView(frame: CGRect(x: view.frame.width*0.375,
+                                                y: view.frame.height/2 - view.frame.width*0.125,
+                                                width: view.frame.width*0.25, height: view.frame.width*0.25))
         
         if firstAppearance {
             firstAppearance = false
@@ -250,8 +255,17 @@ class DisplayMinistryTeamVC: DisplayTemplateVC {
                                       message: "Are you sure you want to leave this ministry team?",
                                       preferredStyle: .alert)
         let leaveAction = UIAlertAction(title: "Leave", style: .destructive) { _ in
+            
+            self.view.addSubview(self.loadingView)
+            self.navigationController!.navigationBar.isUserInteractionEnabled = false
+            self.view.isUserInteractionEnabled = false
+            
             API.leaveTeam(uid: defaults.integer(forKey: "uid"), token: defaults.string(forKey: "token")!,
                           tid: self.data["tid"] as! Int, completionHandler: { response, data in
+                
+                self.loadingView.removeFromSuperview()
+                self.navigationController!.navigationBar.isUserInteractionEnabled = false
+                self.view.isUserInteractionEnabled = false
                 
                 switch response {
                 case .NotConnected:

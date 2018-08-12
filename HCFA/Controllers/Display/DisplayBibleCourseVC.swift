@@ -12,9 +12,14 @@ class DisplayBibleCourseVC: DisplayTemplateVC {
     
     var joined = false
     var admin = false
+    var loadingView: LoadingView!
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        
+        loadingView = LoadingView(frame: CGRect(x: view.frame.width*0.375,
+                                                y: view.frame.height/2 - view.frame.width*0.125,
+                                                width: view.frame.width*0.25, height: view.frame.width*0.25))
         
         if firstAppearance {
             firstAppearance = false
@@ -260,9 +265,17 @@ class DisplayBibleCourseVC: DisplayTemplateVC {
                                       preferredStyle: .alert)
         let leaveAction = UIAlertAction(title: "Leave", style: .destructive) { _ in
             
+            self.view.addSubview(self.loadingView)
+            self.view.isUserInteractionEnabled = false
+            self.navigationController!.navigationBar.isUserInteractionEnabled = false
+            
             API.leaveCourse(uid: defaults.integer(forKey: "uid"), token: defaults.string(forKey: "token")!,
                             cid: self.data["cid"] as! Int, completionHandler: { response, data in
                 
+                self.view.isUserInteractionEnabled = true
+                self.navigationController!.navigationBar.isUserInteractionEnabled = true
+                self.loadingView.removeFromSuperview()
+
                 switch response {
                 case .NotConnected:
                     createAlert(title: "Connection Error", message: "Unable to connect to the server",

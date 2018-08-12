@@ -547,7 +547,7 @@ extension BibleCourseVC: UITableViewDataSource {
             if yourRows.isEmpty {
                 let cell = EmptyCell()
                 cell.load(width: cellWidth, height: cellHeight/4, text: "You are not in any bible courses",
-                          color: .gray, font: emptyFont)
+                          color: .gray, font: displayFont)
                 cell.isUserInteractionEnabled = false
                 return cell
             }
@@ -563,7 +563,7 @@ extension BibleCourseVC: UITableViewDataSource {
             if rows.isEmpty {
                 let cell = EmptyCell()
                 cell.load(width: cellWidth, height: cellHeight/4, text: "No bible courses to display",
-                          color: .gray, font: emptyFont)
+                          color: .gray, font: displayFont)
                 cell.isUserInteractionEnabled = false
                 return cell
             }
