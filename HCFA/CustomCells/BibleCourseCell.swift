@@ -29,24 +29,24 @@ class BibleCourseCell: UITableViewCell {
         
         let title = UILabel(frame: CGRect(x: SIDE_MARGIN, y: TOP_MARGIN, width: FULL_WIDTH, height: FULL_HEIGHT*0.4))
         title.text = "\(data["leader_first"] as! String) \(data["leader_last"] as! String)"
-        title.font = UIFont(name: "Montserrat-Medium", size: FULL_WIDTH*0.08)
+        title.font = titleFont
         title.baselineAdjustment = .alignCenters
         view.addSubview(title)
         
         let location = UILabel(frame: CGRect(x: SIDE_MARGIN, y: title.frame.height + FULL_HEIGHT*0.1,
                                              width: FULL_WIDTH, height: FULL_HEIGHT*0.25))
         location.text = (data["location"] as! String)
-        location.font = UIFont(name: "Montserrat-Light", size: view.frame.width/22)
+        location.font = cellFont
         location.baselineAdjustment = .alignCenters
-        location.textColor = UIColor(red: 43/255, green: 50/255, blue: 53/255, alpha: 1.0)
+        location.textColor = secondaryCellColor
         view.addSubview(location)
         
         let meeting =  UILabel(frame: CGRect(x: SIDE_MARGIN,
                                              y: location.frame.origin.y + location.frame.height,
                                              width: FULL_WIDTH, height: location.frame.height))
-        meeting.font = UIFont(name: "Montserrat-Light", size: view.frame.width/22)
+        meeting.font = cellFont
         meeting.baselineAdjustment = .alignCenters
-        meeting.textColor = UIColor(red: 128/255, green: 130/255, blue: 133/255, alpha: 1.0)
+        meeting.textColor = tertiaryCellColor
 
         if let dayString = data["day"] as? String {
             meeting.text = "\(dayString)s | \(data["start"] as! String)-\(data["end"] as! String)"

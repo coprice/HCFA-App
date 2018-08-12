@@ -11,7 +11,6 @@ import Eureka
 class PasswordViewController: FormViewController, TypedRowControllerType {
 
     var hostVC: HostVC!
-    var navBar: UINavigationBar!
     var loadingView: LoadingView!
     
     override func viewDidLoad() {
@@ -19,7 +18,6 @@ class PasswordViewController: FormViewController, TypedRowControllerType {
 
         tableView.backgroundColor = lightColor
         hostVC = navigationController?.viewControllers.first as! HostVC
-        navBar = navigationController!.navigationBar
         loadingView = LoadingView(frame: CGRect(x: view.frame.width*0.375,
                                                 y: view.frame.height/2 - view.frame.width*0.125,
                                                 width: view.frame.width*0.25, height: view.frame.width*0.25))
@@ -103,13 +101,13 @@ class PasswordViewController: FormViewController, TypedRowControllerType {
             } else {
                 
                 self.view.addSubview(self.loadingView)
-                self.navBar.isUserInteractionEnabled = false
+                self.navigationController!.navigationBar.isUserInteractionEnabled = false
                 self.tableView.isUserInteractionEnabled = false
                 
                 API.changePassword(uid: defaults.integer(forKey: "uid"), token: defaults.string(forKey: "token")!, oldPassword: current, newPassword: password, completionHandler: { response, data in
                     
                     self.loadingView.removeFromSuperview()
-                    self.navBar.isUserInteractionEnabled = true
+                    self.navigationController!.navigationBar.isUserInteractionEnabled = true
                     self.tableView.isUserInteractionEnabled = true
                     
                     switch response {

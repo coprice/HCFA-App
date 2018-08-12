@@ -165,8 +165,6 @@ extension MinistryTeamVC: UITableViewDelegate {
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         
         if section == 0 {
-            let TOGGLE_HEIGHT = view.frame.height*0.06
-            let TOGGLE_WIDTH = view.frame.width*0.275
             
             let your = UIButton(frame: CGRect(x: cellWidth/2 - TOGGLE_WIDTH - 2,
                                               y: view.frame.height/20 - TOGGLE_HEIGHT/2,
@@ -181,7 +179,7 @@ extension MinistryTeamVC: UITableViewDelegate {
             your.setBackgroundImage(roundedImage(color: redColor, width: TOGGLE_WIDTH, height: TOGGLE_HEIGHT,
                                                  cornerRadius: your.layer.cornerRadius), for: .highlighted)
             your.setTitle("MY TEAMS", for: .normal)
-            your.titleLabel?.font = UIFont(name: "Montserrat-Regular", size: view.frame.width*0.035)
+            your.titleLabel?.font = toggleFont
             your.addTarget(self, action: #selector(displayUsersMTs), for: .touchUpInside)
             
             let join = UIButton(frame: CGRect(x: cellWidth/2 + 2, y: view.frame.height/20 - TOGGLE_HEIGHT/2,
@@ -196,7 +194,7 @@ extension MinistryTeamVC: UITableViewDelegate {
             join.setBackgroundImage(roundedImage(color: redColor, width: TOGGLE_WIDTH, height: TOGGLE_HEIGHT,
                                                  cornerRadius: join.layer.cornerRadius), for: .highlighted)
             join.setTitle("ALL TEAMS", for: .normal)
-            join.titleLabel?.font = UIFont(name: "Montserrat-Regular", size: view.frame.width*0.035)
+            join.titleLabel?.font = toggleFont
             join.addTarget(self, action: #selector(displayMTs), for: .touchUpInside)
             
             let headerView = UIView()
@@ -204,6 +202,7 @@ extension MinistryTeamVC: UITableViewDelegate {
             headerView.addSubview(your)
             headerView.addSubview(join)
             return headerView
+
         } else {
             let view = UIView()
             view.backgroundColor = .clear
@@ -281,7 +280,7 @@ extension MinistryTeamVC: UITableViewDataSource {
                 text = "No ministry teams to display"
             }
             cell.load(width: cellWidth, height: cellHeight/4, text: text, color: .gray,
-                      font: UIFont(name: "Montserrat-Regular", size: cellWidth/18)!)
+                      font: emptyFont)
             cell.isUserInteractionEnabled = false
             return cell
         }

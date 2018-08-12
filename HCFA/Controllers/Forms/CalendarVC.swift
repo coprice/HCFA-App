@@ -86,36 +86,60 @@ class CalendarVC: FormViewController {
                 row.title = "Starts"
                 row.tag = "start"
                 row.value = startDate
-                row.cellUpdate { cell, row in
+                row.cellSetup { cell, row in
                     cell.textLabel?.font = formFont
                     cell.detailTextLabel?.font = formFont
+                    cell.detailTextLabel?.textColor = .black
                 }
                 row.onExpandInlineRow { cell, row, _ in
                     cell.detailTextLabel?.textColor = redColor
                     row.updateCell()
                 }
                 row.onCollapseInlineRow { cell, row, _ in
-                    cell.detailTextLabel?.textColor = .gray
+                    cell.detailTextLabel?.textColor = .black
                     row.updateCell()
+                    
+                    let endRow = (self.form.rowBy(tag: "end") as! DateTimeInlineRow).baseCell.baseRow
+                    if let endDate = endRow?.baseValue as? Date {
+                        if let startDate = row.value {
+                            if startDate > endDate {
+                                endRow?.baseValue = startDate
+                                endRow?.updateCell()
+                            }
+                        }
+                    }
                 }
             }
+            
             <<< DateTimeInlineRow() { row in
                 row.title = "Ends"
                 row.tag = "end"
                 row.value = endDate
-                row.cellUpdate { cell, row in
+                row.cellSetup { cell, row in
                     cell.textLabel?.font = formFont
                     cell.detailTextLabel?.font = formFont
+                    cell.detailTextLabel?.textColor = .black
                 }
                 row.onExpandInlineRow { cell, row, _ in
                     cell.detailTextLabel?.textColor = redColor
                     row.updateCell()
                 }
                 row.onCollapseInlineRow { cell, row, _ in
-                    cell.detailTextLabel?.textColor = .gray
+                    cell.detailTextLabel?.textColor = .black
                     row.updateCell()
+                    
+                    let startRow = (self.form.rowBy(tag: "start") as! DateTimeInlineRow).baseCell.baseRow
+                    if let startDate = startRow?.baseValue as? Date {
+                        if let endDate = row.value {
+                            if endDate < startDate {
+                                startRow?.baseValue = endDate
+                                startRow?.updateCell()
+                            }
+                        }
+                    }
                 }
             }
+            
             <<< PushRow<String>() { row in
                 row.title = "Repeat"
                 row.options = ["Never", "Every Day", "Every Week", "Every 2 weeks", "Every Month", "Every Year"]
@@ -124,7 +148,7 @@ class CalendarVC: FormViewController {
             }
             .onPresent({ from, to in
                 to.enableDeselection = false
-                to.selectableRowCellUpdate = { cell, row in
+                to.selectableRowCellSetup = { cell, _ in
                     cell.textLabel?.font = formFont
                 }
             })
@@ -133,6 +157,7 @@ class CalendarVC: FormViewController {
                 cell.detailTextLabel?.font = formFont
                 self.form.rowBy(tag: "endRepeat")?.evaluateHidden()
             })
+            
             <<< PushRow<String>() { row in
                 row.title = "End Repeat"
                 row.options = ["Never", "Date"]
@@ -144,7 +169,7 @@ class CalendarVC: FormViewController {
             }
             .onPresent({ from, to in
                 to.enableDeselection = false
-                to.selectableRowCellUpdate = { cell, row in
+                to.selectableRowCellSetup = { cell, row in
                     cell.textLabel?.font = formFont
                 }
             })
@@ -152,6 +177,7 @@ class CalendarVC: FormViewController {
                 cell.textLabel?.font = formFont
                 cell.detailTextLabel?.font = formFont
             })
+            
             <<< DatePickerRow() { row in
                 row.tag = "endRepeatDate"
                 row.validationOptions = .validatesOnChange

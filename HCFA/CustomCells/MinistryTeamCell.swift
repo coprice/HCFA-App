@@ -30,7 +30,7 @@ class MinistryTeamCell: UITableViewCell {
         let title = UILabel(frame: CGRect(x: SIDE_MARGIN, y: TOP_MARGIN,
                                           width: FULL_WIDTH, height: FULL_HEIGHT*0.32))
         title.text = (data["name"] as! String)
-        title.font = UIFont(name: "Montserrat-Medium", size: FULL_WIDTH*0.08)
+        title.font = titleFont
         title.baselineAdjustment = .alignCenters
         title.textAlignment = .center
         view.addSubview(title)
@@ -38,26 +38,25 @@ class MinistryTeamCell: UITableViewCell {
         let leaders = UILabel(frame: CGRect(x: SIDE_MARGIN, y: title.frame.height + FULL_HEIGHT*0.1,
                                             width: FULL_WIDTH, height: FULL_HEIGHT*0.35))
         let leadersList = data["leaders"] as! [String]
-        var text = "MTL \(leadersList[0]),\n"
+        var text = "MTL \(leadersList[0])"
         
         if leadersList.count > 1 {
-            text += leadersList[1...].joined(separator: ", ")
+            text += ",\n\(leadersList[1...].joined(separator: ", "))"
         }
 
         leaders.lineBreakMode = .byWordWrapping
         leaders.numberOfLines = 2
-        leaders.attributedText = createLeaderString(from: text, fontSize: view.frame.width/22,
-                                                    color: UIColor(red: 43/255, green: 50/255, blue: 53/255,
-                                                                   alpha: 1.0))
+        leaders.attributedText = createLeaderString(from: text, fontSize: cellFont.pointSize,
+                                                    color: secondaryCellColor)
         leaders.textAlignment = .center
         leaders.baselineAdjustment = .alignCenters
         view.addSubview(leaders)
         
         let meeting =  UILabel(frame: CGRect(x: SIDE_MARGIN, y: leaders.frame.origin.y + leaders.frame.height,
                                              width: FULL_WIDTH, height: FULL_HEIGHT*0.35))
-        meeting.font = UIFont(name: "Montserrat-Light", size: view.frame.width/22)
+        meeting.font = cellFont
         meeting.baselineAdjustment = .alignCenters
-        meeting.textColor = UIColor(red: 128/255, green: 130/255, blue: 133/255, alpha: 1.0)
+        meeting.textColor = tertiaryCellColor
         meeting.textAlignment = .center
         
         if let day = data["day"] as? String {
@@ -74,14 +73,6 @@ class MinistryTeamCell: UITableViewCell {
         backgroundView.backgroundColor = .clear
         selectedBackgroundView = backgroundView
     }
-    
-    func highlightView() {
-        view.isHighlighted = true
-    }
-    
-    func unhighlightView() {
-        view.isHighlighted = false
-    }
 
     func createLeaderString(from string: String, fontSize: CGFloat, color: UIColor) -> NSAttributedString {
         let boldAttribute: [NSAttributedStringKey : Any] =
@@ -93,5 +84,13 @@ class MinistryTeamCell: UITableViewCell {
         let attrStr = NSMutableAttributedString(string: string, attributes: nonBoldAttribute)
         attrStr.setAttributes(boldAttribute, range: NSMakeRange(0, 3))
         return attrStr
+    }
+    
+    func highlightView() {
+        view.isHighlighted = true
+    }
+    
+    func unhighlightView() {
+        view.isHighlighted = false
     }
 }

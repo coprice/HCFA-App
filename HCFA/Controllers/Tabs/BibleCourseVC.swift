@@ -354,9 +354,7 @@ extension BibleCourseVC: UITableViewDelegate {
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         
         if section == 0 {
-            let TOGGLE_HEIGHT = view.frame.height*0.06
-            let TOGGLE_WIDTH = view.frame.width*0.275
-            
+
             let your = UIButton(frame: CGRect(x: cellWidth/2 - TOGGLE_WIDTH - 2,
                                               y: view.frame.height/20 - TOGGLE_HEIGHT/2,
                                               width: TOGGLE_WIDTH, height: TOGGLE_HEIGHT))
@@ -370,7 +368,7 @@ extension BibleCourseVC: UITableViewDelegate {
             your.layer.cornerRadius = view.frame.height*0.015
             your.setBackgroundImage(roundedImage(color: redColor, width: TOGGLE_WIDTH, height: TOGGLE_HEIGHT, cornerRadius: your.layer.cornerRadius), for: .highlighted)
             your.setTitle("MY COURSES", for: .normal)
-            your.titleLabel?.font = UIFont(name: "Montserrat-Regular", size: view.frame.width*0.035)
+            your.titleLabel?.font = toggleFont
             your.addTarget(self, action: #selector(displayUsersBCs), for: .touchUpInside)
             
             let join = UIButton(frame: CGRect(x: cellWidth/2 + 2, y: view.frame.height/20 - TOGGLE_HEIGHT/2,
@@ -387,7 +385,7 @@ extension BibleCourseVC: UITableViewDelegate {
                                                  cornerRadius: join.layer.cornerRadius), for: .highlighted)
             
             join.setTitle("ALL COURSES", for: .normal)
-            join.titleLabel?.font = UIFont(name: "Montserrat-Regular", size: view.frame.width*0.035)
+            join.titleLabel?.font = toggleFont
             join.addTarget(self, action: #selector(displayBCs), for: .touchUpInside)
             
             let headerView = UIView()
@@ -400,12 +398,14 @@ extension BibleCourseVC: UITableViewDelegate {
                 let firstSection = UILabel(frame: CGRect(x: cellWidth/2 - view.frame.width/2,
                                                          y: view.frame.height/12,
                                                          width: view.frame.width, height: view.frame.height/20))
+                let font = UIFont(name: "Montserrat-Regular", size: view.frame.width*0.042) ??
+                    UIFont.systemFont(ofSize: view.frame.width*0.042)
                 let text = getHeaderTextBySection(section)
                 let underline = NSMutableAttributedString(string: text)
                 underline.addAttribute(NSAttributedStringKey.underlineStyle, value: 1,
                                        range: NSMakeRange(0, underline.length))
                 firstSection.attributedText = underline
-                firstSection.font = UIFont(name: "Montserrat-Regular", size: view.frame.width/24)
+                firstSection.font = font
                 firstSection.textAlignment = .center
                 firstSection.baselineAdjustment = .alignCenters
                 firstSection.textColor = .darkGray
@@ -423,12 +423,14 @@ extension BibleCourseVC: UITableViewDelegate {
             
             let nextSection = UILabel(frame: CGRect(x: cellWidth/2 - view.frame.width/2, y: -cellHeight/20,
                                                     width: view.frame.width, height: view.frame.height/20))
+            let font = UIFont(name: "Montserrat-Regular", size: view.frame.width*0.041) ??
+                UIFont.systemFont(ofSize: view.frame.width*0.041)
             let text = getHeaderTextBySection(section)
             let underline = NSMutableAttributedString(string: text)
             underline.addAttribute(NSAttributedStringKey.underlineStyle, value: 1,
                                    range: NSMakeRange(0, underline.length))
             nextSection.attributedText = underline
-            nextSection.font = UIFont(name: "Montserrat-Regular", size: view.frame.width/24)
+            nextSection.font = font
             nextSection.textAlignment = .center
             nextSection.baselineAdjustment = .alignCenters
             nextSection.textColor = .darkGray
@@ -545,7 +547,7 @@ extension BibleCourseVC: UITableViewDataSource {
             if yourRows.isEmpty {
                 let cell = EmptyCell()
                 cell.load(width: cellWidth, height: cellHeight/4, text: "You are not in any bible courses",
-                          color: .gray, font: UIFont(name: "Montserrat-Regular", size: cellWidth/18)!)
+                          color: .gray, font: emptyFont)
                 cell.isUserInteractionEnabled = false
                 return cell
             }
@@ -561,7 +563,7 @@ extension BibleCourseVC: UITableViewDataSource {
             if rows.isEmpty {
                 let cell = EmptyCell()
                 cell.load(width: cellWidth, height: cellHeight/4, text: "No bible courses to display",
-                          color: .gray, font: UIFont(name: "Montserrat-Regular", size: cellWidth/18)!)
+                          color: .gray, font: emptyFont)
                 cell.isUserInteractionEnabled = false
                 return cell
             }
@@ -569,8 +571,10 @@ extension BibleCourseVC: UITableViewDataSource {
             let currentRows = getRowsBySection(indexPath.section)
             if currentRows.isEmpty {
                 let cell = EmptyCell()
-                cell.load(width: cellWidth, height: cellHeight/4, text: "Bible courses TBD", color: redColor,
-                          font: UIFont(name: "Montserrat-Regular", size: cellWidth/20)!)
+                let font = UIFont(name: "Montserrat-Regular", size: cellWidth*0.05) ??
+                    UIFont.systemFont(ofSize: cellWidth*0.05)
+                cell.load(width: cellWidth, height: cellHeight/4, text: "Bible courses TBD",
+                          color: redColor, font: font)
                 cell.isUserInteractionEnabled = false
                 cell.selectionStyle = .none
                 return cell

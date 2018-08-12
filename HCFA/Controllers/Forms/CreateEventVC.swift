@@ -43,7 +43,7 @@ class CreateEventVC: CreateTemplateVC {
             if editingEvent {
                 row.value = (eventData["title"] as! String)
             }
-            row.cellUpdate { cell, row in
+            row.cellUpdate { cell, _ in
                 cell.textLabel?.font = formFont
                 cell.textField.font = formFont
             }
@@ -77,7 +77,7 @@ class CreateEventVC: CreateTemplateVC {
             } else {
                 row.value = today
             }
-            row.cellUpdate { cell, row in
+            row.cellSetup { cell, row in
                 cell.textLabel?.font = formFont
                 cell.detailTextLabel?.font = formFont
                 cell.detailTextLabel?.textColor = .black
@@ -87,8 +87,18 @@ class CreateEventVC: CreateTemplateVC {
                 row.updateCell()
             }
             row.onCollapseInlineRow { cell, row, _ in
-                cell.detailTextLabel?.textColor = .gray
+                cell.detailTextLabel?.textColor = .black
                 row.updateCell()
+                
+                let endRow = (self.form.rowBy(tag: "end") as! DateTimeInlineRow).baseCell.baseRow
+                if let endDate = endRow?.baseValue as? Date {
+                    if let startDate = row.value {
+                        if startDate > endDate {
+                            endRow?.baseValue = startDate
+                            endRow?.updateCell()
+                        }
+                    }
+                }
             }
         }
             
@@ -102,7 +112,7 @@ class CreateEventVC: CreateTemplateVC {
             } else {
                 row.value = today
             }
-            row.cellUpdate { cell, row in
+            row.cellSetup { cell, row in
                 cell.textLabel?.font = formFont
                 cell.detailTextLabel?.font = formFont
                 cell.detailTextLabel?.textColor = .black
@@ -112,8 +122,18 @@ class CreateEventVC: CreateTemplateVC {
                 row.updateCell()
             }
             row.onCollapseInlineRow { cell, row, _ in
-                cell.detailTextLabel?.textColor = .gray
+                cell.detailTextLabel?.textColor = .black
                 row.updateCell()
+                
+                let startRow = (self.form.rowBy(tag: "start") as! DateTimeInlineRow).baseCell.baseRow
+                if let startDate = startRow?.baseValue as? Date {
+                    if let endDate = row.value {
+                        if endDate < startDate {
+                            startRow?.baseValue = endDate
+                            startRow?.updateCell()
+                        }
+                    }
+                }
             }
         }
             
@@ -147,7 +167,7 @@ class CreateEventVC: CreateTemplateVC {
                     }
                 }
             }
-            row.cellUpdate { cell, row in
+            row.cellSetup { cell, row in
                 cell.textLabel?.font = formFont
             }
         }
@@ -157,7 +177,7 @@ class CreateEventVC: CreateTemplateVC {
                 <<< ButtonRow() { row in
                 row.title = "Delete Event"
             }
-            .cellUpdate { cell, _row in
+            .cellUpdate { cell, _ in
                 cell.textLabel?.font = formFont
                 cell.textLabel?.textColor = .red
             }
@@ -281,6 +301,7 @@ class CreateEventVC: CreateTemplateVC {
     }
     
     @objc func doneTapped() {
+        tableView.endEditing(true)
         let values = form.values()
         let startDate = values["start"] as! Date
         let endDate = values["end"] as! Date

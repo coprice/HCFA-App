@@ -16,15 +16,12 @@ class HostVC: MenuContainerViewController {
     let createButton = UIButton()
     var slider: UIBarButtonItem!
     var create: UIBarButtonItem!
-    var navBar: UINavigationBar!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        navBar = navigationController!.navigationBar
-        
-        let BUTTON_LENGTH = navBar.frame.height*0.6
-        sliderButton.frame = CGRect(x: 0, y: 0, width: BUTTON_LENGTH, height: BUTTON_LENGTH)
+        let buttonLength = navigationController!.navigationBar.frame.height*0.6
+        sliderButton.frame = CGRect(x: 0, y: 0, width: buttonLength, height: buttonLength)
         sliderButton.setImage(UIImage(named: "slider"), for: .normal)
         sliderButton.setImage(UIImage(named: "slider")?.withRenderingMode(.alwaysTemplate), for: .highlighted)
         sliderButton.tintColor = barHighlightColor
@@ -33,7 +30,7 @@ class HostVC: MenuContainerViewController {
         sliderButton.heightAnchor.constraint(equalToConstant: 28).isActive = true
         sliderButton.addTarget(self, action: #selector(sliderTapped), for: .touchUpInside)
 
-        createButton.frame = CGRect(x: 0, y: 0, width: BUTTON_LENGTH, height: BUTTON_LENGTH)
+        createButton.frame = CGRect(x: 0, y: 0, width: buttonLength, height: buttonLength)
         createButton.setImage(UIImage(named: "create"), for: .normal)
         createButton.setImage(UIImage(named: "create")?.withRenderingMode(.alwaysTemplate), for: .highlighted)
         createButton.tintColor = barHighlightColor

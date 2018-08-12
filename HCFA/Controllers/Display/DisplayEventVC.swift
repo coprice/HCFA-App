@@ -13,8 +13,6 @@ class DisplayEventVC: DisplayTemplateVC {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        let mainFont = UIFont(name: "Montserrat-Regular", size: view.frame.width/20)!
-        
         if firstAppearance {
             hostVC = navigationController!.viewControllers.first as! HostVC
             firstAppearance = false
@@ -33,8 +31,8 @@ class DisplayEventVC: DisplayTemplateVC {
             offset = TOP_MARGIN
             
             let location = UITextView(frame: CGRect(x: SIDE_MARGIN, y: offset, width: FULL_WIDTH, height: 0))
-            createTextView(location, font: mainFont,
-                           text: (data["location"] as! String), color: .darkGray, textAlignment: .center)
+            createTextView(location, font: displayFont, text: (data["location"] as! String),
+                           color: secondaryCellColor, textAlignment: .center)
             offset += location.frame.height
             scrollView.addSubview(location)
             
@@ -57,32 +55,33 @@ class DisplayEventVC: DisplayTemplateVC {
             
             if startDateString == endDateString {
                 let height = view.frame.height/12
-                let dateLabel = createLabel(frame: CGRect(x: view.frame.width/20, y: offset + height*0.1,
+                let dateLabel = createLabel(frame: CGRect(x: SIDE_MARGIN, y: offset + height*0.1,
                                                           width: view.frame.width*0.9, height: height*0.4),
-                                            text: startDateString, font: mainFont,
+                                            text: startDateString, font: displayFont,
                                             color: .black, alignment: .center, fitToWidth: true)
                 scrollView.addSubview(dateLabel)
                 
-                let timeLabel = createLabel(frame: CGRect(x: view.frame.width/20, y: offset + height/2,
+                let timeLabel = createLabel(frame: CGRect(x: SIDE_MARGIN, y: offset + height/2,
                                                           width: view.frame.width*0.9, height: height*0.4),
                                             text: ("\(startTime)-\(endTime)"),
-                                            font: mainFont,
+                                            font: displayFont,
                                             color: .darkGray, alignment: .center, fitToWidth: true)
                 scrollView.addSubview(timeLabel)
                 offset += height
                 
             } else {
                 
-                let underlineFont = UIFont(name: "Montserrat-Regular", size: view.frame.width/22)!
+                let underlineFont = UIFont(name: "Montserrat-Regular", size: view.frame.width*0.045) ??
+                    UIFont.systemFont(ofSize: view.frame.width*0.045)
                 let height = view.frame.height/10
-                let starts = createUnderlineLabel(frame: CGRect(x: view.frame.width*0.05, y: offset + height/8,
-                                                                width: view.frame.width*0.15, height: height/4),
+                let starts = createUnderlineLabel(frame: CGRect(x: SIDE_MARGIN, y: offset + height/8,
+                                                                width: SIDE_MARGIN*4, height: height/4),
                                                   text: "START", font: underlineFont,
                                                   color: redColor, alignment: .left)
                 scrollView.addSubview(starts)
                 
-                let ends = createUnderlineLabel(frame: CGRect(x: view.frame.width*0.05, y: offset + height*5/8,
-                                                              width: view.frame.width*0.15, height: height/4),
+                let ends = createUnderlineLabel(frame: CGRect(x: SIDE_MARGIN, y: offset + height*5/8,
+                                                              width: SIDE_MARGIN*4, height: height/4),
                                                 text: "END", font: underlineFont,
                                                 color: redColor, alignment: .left)
                 scrollView.addSubview(ends)
@@ -95,15 +94,15 @@ class DisplayEventVC: DisplayTemplateVC {
                 
                 let endingDateString = "\(endStrings[0])\(daySuffix(from: endDate)),\(endStrings[1]) at \(endTime)"
                 
-                let startDateLabel = createLabel(frame: CGRect(x: view.frame.width*0.25, y: offset,
+                let startDateLabel = createLabel(frame: CGRect(x: SIDE_MARGIN*5, y: offset,
                                                                width: view.frame.width*0.7, height: height/2),
-                                                 text: startingDateString, font: mainFont,
+                                                 text: startingDateString, font: displayFont,
                                                  color: .black, alignment: .left, fitToWidth: true)
                 scrollView.addSubview(startDateLabel)
                 
-                let endDateLabel = createLabel(frame: CGRect(x: view.frame.width*0.25, y: offset + height/2,
+                let endDateLabel = createLabel(frame: CGRect(x: SIDE_MARGIN*5, y: offset + height/2,
                                                              width: view.frame.width*0.7, height: height/2),
-                                               text: endingDateString, font: mainFont,
+                                               text: endingDateString, font: displayFont,
                                                color: .black, alignment: .left, fitToWidth: true)
                 scrollView.addSubview(endDateLabel)
                 offset += height
@@ -115,8 +114,8 @@ class DisplayEventVC: DisplayTemplateVC {
             
             if let imageString = data["image"] as? String {
                 
-                let imageView = EventImageView(frame: CGRect(x: view.frame.width*0.075, y: offset + TOP_MARGIN,
-                                                             width: FULL_WIDTH-view.frame.width/20,
+                let imageView = EventImageView(frame: CGRect(x: SIDE_MARGIN, y: offset + TOP_MARGIN,
+                                                             width: FULL_WIDTH,
                                                              height: view.frame.height*0.35))
                 imageView.isCell = false
                 imageView.initializeReload()
@@ -150,8 +149,8 @@ class DisplayEventVC: DisplayTemplateVC {
             }
             
             let description = UITextView(frame: CGRect(x: SIDE_MARGIN, y: offset, width: FULL_WIDTH, height: 0))
-            createTextView(description, font: UIFont(name: "OpenSans-Light", size: view.frame.width/20)!,
-                           text: (data["description"] as! String), color: .black, textAlignment: .left)
+            createTextView(description, font: blockTextFont, text: (data["description"] as! String),
+                           color: .black, textAlignment: .left)
             offset += description.frame.height
             scrollView.addSubview(description)
             

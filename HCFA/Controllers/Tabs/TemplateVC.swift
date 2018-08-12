@@ -11,9 +11,12 @@ import UIKit
 class TemplateVC: UIViewController {
     
     let upButton = UIButton()
+    let toggleFont = UIFont(name: "Montserrat-Regular", size: UIScreen.main.bounds.width*0.035) ??
+        UIFont.systemFont(ofSize: UIScreen.main.bounds.width*0.035)
+    let emptyFont = UIFont(name: "Montserrat-Regular", size: UIScreen.main.bounds.width*0.055) ??
+        UIFont.systemFont(ofSize: UIScreen.main.bounds.width*0.055)
 
     var hostVC: HostVC!
-    var navBar: UINavigationBar!
     var tableView: UITableView!
     var showingUpButton = false
     
@@ -21,7 +24,6 @@ class TemplateVC: UIViewController {
         super.viewDidLoad()
         
         view.backgroundColor = lightColor
-        navBar = navigationController!.navigationBar
         hostVC = navigationController?.viewControllers.first as! HostVC
         
         let barHeight = navigationController!.navigationBar.frame.height

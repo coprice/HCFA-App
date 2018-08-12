@@ -10,7 +10,6 @@ import Eureka
 
 class SetPermissionVC: FormViewController, TypedRowControllerType {
     
-    var navBar: UINavigationBar!
     var loadingView: LoadingView!
     var isLeader: Bool!
     var isAdd: Bool!
@@ -19,7 +18,6 @@ class SetPermissionVC: FormViewController, TypedRowControllerType {
         super.viewDidLoad()
         
         tableView.backgroundColor = lightColor
-        navBar = navigationController!.navigationBar
         loadingView = LoadingView(frame: CGRect(x: view.frame.width*0.375,
                                                 y: view.frame.height/2 - view.frame.width*0.125,
                                                 width: view.frame.width*0.25, height: view.frame.width*0.25))
@@ -62,7 +60,7 @@ class SetPermissionVC: FormViewController, TypedRowControllerType {
                 } else {
                     
                     self.view.addSubview(self.loadingView)
-                    self.navBar.isUserInteractionEnabled = false
+                    self.navigationController!.navigationBar.isUserInteractionEnabled = false
                     self.tableView.isUserInteractionEnabled = false
                     
                     if self.isAdd {
@@ -86,7 +84,7 @@ class SetPermissionVC: FormViewController, TypedRowControllerType {
     func handle(_ response: URLResponses, _ data: Any?, _ message: String) {
         
         loadingView.removeFromSuperview()
-        navBar.isUserInteractionEnabled = true
+        navigationController!.navigationBar.isUserInteractionEnabled = true
         tableView.isUserInteractionEnabled = true
         
         switch response {

@@ -37,21 +37,21 @@ class EventCell: UITableViewCell {
         let title = UILabel(frame: CGRect(x: SIDE_MARGIN, y: TOP_MARGIN, width: FULL_WIDTH,
                                           height: FULL_HEIGHT*0.4))
         title.text = (data["title"] as! String)
-        title.font = UIFont(name: "Montserrat-Medium", size: FULL_WIDTH*0.08)
+        title.font = titleFont
         title.baselineAdjustment = .alignBaselines
         
         let location = UILabel(frame: CGRect(x: SIDE_MARGIN, y: title.frame.height + FULL_HEIGHT*0.1,
                                              width: FULL_WIDTH, height: FULL_HEIGHT*0.25))
         location.text = (data["location"] as! String)
-        location.font = UIFont(name: "Montserrat-Light", size: view.frame.width/22)
+        location.font = cellFont
         location.baselineAdjustment = .alignCenters
-        location.textColor = UIColor(red: 43/255, green: 50/255, blue: 53/255, alpha: 1.0)
+        location.textColor = secondaryCellColor
         
         let date = UILabel(frame: CGRect(x: SIDE_MARGIN, y: location.frame.origin.y + location.frame.height,
                                          width: FULL_WIDTH, height: location.frame.height))
-        date.font = UIFont(name: "Montserrat-Light", size: view.frame.width/22)
+        date.font = cellFont
         date.baselineAdjustment = .alignCenters
-        date.textColor = UIColor(red: 128/255, green: 130/255, blue: 133/255, alpha: 1.0)
+        date.textColor = tertiaryCellColor
         
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"

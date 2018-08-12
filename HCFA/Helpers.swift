@@ -58,9 +58,26 @@ let highlightColor = UIColor(red: 237/255, green: 127/255, blue: 137/255, alpha:
 let lightColor = UIColor(red: 248/255, green: 250/255, blue: 253/255, alpha: 1)
 let sideMenuColor = UIColor(red: 180/255, green: 150/255, blue: 150/255, alpha: 1)
 let barHighlightColor = UIColor(red: 197/255, green: 104/255, blue: 122/255, alpha: 1)
+let secondaryCellColor = UIColor(red: 43/255, green: 50/255, blue: 53/255, alpha: 1.0)
+let tertiaryCellColor = UIColor(red: 128/255, green: 130/255, blue: 133/255, alpha: 1.0)
 
-let formFont = UIFont(name: "Montserrat-Light", size: UIScreen.main.bounds.width/24)
-let formHeaderFont = UIFont(name: "Montserrat-Regular", size: UIScreen.main.bounds.width/24)
+// -- Fonts --
+
+let formFont = UIFont(name: "Montserrat-Light", size: UIScreen.main.bounds.width*0.04) ??
+    UIFont.systemFont(ofSize: UIScreen.main.bounds.width*0.04)
+let formHeaderFont = UIFont(name: "Montserrat-Regular", size: UIScreen.main.bounds.width*0.04) ??
+    UIFont.systemFont(ofSize: UIScreen.main.bounds.width*0.04)
+let titleFont =  UIFont(name: "Montserrat-Medium", size: UIScreen.main.bounds.width*0.068) ??
+    UIFont.systemFont(ofSize: UIScreen.main.bounds.width*0.068)
+let cellFont = UIFont(name: "Montserrat-Light", size: UIScreen.main.bounds.width*0.043) ??
+    UIFont.systemFont(ofSize: UIScreen.main.bounds.width*0.043)
+let displayFont = UIFont(name: "Montserrat-Regular", size: UIScreen.main.bounds.width*0.05) ??
+    UIFont.systemFont(ofSize: UIScreen.main.bounds.width*0.05)
+let blockTextFont = UIFont(name: "OpenSans-Light", size: UIScreen.main.bounds.width*0.05) ??
+    UIFont.systemFont(ofSize: UIScreen.main.bounds.width*0.05)
+
+let TOGGLE_WIDTH = UIScreen.main.bounds.width*0.275
+let TOGGLE_HEIGHT = UIScreen.main.bounds.height*0.06
 
 // -- Alerts --
 

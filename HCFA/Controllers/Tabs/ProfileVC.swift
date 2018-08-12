@@ -18,7 +18,6 @@ class ProfileVC: FormViewController {
     var hostVC: HostVC!
     var sideMenu: SideMenuVC!
     var profileCell: ProfileCell!
-    var navBar: UINavigationBar!
     var camera: DSCameraHandler!
     var loadingView: LoadingView!
     var cameraLoaded = false
@@ -28,7 +27,6 @@ class ProfileVC: FormViewController {
         super.viewDidLoad()
         
         tableView.backgroundColor = lightColor
-        navBar = navigationController!.navigationBar
         hostVC = navigationController?.viewControllers.first as! HostVC
         sideMenu = hostVC.menuViewController as! SideMenuVC
         profileCell = sideMenu.tableView.cellForRow(at: IndexPath(row: 0, section: 0)) as! ProfileCell
@@ -218,7 +216,7 @@ class ProfileVC: FormViewController {
                 
                 setImages()
                 self.loadingView.removeFromSuperview()
-                self.navBar.isUserInteractionEnabled = true
+                self.navigationController!.navigationBar.isUserInteractionEnabled = true
                 self.tableView.isUserInteractionEnabled = true
                 
                 if let error = error {
@@ -342,7 +340,7 @@ extension ProfileVC: UINavigationControllerDelegate, UIImagePickerControllerDele
         
         let image = info[UIImagePickerControllerEditedImage] as! UIImage
         picker.dismiss(animated: true, completion: nil)
-        navBar.isUserInteractionEnabled = false
+        navigationController!.navigationBar.isUserInteractionEnabled = false
         tableView.isUserInteractionEnabled = false
         view.addSubview(loadingView)
         

@@ -63,10 +63,12 @@ class EventVC: TemplateVC {
         tableView.separatorStyle = .none
         view.addSubview(tableView)
         
-        deleteButton.frame = CGRect(x: view.frame.width*0.125 - 1, y: view.frame.height - offset,
-                                    width: view.frame.width*0.75, height: offset*0.8)
-        deleteButton.layer.cornerRadius = deleteButton.frame.width/25
-        deleteButton.backgroundColor = UIColor(red: 0.98, green: 0.95, blue: 0.95, alpha: 1.0)
+        let font = UIFont(name: "Montserrat-Regular", size: view.frame.width*0.0375) ??
+            UIFont.systemFont(ofSize: view.frame.width*0.0375)
+        deleteButton.frame = CGRect(x: view.frame.width/40, y: view.frame.height - offset,
+                                    width: view.frame.width*0.95, height: offset*0.8)
+        deleteButton.layer.cornerRadius = deleteButton.frame.width/20
+        deleteButton.backgroundColor = UIColor(red: 0.9, green: 0.87, blue: 0.87, alpha: 1.0)
         deleteButton.setBackgroundImage(roundedImage(color: UIColor(red: 0.8, green: 0.78, blue: 0.78, alpha: 1.0),
                                                      width: deleteButton.frame.width,
                                                      height: deleteButton.frame.height,
@@ -74,9 +76,7 @@ class EventVC: TemplateVC {
                                         for: .highlighted)
         deleteButton.setTitle("Delete", for: .normal)
         deleteButton.setTitleColor(.red, for: .normal)
-        deleteButton.titleLabel?.font = UIFont(name: "Montserrat-Regular", size: view.frame.width*0.0375)
-        deleteButton.layer.borderWidth = 1
-        deleteButton.layer.borderColor = redColor.cgColor
+        deleteButton.titleLabel?.font = font
         deleteButton.addTarget(self, action: #selector(deleteSelected), for: .touchUpInside)
     
         loadingView = LoadingView(frame: CGRect(x: view.frame.width*0.375,
@@ -313,8 +313,6 @@ extension EventVC: UITableViewDelegate {
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         
         if section == 0 {
-            let TOGGLE_HEIGHT = view.frame.height*0.06
-            let TOGGLE_WIDTH = view.frame.width*0.275
             
             let upcoming = UIButton(frame: CGRect(x: cellWidth/2 - TOGGLE_WIDTH - 2,
                                                   y: view.frame.height/20 - TOGGLE_HEIGHT/2,
@@ -331,7 +329,7 @@ extension EventVC: UITableViewDelegate {
                                                      cornerRadius: upcoming.layer.cornerRadius),
                                         for: .highlighted)
             upcoming.setTitle("UPCOMING", for: .normal)
-            upcoming.titleLabel?.font = UIFont(name: "Montserrat-Regular", size: view.frame.width*0.035)
+            upcoming.titleLabel?.font = toggleFont
             upcoming.addTarget(self, action: #selector(displayUpcomingEvents), for: .touchUpInside)
             
             let past = UIButton(frame: CGRect(x: cellWidth/2 + 2, y: view.frame.height/20 - TOGGLE_HEIGHT/2,
@@ -348,7 +346,7 @@ extension EventVC: UITableViewDelegate {
                                                  cornerRadius: past.layer.cornerRadius),
                                     for: .highlighted)
             past.setTitle("PAST", for: .normal)
-            past.titleLabel?.font = UIFont(name: "Montserrat-Regular", size: view.frame.width*0.035)
+            past.titleLabel?.font = toggleFont
             past.addTarget(self, action: #selector(displayPastEvents), for: .touchUpInside)
             
             let headerView = UIView()
@@ -459,7 +457,7 @@ extension EventVC: UITableViewDataSource {
             }
             
             cell.load(width: cellWidth, height: cellHeight/4, text: text, color: .gray,
-                      font: UIFont(name: "Montserrat-Regular", size: cellWidth/18)!)
+                      font: emptyFont)
             cell.isUserInteractionEnabled = false
             return cell
         }

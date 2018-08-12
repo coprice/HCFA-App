@@ -66,16 +66,19 @@ class CreateMinistryTeamVC: CreateTemplateVC {
                 row.value = "TBD"
             }
         }
-        .onPresent({(from, to) in
+        .onPresent({ from, to in
             to.enableDeselection = false
-            to.selectableRowCellUpdate = { cell, row in
+            to.selectableRowCellSetup = { cell, row in
                 cell.textLabel?.font = formFont
             }
         })
-        .cellUpdate({cell, row in
+        .cellSetup({ cell, _ in
             cell.textLabel?.font = formFont
             cell.detailTextLabel?.font = formFont
             cell.detailTextLabel?.textColor = .black
+            cell.update()
+        })
+        .cellUpdate({ _, _ in
             self.form.rowBy(tag: "start")?.evaluateHidden()
             self.form.rowBy(tag: "end")?.evaluateHidden()
             self.form.rowBy(tag: "location")?.evaluateHidden()
@@ -95,7 +98,7 @@ class CreateMinistryTeamVC: CreateTemplateVC {
             } else {
                 row.value = today
             }
-            row.cellUpdate { cell, row in
+            row.cellSetup { cell, row in
                 cell.textLabel?.font = formFont
                 cell.detailTextLabel?.font = formFont
                 cell.detailTextLabel?.textColor = .black
@@ -105,8 +108,18 @@ class CreateMinistryTeamVC: CreateTemplateVC {
                 row.updateCell()
             }
             row.onCollapseInlineRow { cell, row, _ in
-                cell.detailTextLabel?.textColor = .gray
+                cell.detailTextLabel?.textColor = .black
                 row.updateCell()
+                
+                let endRow = (self.form.rowBy(tag: "end") as! TimeInlineRow).baseCell.baseRow
+                if let endDate = endRow?.baseValue as? Date {
+                    if let startDate = row.value {
+                        if startDate > endDate {
+                            endRow?.baseValue = startDate
+                            endRow?.updateCell()
+                        }
+                    }
+                }
             }
         }
             
@@ -124,7 +137,7 @@ class CreateMinistryTeamVC: CreateTemplateVC {
             } else {
                 row.value = today
             }
-            row.cellUpdate { cell, row in
+            row.cellSetup { cell, row in
                 cell.textLabel?.font = formFont
                 cell.detailTextLabel?.font = formFont
                 cell.detailTextLabel?.textColor = .black
@@ -134,8 +147,18 @@ class CreateMinistryTeamVC: CreateTemplateVC {
                 row.updateCell()
             }
             row.onCollapseInlineRow { cell, row, _ in
-                cell.detailTextLabel?.textColor = .gray
+                cell.detailTextLabel?.textColor = .black
                 row.updateCell()
+                
+                let startRow = (self.form.rowBy(tag: "start") as! TimeInlineRow).baseCell.baseRow
+                if let startDate = startRow?.baseValue as? Date {
+                    if let endDate = row.value {
+                        if endDate < startDate {
+                            startRow?.baseValue = endDate
+                            startRow?.updateCell()
+                        }
+                    }
+                }
             }
         }
             
@@ -148,7 +171,7 @@ class CreateMinistryTeamVC: CreateTemplateVC {
             if isMeeting {
                 row.value = (data["location"] as! String)
             }
-            row.cellUpdate { cell, row in
+            row.cellUpdate { cell, _ in
                 cell.textLabel?.font = formFont
                 cell.textField.font = formFont
             }
@@ -170,12 +193,9 @@ class CreateMinistryTeamVC: CreateTemplateVC {
             } else {
                 row.value = "https://groupme.com/join_group/"
             }
-            row.cellUpdate { cell, row in
+            row.cellUpdate { cell, _ in
                 cell.textLabel?.font = formFont
                 cell.textField.font = formFont
-            }
-            row.onCellHighlightChanged { cell, row in
-                cell.textLabel?.textColor = redColor
             }
         }
         
@@ -305,7 +325,7 @@ class CreateMinistryTeamVC: CreateTemplateVC {
             <<< ButtonRow() { row in
                 row.title = "Delete Team"
             }
-            .cellUpdate { cell, _row in
+            .cellUpdate { cell, _ in
                 cell.textLabel?.font = formFont
                 cell.textLabel?.textColor = .red
             }
@@ -386,6 +406,7 @@ class CreateMinistryTeamVC: CreateTemplateVC {
     }
     
     @objc func doneTapped() {
+        tableView.endEditing(true)
         let values = form.values()
 
         if values["name"]! == nil {

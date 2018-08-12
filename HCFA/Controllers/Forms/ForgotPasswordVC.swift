@@ -10,31 +10,18 @@ import Eureka
 
 class ForgotPasswordVC: FormViewController {
 
-    let cancel = UIButton()
-    var navBar: UINavigationBar!
     var loadingView: LoadingView!
+    var cancel: UIBarButtonItem!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         tableView.backgroundColor = lightColor
         navigationAccessoryView.tintColor = redColor
-        navBar = navigationController!.navigationBar
-        
-        cancel.frame = CGRect(x: navBar.frame.width*0.75, y: 0,
-                              width: navBar.frame.width/4, height: navBar.frame.height)
-        cancel.setTitle("Cancel", for: .normal)
-        cancel.titleLabel?.textColor = .white
-        cancel.titleLabel?.font = UIFont(name: "Georgia", size: navBar.frame.width/21)
-        cancel.setTitleColor(barHighlightColor, for: .highlighted)
-        cancel.addTarget(self, action: #selector(cancelTapped), for: .touchUpInside)
-        
         loadingView = LoadingView(frame: CGRect(x: view.frame.width*0.375,
                                                 y: view.frame.height/2 - view.frame.width*0.125,
                                                 width: view.frame.width*0.25, height: view.frame.width*0.25))
-        
-        navBar.topItem?.title = "Reset Password"
-        navBar.addSubview(cancel)
+        cancel = UIBarButtonItem(title: "Cancel", style: .done, target: self, action: #selector(cancelTapped))
         
         form +++ Section("")
         <<< EmailRow() { row in
@@ -52,7 +39,7 @@ class ForgotPasswordVC: FormViewController {
             
         +++ Section("")
         <<< ButtonRow() { row in
-            row.title = "Send Request"
+            row.title = "Send Email"
         }
         .cellUpdate { cell, _row in
             cell.textLabel?.font = formFont
@@ -65,13 +52,13 @@ class ForgotPasswordVC: FormViewController {
             }
             
             self.view.addSubview(self.loadingView)
-            self.navBar.isUserInteractionEnabled = false
+            self.navigationController!.navigationBar.isUserInteractionEnabled = false
             self.tableView.isUserInteractionEnabled = false
             
             API.sendPasswordRequest(email: email, completionHandler: { response, data in
                 
                 self.loadingView.removeFromSuperview()
-                self.navBar.isUserInteractionEnabled = true
+                self.navigationController!.navigationBar.isUserInteractionEnabled = true
                 self.tableView.isUserInteractionEnabled = true
                 
                 switch response {
@@ -95,6 +82,13 @@ class ForgotPasswordVC: FormViewController {
                 }
             })
         }
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        navigationItem.title = "Reset Password"
+        navigationItem.rightBarButtonItem = cancel
     }
     
     @objc func cancelTapped() {
