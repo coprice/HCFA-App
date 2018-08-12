@@ -47,7 +47,8 @@ class SideMenuCell: UITableViewCell {
         let label = UILabel(frame: CGRect(x: SIDE_MARGIN*2 + IMAGE_LENGTH, y: (cellHeight-IMAGE_LENGTH)/2,
                                           width: frame.width - SIDE_MARGIN*3 - IMAGE_LENGTH, height: IMAGE_LENGTH))
         label.text = text
-        label.font = UIFont(name: "Montserrat-Light", size: cellWidth/16)
+        label.font = UIFont(name: "Montserrat-Light", size: cellWidth*0.0625) ??
+            UIFont.systemFont(ofSize: cellWidth*0.0625)
         label.adjustsFontSizeToFitWidth = true
         
         addSubview(imageView)

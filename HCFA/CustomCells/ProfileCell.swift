@@ -48,10 +48,19 @@ class ProfileCell: UITableViewCell {
                                          width: cellWidth, height: (cellHeight - y)*0.8))
         name.text = "\(defaults.string(forKey: "first")!) \(defaults.string(forKey: "last")!)"
         name.textColor = .black
-        name.font = UIFont(name: "Montserrat-Regular", size: cellWidth/15)
+        name.font = UIFont(name: "Montserrat-Regular", size: cellWidth*0.0675) ??
+            UIFont.systemFont(ofSize: cellWidth*0.0675)
         name.textAlignment = .center
         name.baselineAdjustment = .alignBaselines
         addSubview(name)
+    }
+    
+    // hide top separator inset
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        let view = UIView(frame: CGRect(x: 0, y: 0, width: cellWidth, height: cellHeight*0.05))
+        view.backgroundColor = sideMenuColor
+        addSubview(view)
     }
 }
 
