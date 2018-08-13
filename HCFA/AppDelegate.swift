@@ -73,7 +73,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         let aps = (userInfo["aps"] as! [String: AnyObject])
         
         if let category = aps["category"] as? String {
-            
             switch category {
             case "team":
                 signIn.defaultTab = Tabs.MinistryTeams
@@ -84,8 +83,21 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
             }
         }
         
-        window?.rootViewController = signIn
-        window?.makeKeyAndVisible()
+        if UIApplication.shared.applicationState != .active {
+            window?.rootViewController = signIn
+            window?.makeKeyAndVisible()
+        } else {
+            if let alert = aps["alert"] as? String {
+                
+                let root = window!.rootViewController as! SignInVC
+                
+                if let nav = root.nav {
+                    createAlert(title: "", message: alert, view: nav.viewControllers.first!)
+                } else {
+                    createAlert(title: "", message: alert, view: root)
+                }
+            }
+        }
     }
     
     
@@ -116,6 +128,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         let tokenParts = deviceToken.map { data -> String in
             return String(format: "%02.2hhx", data)
         }
+        
         let loadedToken = tokenParts.joined()
 
         print("Device Token: \(loadedToken)")

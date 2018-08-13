@@ -24,6 +24,7 @@ class SignInVC: UIViewController {
     let forgot = UIButton()
     let spinner = UIActivityIndicatorView()
     
+    var nav: UINavigationController? = nil
     var defaultTab = Tabs.Events
     var banner: UIImageView!
     var currentTextField: UITextField?
@@ -51,6 +52,52 @@ class SignInVC: UIViewController {
         navigationAccessory.doneButton.action = #selector(donePressed)
         
         view.addSubview(spinner)
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        nav = nil
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        
+        if presentingPassword {
+            presentingPassword = false
+            return
+        }
+        
+        if defaults.integer(forKey: "uid") == 0 {
+            handleLogin()
+            
+        } else {
+            
+            let initialWidth = view.frame.width*(20/32)
+            let initialHeight = initialWidth*(110/200)
+            
+            banner = UIImageView(image: UIImage(named: "banner"))
+            banner.frame = CGRect(x: view.frame.midX - initialWidth/2, y: view.frame.midY - initialHeight/2,
+                                  width: initialWidth, height: initialHeight)
+            banner.contentMode = .scaleAspectFit
+            view.addSubview(banner)
+            
+            API.validate(uid: defaults.integer(forKey: "uid"), token: defaults.string(forKey: "token")!,
+                         completionHandler: { response, _ in
+                
+                self.banner.removeFromSuperview()
+                            
+                if response == .Success {
+                    self.atLaunch = false
+                    let hostVC = HostVC()
+                    hostVC.defaultTab = self.defaultTab
+                    self.nav = UINavigationController(rootViewController: hostVC)
+                    self.present(self.nav!, animated: true, completion: nil)
+                
+                } else {
+                    resetDefaults()
+                    self.handleLogin()
+                }
+            })
+        }
     }
     
     func prepareDisplay() {
@@ -183,47 +230,6 @@ class SignInVC: UIViewController {
         
         view.addSubview(banner)
         view.addSubview(scrollView)
-    }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        
-        if presentingPassword {
-            presentingPassword = false
-            return
-        }
-        
-        if defaults.integer(forKey: "uid") == 0 {
-            handleLogin()
-            
-        } else {
-            
-            let initialWidth = view.frame.width*(20/32)
-            let initialHeight = initialWidth*(110/200)
-            
-            banner = UIImageView(image: UIImage(named: "banner"))
-            banner.frame = CGRect(x: view.frame.midX - initialWidth/2, y: view.frame.midY - initialHeight/2,
-                                  width: initialWidth, height: initialHeight)
-            banner.contentMode = .scaleAspectFit
-            view.addSubview(banner)
-            
-            API.validate(uid: defaults.integer(forKey: "uid"), token: defaults.string(forKey: "token")!,
-                         completionHandler: { response, _ in
-                
-                self.banner.removeFromSuperview()
-                            
-                if response == .Success {
-                    self.atLaunch = false
-                    let hostVC = HostVC()
-                    hostVC.defaultTab = self.defaultTab
-                    let nav = UINavigationController(rootViewController: hostVC)
-                    self.present(nav, animated: true, completion: nil)
-                
-                } else {
-                    resetDefaults()
-                    self.handleLogin()
-                }
-            })
-        }
     }
     
     func handleLogin() {
@@ -373,8 +379,8 @@ class SignInVC: UIViewController {
         }, completion: {_ in
             let hostVC = HostVC()
             hostVC.defaultTab = self.defaultTab
-            let nav = UINavigationController(rootViewController: hostVC)
-            self.present(nav, animated: true, completion: nil)
+            self.nav = UINavigationController(rootViewController: hostVC)
+            self.present(self.nav!, animated: true, completion: nil)
         })
     }
     
@@ -420,8 +426,8 @@ class SignInVC: UIViewController {
     
     @objc func forgotTapped() {
         presentingPassword = true
-        let nav = UINavigationController(rootViewController: ForgotPasswordVC())
-        present(nav, animated: true, completion: nil)
+        nav = UINavigationController(rootViewController: ForgotPasswordVC())
+        present(nav!, animated: true, completion: nil)
     }
     
     @objc func submitPressed() {
