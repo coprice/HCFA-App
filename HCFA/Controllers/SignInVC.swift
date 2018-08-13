@@ -230,7 +230,6 @@ class SignInVC: UIViewController {
         if !animationComplete {
             prepareDisplay()
             
-            
             if atLaunch {
                 DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(500), execute: {
                     self.moveImage(1.5)
@@ -313,14 +312,12 @@ class SignInVC: UIViewController {
     
     func displayLoginForm(duration: Double, completion: ((Bool) -> Void)?) {
         
+        scrollView.setContentOffset(CGPoint.zero, animated: true)
+        
         let x = view.frame.midX - FIELD_WIDTH/2
-        
         email.frame = CGRect(x: x, y: view.frame.height*0.01, width: FIELD_WIDTH, height: FIELD_HEIGHT)
-        
         password.frame = CGRect(x: x, y: view.frame.height*0.09, width: FIELD_WIDTH, height: FIELD_HEIGHT)
-        
         submit.frame = CGRect(x: x, y: view.frame.height*0.17, width: FIELD_WIDTH, height: TOGGLE_HEIGHT)
-        
         forgot.frame = CGRect(x: view.frame.midX - FIELD_WIDTH*0.3125,
                               y: submit.frame.origin.y + TOGGLE_HEIGHT*9/8,
                               width: FIELD_WIDTH*0.625, height: TOGGLE_HEIGHT*0.75)
@@ -337,23 +334,18 @@ class SignInVC: UIViewController {
     
     func displayRegisterForm(duration: Double, completion: ((Bool) -> Void)?) {
         
-        let x = view.frame.midX - FIELD_WIDTH/2
+        scrollView.setContentOffset(CGPoint.zero, animated: true)
         
+        let x = view.frame.midX - FIELD_WIDTH/2
         firstName.frame = CGRect(x: x, y: view.frame.height*0.01,
                                  width: FIELD_WIDTH*0.49, height: FIELD_HEIGHT)
-        
         lastName.frame = CGRect(x: view.frame.midX + FIELD_WIDTH*0.01, y: view.frame.height*0.01,
                                 width: FIELD_WIDTH*0.49, height: FIELD_HEIGHT)
-        
         email.frame = CGRect(x: x, y: view.frame.height*0.09, width: FIELD_WIDTH, height: FIELD_HEIGHT)
-        
         password.frame = CGRect(x: x, y: view.frame.height*0.17, width: FIELD_WIDTH, height: FIELD_HEIGHT)
-        
         confirm.frame = CGRect(x: x, y: view.frame.height*0.25, width: FIELD_WIDTH, height: FIELD_HEIGHT)
-        
         submit.frame = CGRect(x: (scrollView.frame.width - FIELD_WIDTH)/2, y: view.frame.height*0.33,
                               width: FIELD_WIDTH, height: TOGGLE_HEIGHT)
-        
         submit.setTitle("REGISTER", for: .normal)
         
         UIView.animate(withDuration: duration, delay: 0.0, options: .curveEaseIn, animations: {
@@ -397,11 +389,13 @@ class SignInVC: UIViewController {
     }
     
     func startSpinner() {
+        
+        let submitY = scrollView.frame.origin.y + submit.frame.origin.y
         if loginActive {
-            spinner.center = CGPoint(x: view.frame.width/2, y: view.frame.height*0.53 + submit.frame.height*2.25)
+            spinner.center = CGPoint(x: view.frame.width/2, y: submitY + submit.frame.height*2.25)
         } else {
             spinner.center = CGPoint(x: view.frame.width/2,
-                                     y: view.frame.height*0.725 - forgot.frame.height + submit.frame.height*2.25)
+                                     y: submitY - forgot.frame.height + submit.frame.height*2.25)
         }
         spinner.startAnimating()
     }
@@ -433,6 +427,7 @@ class SignInVC: UIViewController {
     @objc func submitPressed() {
         
         currentTextField?.resignFirstResponder()
+        scrollView.setContentOffset(CGPoint.zero, animated: true)
         
         let userEmail = email.text!
         let userPassword = password.text!
@@ -504,8 +499,6 @@ class SignInVC: UIViewController {
             let userFirstName = firstName.text!
             let userLastName = lastName.text!
             let confirmedPass = confirm.text!
-            
-            scrollView.setContentOffset(CGPoint.zero, animated: true)
             
             if userFirstName.isEmpty {
                 createAlert(title: "First Name Empty", message: "Enter your first name", view: self)
@@ -638,6 +631,8 @@ extension SignInVC: UITextFieldDelegate {
     
     func textFieldDidBeginEditing(_ textField: UITextField) {
         currentTextField = textField
+        
+        print(loginActive)
         
         if loginActive {
             
