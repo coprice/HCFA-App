@@ -92,7 +92,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
                 let root = window!.rootViewController as! SignInVC
                 
                 if let nav = root.nav {
-                    createAlert(title: "", message: alert, view: nav.viewControllers.first!)
+                    createAlert(title: "", message: alert, view: nav.viewControllers.last!)
                 } else {
                     createAlert(title: "", message: alert, view: root)
                 }
