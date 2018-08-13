@@ -42,12 +42,24 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
                                                                                   size: window!.frame.width/24)!],
                                               for: .highlighted)
         
+        let signIn = SignInVC()
+        
         if let notification = launchOptions?[.remoteNotification] as? [String: AnyObject] {
             let aps = notification["aps"] as! [String: AnyObject]
-            print(aps)
+            
+            if let category = aps["category"] as? String {
+                switch category {
+                case "team":
+                    signIn.defaultTab = Tabs.MinistryTeams
+                case "course":
+                    signIn.defaultTab = Tabs.BibleCourses
+                default:
+                    signIn.defaultTab = Tabs.Events
+                }
+            }
         }
         
-        window?.rootViewController = SignInVC()
+        window?.rootViewController = signIn
         window?.makeKeyAndVisible()
         
         // Instantiate AWSMobileClient to establish AWS user credentials
@@ -57,8 +69,23 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
     func application( _ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable : Any],
                       fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
         
-        let aps = userInfo["aps"] as! [String: AnyObject]
-        print(aps)
+        let signIn = SignInVC()
+        let aps = (userInfo["aps"] as! [String: AnyObject])
+        
+        if let category = aps["category"] as? String {
+            
+            switch category {
+            case "team":
+                signIn.defaultTab = Tabs.MinistryTeams
+            case "course":
+                signIn.defaultTab = Tabs.BibleCourses
+            default:
+                signIn.defaultTab = Tabs.Events
+            }
+        }
+        
+        window?.rootViewController = signIn
+        window?.makeKeyAndVisible()
     }
     
     

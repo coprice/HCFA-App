@@ -16,6 +16,7 @@ class HostVC: MenuContainerViewController {
     let createButton = UIButton()
     var slider: UIBarButtonItem!
     var create: UIBarButtonItem!
+    var defaultTab = Tabs.Events
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -45,10 +46,20 @@ class HostVC: MenuContainerViewController {
                                               visibleContentWidth: UIScreen.main.bounds.width/6)
  
         contentViewControllers = [ProfileVC(), EventVC(), BibleCourseVC(), MinistryTeamVC(), SettingsVC()]
-        selectContentViewController(contentViewControllers[Tabs.Events])
+        selectContentViewController(contentViewControllers[defaultTab])
         
-        menuViewController = SideMenuVC()
+        let sideMenu = SideMenuVC()
+        sideMenu.currentTab = defaultTab
+        menuViewController = sideMenu
         menuViewController.menuContainerViewController = self
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        if UIApplication.shared.applicationIconBadgeNumber != 0 {
+            UIApplication.shared.applicationIconBadgeNumber = 0
+        }
     }
     
     @objc func sliderTapped() {

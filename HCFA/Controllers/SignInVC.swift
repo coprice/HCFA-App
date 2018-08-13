@@ -24,6 +24,7 @@ class SignInVC: UIViewController {
     let forgot = UIButton()
     let spinner = UIActivityIndicatorView()
     
+    var defaultTab = Tabs.Events
     var banner: UIImageView!
     var currentTextField: UITextField?
     var loginActive = true
@@ -193,12 +194,26 @@ class SignInVC: UIViewController {
             handleLogin()
             
         } else {
+            
+            let initialWidth = view.frame.width*(20/32)
+            let initialHeight = initialWidth*(110/200)
+            
+            banner = UIImageView(image: UIImage(named: "banner"))
+            banner.frame = CGRect(x: view.frame.midX - initialWidth/2, y: view.frame.midY - initialHeight/2,
+                                  width: initialWidth, height: initialHeight)
+            banner.contentMode = .scaleAspectFit
+            view.addSubview(banner)
+            
             API.validate(uid: defaults.integer(forKey: "uid"), token: defaults.string(forKey: "token")!,
                          completionHandler: { response, _ in
                 
+                self.banner.removeFromSuperview()
+                            
                 if response == .Success {
                     self.atLaunch = false
-                    let nav = UINavigationController(rootViewController: HostVC())
+                    let hostVC = HostVC()
+                    hostVC.defaultTab = self.defaultTab
+                    let nav = UINavigationController(rootViewController: hostVC)
                     self.present(nav, animated: true, completion: nil)
                 
                 } else {
@@ -365,7 +380,9 @@ class SignInVC: UIViewController {
             self.submit.alpha = 0.0
             self.forgot.alpha = 0.0
         }, completion: {_ in
-            let nav = UINavigationController(rootViewController: HostVC())
+            let hostVC = HostVC()
+            hostVC.defaultTab = self.defaultTab
+            let nav = UINavigationController(rootViewController: hostVC)
             self.present(nav, animated: true, completion: nil)
         })
     }
