@@ -33,6 +33,8 @@ enum Year {
     case Senior
 }
 
+let IS_IPHONE_X = UIDevice().userInterfaceIdiom == .phone && UIScreen.main.nativeBounds.height == 2436
+
 // -- UserDefaults --
 
 let defaults = UserDefaults.standard

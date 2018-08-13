@@ -29,7 +29,12 @@ class EventVC: TemplateVC {
         super.viewDidLoad()
         
         cellWidth = view.frame.width
-        cellHeight = view.frame.height*0.15
+        
+        if IS_IPHONE_X {
+            cellHeight = view.frame.height*0.13
+        } else {
+            cellHeight = view.frame.height*0.15
+        }
         
         let barHeight = navigationController!.navigationBar.frame.height
         let BUTTON_LENGTH = barHeight*0.6

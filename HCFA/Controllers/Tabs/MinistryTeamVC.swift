@@ -27,7 +27,13 @@ class MinistryTeamVC: TemplateVC {
         
         let offset = navigationController!.navigationBar.frame.height + UIApplication.shared.statusBarFrame.height
         cellWidth = view.frame.width
-        cellHeight = view.frame.height*0.2
+        
+        if IS_IPHONE_X {
+            cellHeight = view.frame.height*0.16
+        } else {
+            cellHeight = view.frame.height*0.2
+        }
+        
         
         let refreshControl = UIRefreshControl(frame: CGRect(x: 0, y: 0, width: view.frame.width, height: 0))
         refreshControl.tintColor = highlightColor
