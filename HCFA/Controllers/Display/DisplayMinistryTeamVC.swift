@@ -42,46 +42,34 @@ class DisplayMinistryTeamVC: DisplayTemplateVC {
                                                  frame: CGRect(x: SIDE_MARGIN, y: offset + TOP_MARGIN,
                                                                width: FULL_WIDTH, height: .greatestFiniteMagnitude),
                                                  font: displayFont)
-            
+        
+            let leaders = UITextView(frame: CGRect(x: SIDE_MARGIN, y: offset, width: FULL_WIDTH, height: 0))
             let leaderList = data["leaders"] as! [String]
             
+            var leaderText = ""
             if leaderList.count > 2 {
-                let labelOne = UILabel(frame: CGRect(x: SIDE_MARGIN, y: offset + TOP_MARGIN/4,
-                                                     width: FULL_WIDTH, height: categoryHeight))
-                createListLabel(label: labelOne, text: "\(leaderList[0...1].joined(separator: ", ")),",
-                                font: displayFont, color: .black, view: scrollView)
-                scrollView.addSubview(labelOne)
-                offset += labelOne.frame.height
-                
-                let labelTwo = UILabel(frame: CGRect(x: SIDE_MARGIN, y: offset - TOP_MARGIN/4,
-                                                     width: FULL_WIDTH, height: categoryHeight))
-                createListLabel(label: labelTwo, text: leaderList[2...].joined(separator: ", "), font: displayFont,
-                                color: .black, view: scrollView)
-                scrollView.addSubview(labelTwo)
-                offset += labelTwo.frame.height
+                leaderText += "\(leaderList[..<2].joined(separator: ", ")),\n\(leaderList[2...].joined(separator: ", "))"
             } else {
-                let label = UILabel(frame: CGRect(x: SIDE_MARGIN, y: offset,
-                                                  width: FULL_WIDTH, height: categoryHeight))
-                createListLabel(label: label, text: leaderList.joined(separator: ", "), font: displayFont,
-                                color: .black, view: scrollView)
-                scrollView.addSubview(label)
-                offset += label.frame.height
+                leaderText += leaderList.joined(separator: ", ")
             }
             
-            offset += TOP_MARGIN/2
+            createTextView(leaders, font: displayFont, text: leaderText, color: .black, textAlignment: .center)
+            scrollView.addSubview(leaders)
+            
+            offset += leaders.frame.height + TOP_MARGIN/2
             addLine(x: SIDE_MARGIN, y: offset, width: FULL_WIDTH, view: scrollView)
             offset += TOP_MARGIN/2
             
             let meetingInfo = UITextView(frame: CGRect(x: SIDE_MARGIN, y: offset, width: FULL_WIDTH, height: 0))
             
             var isMeeting = false
-            var text = "Meetings TBD"
+            var meetingText = "Meetings TBD"
             if let day = data["day"] as? String {
                 isMeeting = true
-                text = "\(day)s \(data["start"] as! String)-\(data["end"] as! String)\n\(data["location"] as! String)"
+                meetingText = "\(day)s \(data["start"] as! String)-\(data["end"] as! String)\n\(data["location"] as! String)"
             }
-            createTextView(meetingInfo, font: displayFont, text: text, color: secondaryCellColor,
-                           textAlignment: .center)
+            createTextView(meetingInfo, font: displayFont, text: meetingText,
+                           color: secondaryCellColor, textAlignment: .center)
             offset += meetingInfo.frame.height + TOP_MARGIN/2
             scrollView.addSubview(meetingInfo)
             

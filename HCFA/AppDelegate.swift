@@ -122,14 +122,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         
         defaults.set(loadedToken, forKey: "loadedAPNToken")
         
-        if let userToken = defaults.string(forKey: "userAPNToken") {
+        if let userTokens = defaults.array(forKey: "userAPNTokens") as? [String] {
             let uid = defaults.integer(forKey: "uid")
-            if loadedToken != userToken && uid != 0 {
-                API.updateAPNToken(uid: 0, token: defaults.string(forKey: "token")!, apnToken: loadedToken) {
+            
+            if !userTokens.contains(loadedToken) && uid != 0 {
+                API.addAPNToken(uid: uid, token: defaults.string(forKey: "token")!, apnToken: loadedToken) {
                     response, data in
                     
                     if response == .Success {
-                        defaults.set(loadedToken, forKey: "userAPNToken")
+                        defaults.set(userTokens + [loadedToken], forKey: "userAPNTokens")
                     }
                 }
             }

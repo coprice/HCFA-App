@@ -107,8 +107,8 @@ class API {
                            completionHandler: completionHandler)
     }
     
-    class func updateAPNToken(uid: Int, token: String, apnToken: String,
-                              completionHandler: @escaping (URLResponses, Any?) -> Void) {
+    class func addAPNToken(uid: Int, token: String, apnToken: String,
+                           completionHandler: @escaping (URLResponses, Any?) -> Void) {
         
         let json = ["uid": uid, "token": token, "apn_token": apnToken] as [String:Any]
         

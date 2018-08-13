@@ -34,7 +34,7 @@ class SignInVC: UIViewController {
     var presentingPassword = false
     
     let FIELD_WIDTH = UIScreen.main.bounds.width*0.55
-    let FIELD_HEIGHT = UIScreen.main.bounds.height*0.075
+    let FIELD_HEIGHT = UIScreen.main.bounds.height*0.06
     
     override func viewDidLoad() {
         
@@ -49,6 +49,8 @@ class SignInVC: UIViewController {
         navigationAccessory.nextButton.action = #selector(nextPressed)
         navigationAccessory.doneButton.target = self
         navigationAccessory.doneButton.action = #selector(donePressed)
+        
+        view.addSubview(spinner)
     }
     
     func prepareDisplay() {
@@ -171,16 +173,16 @@ class SignInVC: UIViewController {
         
         scrollView.frame = CGRect(x: 0, y: view.frame.height*0.31,
                                   width: view.frame.width, height: view.frame.height*0.665)
-        scrollView.backgroundColor = .clear
         scrollView.addSubview(firstName)
         scrollView.addSubview(lastName)
         scrollView.addSubview(confirm)
+        scrollView.addSubview(email)
+        scrollView.addSubview(password)
+        scrollView.addSubview(submit)
+        scrollView.addSubview(forgot)
         
         view.addSubview(banner)
-        view.addSubview(email)
-        view.addSubview(password)
-        view.addSubview(submit)
-        view.addSubview(forgot)
+        view.addSubview(scrollView)
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -263,15 +265,14 @@ class SignInVC: UIViewController {
             login.backgroundColor = redColor
             loginActive = true
             
-            view.addSubview(banner)
             scrollView.addSubview(firstName)
             scrollView.addSubview(lastName)
             scrollView.addSubview(confirm)
-            scrollView.removeFromSuperview()
-            view.addSubview(email)
-            view.addSubview(password)
-            view.addSubview(submit)
-            view.addSubview(forgot)
+            scrollView.addSubview(email)
+            scrollView.addSubview(password)
+            scrollView.addSubview(submit)
+            scrollView.addSubview(forgot)
+            view.addSubview(banner)
             
             banner.alpha = 0.0
             
@@ -312,14 +313,13 @@ class SignInVC: UIViewController {
     
     func displayLoginForm(duration: Double, completion: ((Bool) -> Void)?) {
         
-        email.frame = CGRect(x: view.frame.midX - FIELD_WIDTH/2, y: view.frame.height*0.32,
-                             width: FIELD_WIDTH, height: FIELD_HEIGHT)
+        let x = view.frame.midX - FIELD_WIDTH/2
         
-        password.frame = CGRect(x: view.frame.midX - FIELD_WIDTH/2, y: view.frame.height*0.42,
-                                width: FIELD_WIDTH, height: FIELD_HEIGHT)
+        email.frame = CGRect(x: x, y: view.frame.height*0.01, width: FIELD_WIDTH, height: FIELD_HEIGHT)
         
-        submit.frame = CGRect(x: view.frame.midX - FIELD_WIDTH/2, y: view.frame.height*0.53,
-                              width: FIELD_WIDTH, height: TOGGLE_HEIGHT)
+        password.frame = CGRect(x: x, y: view.frame.height*0.09, width: FIELD_WIDTH, height: FIELD_HEIGHT)
+        
+        submit.frame = CGRect(x: x, y: view.frame.height*0.17, width: FIELD_WIDTH, height: TOGGLE_HEIGHT)
         
         forgot.frame = CGRect(x: view.frame.midX - FIELD_WIDTH*0.3125,
                               y: submit.frame.origin.y + TOGGLE_HEIGHT*9/8,
@@ -337,22 +337,21 @@ class SignInVC: UIViewController {
     
     func displayRegisterForm(duration: Double, completion: ((Bool) -> Void)?) {
         
-        view.addSubview(scrollView)
-        let startingX = scrollView.frame.width*0.49-FIELD_WIDTH/2
+        let x = view.frame.midX - FIELD_WIDTH/2
         
-        firstName.frame = CGRect(x: startingX, y: view.frame.height*0.01,
+        firstName.frame = CGRect(x: x, y: view.frame.height*0.01,
                                  width: FIELD_WIDTH*0.49, height: FIELD_HEIGHT)
         
-        lastName.frame = CGRect(x: scrollView.frame.width*0.51, y: view.frame.height*0.01,
+        lastName.frame = CGRect(x: view.frame.midX + FIELD_WIDTH*0.01, y: view.frame.height*0.01,
                                 width: FIELD_WIDTH*0.49, height: FIELD_HEIGHT)
         
-        email.frame = CGRect(x: startingX, y: view.frame.height*0.11, width: FIELD_WIDTH, height: FIELD_HEIGHT)
+        email.frame = CGRect(x: x, y: view.frame.height*0.09, width: FIELD_WIDTH, height: FIELD_HEIGHT)
         
-        password.frame = CGRect(x: startingX, y: view.frame.height*0.21, width: FIELD_WIDTH, height: FIELD_HEIGHT)
+        password.frame = CGRect(x: x, y: view.frame.height*0.17, width: FIELD_WIDTH, height: FIELD_HEIGHT)
         
-        confirm.frame = CGRect(x: startingX, y: view.frame.height*0.31, width: FIELD_WIDTH, height: FIELD_HEIGHT)
+        confirm.frame = CGRect(x: x, y: view.frame.height*0.25, width: FIELD_WIDTH, height: FIELD_HEIGHT)
         
-        submit.frame = CGRect(x: (scrollView.frame.width - FIELD_WIDTH)/2, y: view.frame.height*0.41,
+        submit.frame = CGRect(x: (scrollView.frame.width - FIELD_WIDTH)/2, y: view.frame.height*0.33,
                               width: FIELD_WIDTH, height: TOGGLE_HEIGHT)
         
         submit.setTitle("REGISTER", for: .normal)
@@ -399,9 +398,10 @@ class SignInVC: UIViewController {
     
     func startSpinner() {
         if loginActive {
-            spinner.center = CGPoint(x: view.frame.width/2, y: view.frame.height*0.625)
+            spinner.center = CGPoint(x: view.frame.width/2, y: view.frame.height*0.53 + submit.frame.height*2.25)
         } else {
-            spinner.center = CGPoint(x: view.frame.width/2, y: view.frame.height*0.825)
+            spinner.center = CGPoint(x: view.frame.width/2,
+                                     y: view.frame.height*0.725 - forgot.frame.height + submit.frame.height*2.25)
         }
         spinner.startAnimating()
     }
@@ -410,11 +410,16 @@ class SignInVC: UIViewController {
         spinner.stopAnimating()
     }
     
-    func updateAPNToken(_ apnToken: String) {
-        API.updateAPNToken(uid: defaults.integer(forKey: "uid"), token: defaults.string(forKey: "token")!, apnToken: apnToken, completionHandler: { response, data in
+    func addAPNToken(_ apnToken: String) {
+        API.addAPNToken(uid: defaults.integer(forKey: "uid"), token: defaults.string(forKey: "token")!,
+                           apnToken: apnToken, completionHandler: { response, data in
             
             if response == .Success {
-                defaults.set(apnToken, forKey: "userAPNToken")
+                if let apnTokens = defaults.array(forKey: "userAPNTokens") as? [String] {
+                    defaults.set(apnTokens + [apnToken], forKey: "userAPNTokens")
+                } else {
+                    defaults.set([apnToken], forKey: "userAPNTokens")
+                }
             }
         })
     }
@@ -472,19 +477,19 @@ class SignInVC: UIViewController {
                             defaults.set(nil, forKey: "image")
                             defaults.set(nil, forKey: "profile")
                         }
-                        
-                        if let apnToken = data["apn_token"] as? String {
-                            defaults.set(apnToken, forKey: "userAPNToken")
+
+                        if let apnTokens = data["apn_tokens"] as? [String] {
+                            defaults.set(apnTokens, forKey: "userAPNTokens")
                         }
                         
                         DispatchQueue.main.async {
                             if let loadedToken = defaults.string(forKey: "loadedAPNToken") {
-                                if let apnToken = data["apn_token"] as? String {
-                                    if apnToken != loadedToken {
-                                        self.updateAPNToken(loadedToken)
+                                if let apnTokens = data["apn_tokens"] as? [String] {
+                                    if !apnTokens.contains(loadedToken) {
+                                        self.addAPNToken(loadedToken)
                                     }
                                 } else {
-                                    self.updateAPNToken(loadedToken)
+                                    self.addAPNToken(loadedToken)
                                 }
                             }
                         }
@@ -549,7 +554,7 @@ class SignInVC: UIViewController {
                         
                         DispatchQueue.main.async {
                             if let loadedToken = defaults.string(forKey: "loadedAPNToken") {
-                                self.updateAPNToken(loadedToken)
+                                self.addAPNToken(loadedToken)
                             }
                         }
                         
@@ -582,12 +587,7 @@ class SignInVC: UIViewController {
                 self.email.text = nil
                 self.password.text = nil
                 self.confirm.text = nil
-                self.scrollView.removeFromSuperview()
-                
-                self.view.addSubview(self.email)
-                self.view.addSubview(self.password)
-                self.view.addSubview(self.submit)
-                self.view.addSubview(self.forgot)
+                self.scrollView.addSubview(self.forgot)
                 self.displayLoginForm(duration: 0.15, completion: {_ in self.switchingMenu = false})
             })
         }
@@ -611,15 +611,7 @@ class SignInVC: UIViewController {
             }, completion: {_ in
                 self.email.text = nil
                 self.password.text = nil
-                self.email.removeFromSuperview()
-                self.password.removeFromSuperview()
-                self.submit.removeFromSuperview()
                 self.forgot.removeFromSuperview()
-                
-                self.view.addSubview(self.scrollView)
-                self.scrollView.addSubview(self.email)
-                self.scrollView.addSubview(self.password)
-                self.scrollView.addSubview(self.submit)
                 self.displayRegisterForm(duration: 0.15, completion: {_ in self.switchingMenu = false})
             })
         }
@@ -638,9 +630,7 @@ class SignInVC: UIViewController {
     
     @objc func donePressed() {
         currentTextField?.resignFirstResponder()
-        if !loginActive {
-            scrollView.setContentOffset(CGPoint.zero, animated: true)
-        }
+        scrollView.setContentOffset(CGPoint.zero, animated: true)
     }
 }
 
@@ -665,7 +655,13 @@ extension SignInVC: UITextFieldDelegate {
                 navigationAccessory.nextButton.isEnabled = true
             }
             
-            // currently registering
+            // changing positioning of scrollView
+            if currentTextField?.tag == 3 {
+                scrollView.setContentOffset(CGPoint.zero, animated: true)
+            } else if currentTextField?.tag == 4 {
+                scrollView.setContentOffset(CGPoint(x: 0, y: view.frame.height*0.08), animated: true)
+            }
+            
         } else {
             
             // at first field (first name)
@@ -683,12 +679,14 @@ extension SignInVC: UITextFieldDelegate {
             }
             
             // changing positioning of scrollView
-            if currentTextField?.tag == 1 || currentTextField?.tag == 2 || currentTextField?.tag == 3 {
+            if currentTextField?.tag == 1 || currentTextField?.tag == 2 {
                 scrollView.setContentOffset(CGPoint.zero, animated: true)
+            } else if currentTextField?.tag == 3 {
+                scrollView.setContentOffset(CGPoint(x: 0, y: view.frame.height*0.08), animated: true)
             } else if currentTextField?.tag == 4 {
-                scrollView.setContentOffset(CGPoint(x: 0, y: view.frame.height/10), animated: true)
+                scrollView.setContentOffset(CGPoint(x: 0, y: view.frame.height*0.16), animated: true)
             } else {
-                scrollView.setContentOffset(CGPoint(x: 0, y: view.frame.height/5), animated: true)
+                scrollView.setContentOffset(CGPoint(x: 0, y: view.frame.height*0.24), animated: true)
             }
         }
     }
