@@ -233,6 +233,10 @@ class EventVC: TemplateVC {
                     for eid in events {
                         deleteEventImage(eid)
                     }
+                    
+                    if events.count == self.rows.count {
+                        self.hostVC.navigationItem.rightBarButtonItems = [self.hostVC.create]
+                    }
                 }
             })
         }

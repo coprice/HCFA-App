@@ -27,6 +27,7 @@ class SideMenuVC: MenuViewController {
         tableView.isScrollEnabled = false
         tableView.layoutMargins = UIEdgeInsets.zero
         tableView.separatorInset = UIEdgeInsets.zero
+        tableView.separatorColor = sideMenuHighlightColor
         view.addSubview(tableView)
  
     }

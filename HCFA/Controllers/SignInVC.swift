@@ -638,8 +638,6 @@ extension SignInVC: UITextFieldDelegate {
     func textFieldDidBeginEditing(_ textField: UITextField) {
         currentTextField = textField
         
-        print(loginActive)
-        
         if loginActive {
             
             // first field (email)

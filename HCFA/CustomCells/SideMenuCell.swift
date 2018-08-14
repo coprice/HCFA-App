@@ -19,7 +19,7 @@ class SideMenuCell: UITableViewCell {
         layoutMargins = UIEdgeInsets.zero
         
         let colorView = UIView(frame: frame)
-        colorView.backgroundColor = highlightColor
+        colorView.backgroundColor = sideMenuHighlightColor
         selectedBackgroundView = colorView
         
         switch tab {
