@@ -30,7 +30,7 @@ class TemplateVC: UIViewController {
         
         upButton.frame = CGRect(x: view.frame.width, y: offset*1.2,
                                 width: BUTTON_LENGTH*1.1, height: BUTTON_LENGTH*1.1)
-        upButton.backgroundColor = UIColor(red: 0.4, green: 0.4, blue: 0.4, alpha: 1.0)
+        upButton.backgroundColor = UIColor(red: 0.5, green: 0.5, blue: 0.5, alpha: 0.8)
         upButton.layer.cornerRadius = upButton.frame.width/2
         
         let arrow = UIImage(named: "arrow")
