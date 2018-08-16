@@ -58,7 +58,7 @@ func resetDefaults() {
 let redColor = UIColor(red: 220/255, green: 0/255, blue: 19/255, alpha: 1)
 let highlightColor = UIColor(red: 237/255, green: 127/255, blue: 137/255, alpha: 1)
 let lightColor = UIColor(red: 248/255, green: 250/255, blue: 253/255, alpha: 1)
-let sideMenuColor = UIColor(red: 255/255, green: 240/255, blue: 240/255, alpha: 1.0)
+let sideMenuColor = UIColor(red: 255/255, green: 248/255, blue: 248/255, alpha: 1.0)
 let sideMenuHighlightColor = UIColor(red: 240/255, green: 220/255, blue: 220/255, alpha: 1.0)
 let barHighlightColor = UIColor(red: 197/255, green: 104/255, blue: 122/255, alpha: 1)
 let secondaryCellColor = UIColor(red: 43/255, green: 50/255, blue: 53/255, alpha: 1.0)

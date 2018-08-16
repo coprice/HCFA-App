@@ -41,13 +41,13 @@ class DisplayBibleCourseVC: DisplayTemplateVC {
             let categoryHeight = calcLabelHeight(text: "Location",
                                                  frame: CGRect(x: SIDE_MARGIN, y: offset + TOP_MARGIN,
                                                                width: FULL_WIDTH, height: .greatestFiniteMagnitude),
-                                                 font: displayFont)
+                                                 font: displayFont)*1.2
             
             let leader = UILabel(frame: CGRect(x: SIDE_MARGIN, y: offset, width: FULL_WIDTH, height: categoryHeight))
-            leader.text = "Leader: \(data["leader_first"] as! String) \(data["leader_last"] as! String)"
+            let leaderText = "Leader  \(data["leader_first"] as! String) \(data["leader_last"] as! String)"
+            leader.attributedText = createStringWithBoldRange(from: leaderText, boldRange: NSMakeRange(0, 6),
+                                                              fontSize: displayFont.pointSize, color: .black)
             leader.textAlignment = .center
-            leader.font = displayFont
-            leader.textColor = .black
             leader.baselineAdjustment = .alignCenters
             offset += leader.frame.height + TOP_MARGIN
             scrollView.addSubview(leader)
@@ -55,7 +55,11 @@ class DisplayBibleCourseVC: DisplayTemplateVC {
             let abcls = (data["abcls"] as! [String])
             for abcl in abcls {
                 let label = UILabel(frame: CGRect(x: SIDE_MARGIN, y: offset, width: FULL_WIDTH, height: categoryHeight))
-                createListLabel(label: label, text: "ABCL: \(abcl)", font: displayFont, color: .black, view: scrollView)
+                label.attributedText = createStringWithBoldRange(from: "ABCL  \(abcl)", boldRange: NSMakeRange(0, 4),
+                                                                 fontSize: displayFont.pointSize, color: .black)
+                label.textAlignment = .center
+                label.baselineAdjustment = .alignCenters
+                scrollView.addSubview(label)
                 offset += label.frame.height
             }
             if !abcls.isEmpty {
@@ -235,6 +239,18 @@ class DisplayBibleCourseVC: DisplayTemplateVC {
         } else {
             return "\(firstName)'s \(yearPlural)"
         }
+    }
+    
+    func createStringWithBoldRange(from string: String, boldRange: NSRange, fontSize: CGFloat, color: UIColor) -> NSAttributedString {
+        let boldAttribute: [NSAttributedStringKey : Any] =
+            [.font: UIFont(name: "Montserrat-Bold", size: fontSize) ?? UIFont.systemFont(ofSize: fontSize),
+             .foregroundColor: color]
+        let nonBoldAttribute: [NSAttributedStringKey : Any] =
+            [.font: UIFont(name: "Montserrat-Regular" , size: fontSize) ?? UIFont.systemFont(ofSize: fontSize),
+             .foregroundColor: color]
+        let attrStr = NSMutableAttributedString(string: string, attributes: nonBoldAttribute)
+        attrStr.setAttributes(boldAttribute, range: boldRange)
+        return attrStr
     }
     
     @objc func editTapped() {

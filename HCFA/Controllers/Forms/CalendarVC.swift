@@ -242,7 +242,7 @@ class CalendarVC: FormViewController {
         +++ Section("Calendar")
         <<< PushRow<String>(){ row in
             row.title = "Calendar"
-            row.options = eventStore.calendars(for: .event).map({$0.title})
+            row.options = Array(Set(eventStore.calendars(for: .event).map({ $0.title })))
             row.value = eventStore.defaultCalendarForNewEvents?.title
             row.tag = "calendar"
         }
