@@ -250,11 +250,11 @@ class EventVC: TemplateVC {
     
     @objc func refresh() {
         
-        if firstAppearance {
-            firstAppearance = false
-        }
-        
         API.getEvents { response, data in
+            
+            if self.firstAppearance {
+                self.firstAppearance = false
+            }
             
             switch response {
             case .NotConnected:

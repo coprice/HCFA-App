@@ -309,6 +309,7 @@ class BibleCourseVC: TemplateVC {
     }
     
     @objc func refresh() {
+        
         API.getCourses(uid: defaults.integer(forKey: "uid"), token: defaults.string(forKey: "token")!) {
             response, data in
             
