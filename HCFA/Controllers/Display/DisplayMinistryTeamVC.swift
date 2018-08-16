@@ -48,9 +48,14 @@ class DisplayMinistryTeamVC: DisplayTemplateVC {
             
             var leaderText = ""
             if leaderList.count > 2 {
-                leaderText += "\(leaderList[..<2].joined(separator: ", ")),\n\(leaderList[2...].joined(separator: ", "))"
+                leaderText +=
+                    "\(leaderList[..<2].joined(separator: ", ")),\n\(leaderList[2...].joined(separator: ", "))"
             } else {
                 leaderText += leaderList.joined(separator: ", ")
+            }
+            
+            if leaderList.count == 0 {
+                leaderText = "No Leaders"
             }
             
             createTextView(leaders, font: displayFont, text: leaderText, color: .black, textAlignment: .center)
@@ -203,7 +208,8 @@ class DisplayMinistryTeamVC: DisplayTemplateVC {
                 scrollView.addSubview(joinButton)
             }
             
-            scrollView.contentSize = CGSize(width: scrollView.frame.width, height: offset)
+            scrollView.contentSize = CGSize(width: scrollView.frame.width,
+                                            height: max(offset, scrollView.frame.height*1.01))
             view.addSubview(scrollView)
         }
         

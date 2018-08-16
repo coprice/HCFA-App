@@ -44,7 +44,7 @@ class DisplayBibleCourseVC: DisplayTemplateVC {
                                                  font: displayFont)*1.2
             
             let leader = UILabel(frame: CGRect(x: SIDE_MARGIN, y: offset, width: FULL_WIDTH, height: categoryHeight))
-            let leaderText = "Leader  \(data["leader_first"] as! String) \(data["leader_last"] as! String)"
+            let leaderText = "LEADER  \(data["leader_first"] as! String) \(data["leader_last"] as! String)"
             leader.attributedText = createStringWithBoldRange(from: leaderText, boldRange: NSMakeRange(0, 6),
                                                               fontSize: displayFont.pointSize, color: .black)
             leader.textAlignment = .center
@@ -213,7 +213,8 @@ class DisplayBibleCourseVC: DisplayTemplateVC {
                 scrollView.addSubview(joinButton)
             }
             
-            scrollView.contentSize = CGSize(width: scrollView.frame.width, height: offset)
+            scrollView.contentSize = CGSize(width: scrollView.frame.width,
+                                            height: max(offset, scrollView.frame.height*1.01))
             view.addSubview(scrollView)
         }
         

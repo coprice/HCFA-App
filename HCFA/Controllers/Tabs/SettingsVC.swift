@@ -62,7 +62,6 @@ class SettingsVC: FormViewController {
         
         hostVC.navigationItem.leftBarButtonItem = hostVC.slider
         hostVC.navigationItem.rightBarButtonItems = nil
-        
         hostVC.navigationItem.title = "Settings"
         
         let backItem = UIBarButtonItem()

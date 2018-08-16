@@ -30,16 +30,6 @@ class DisplayTemplateVC: UIViewController {
     
     // Helpers for displaying views
     
-    func resizeFrameToContent(_ textView: UITextView) {
-        var newFrame = textView.frame
-        newFrame.size.height = textView.contentSize.height
-        textView.frame = newFrame
-    }
-    
-    func recenterText(_ textView: UITextView) {
-        textView.setContentOffset(CGPoint(x: 0, y: abs(textView.contentSize.height-textView.frame.height)/2), animated: false)
-    }
-    
     func calcLabelHeight(text: String, frame: CGRect, font: UIFont) -> CGFloat {
         let label = UILabel(frame: frame)
         label.text = text
@@ -48,15 +38,14 @@ class DisplayTemplateVC: UIViewController {
         return label.frame.height
     }
     
-    func addLabelProperties(text: String, font: UIFont, label: UILabel) {
-        let underline = NSMutableAttributedString(string: text)
-        underline.addAttribute(NSAttributedStringKey.underlineStyle, value: 1,
-                               range: NSMakeRange(0, underline.length))
-        label.attributedText = underline
-        label.font = font
-        label.textAlignment = .center
-        label.textColor = redColor
-        label.backgroundColor = .clear
+    func resizeFrameToContent(_ textView: UITextView) {
+        var newFrame = textView.frame
+        newFrame.size.height = textView.contentSize.height
+        textView.frame = newFrame
+    }
+    
+    func recenterText(_ textView: UITextView) {
+        textView.setContentOffset(CGPoint(x: 0, y: abs(textView.contentSize.height-textView.frame.height)/2), animated: false)
     }
     
     func createTextView(_ textView: UITextView, font: UIFont, text: String, color: UIColor,

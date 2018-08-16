@@ -376,27 +376,27 @@ extension BibleCourseVC: UITableViewDelegate {
             your.titleLabel?.font = toggleFont
             your.addTarget(self, action: #selector(displayUsersBCs), for: .touchUpInside)
             
-            let join = UIButton(frame: CGRect(x: cellWidth/2 + 2, y: view.frame.height/20 - TOGGLE_HEIGHT/2,
+            let all = UIButton(frame: CGRect(x: cellWidth/2 + 2, y: view.frame.height/20 - TOGGLE_HEIGHT/2,
                                               width: TOGGLE_WIDTH, height: TOGGLE_HEIGHT))
             
             if displayingYours {
-                join.backgroundColor = highlightColor
+                all.backgroundColor = highlightColor
             } else {
-                join.backgroundColor = redColor
+                all.backgroundColor = redColor
             }
             
-            join.layer.cornerRadius = view.frame.height*0.015
-            join.setBackgroundImage(roundedImage(color: redColor, width: TOGGLE_WIDTH, height: TOGGLE_HEIGHT,
-                                                 cornerRadius: join.layer.cornerRadius), for: .highlighted)
+            all.layer.cornerRadius = view.frame.height*0.015
+            all.setBackgroundImage(roundedImage(color: redColor, width: TOGGLE_WIDTH, height: TOGGLE_HEIGHT,
+                                                 cornerRadius: all.layer.cornerRadius), for: .highlighted)
             
-            join.setTitle("ALL COURSES", for: .normal)
-            join.titleLabel?.font = toggleFont
-            join.addTarget(self, action: #selector(displayBCs), for: .touchUpInside)
+            all.setTitle("ALL COURSES", for: .normal)
+            all.titleLabel?.font = toggleFont
+            all.addTarget(self, action: #selector(displayBCs), for: .touchUpInside)
             
             let headerView = UIView()
             headerView.backgroundColor = .clear
             headerView.addSubview(your)
-            headerView.addSubview(join)
+            headerView.addSubview(all)
             
             if !displayingYours && !rows.isEmpty {
 

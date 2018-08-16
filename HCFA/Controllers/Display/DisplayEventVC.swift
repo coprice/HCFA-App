@@ -167,7 +167,8 @@ class DisplayEventVC: DisplayTemplateVC {
             scrollView.addSubview(calendarButton)
             
             offset += calendarLength + TOP_MARGIN
-            scrollView.contentSize = CGSize(width: view.frame.width, height: offset)
+            scrollView.contentSize = CGSize(width: view.frame.width,
+                                            height: max(offset, scrollView.frame.height*1.01))
             view.addSubview(scrollView)
         }
         
