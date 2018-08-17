@@ -1,8 +1,8 @@
 *.DS_Store
 *.lock
+*.json
 Pods/
-HCFA.xcworkspace/xcshareddata/
-HCFA/awsconfiguration.json
+HCFA/AWS.swift
 
 ## Build generated
 build/

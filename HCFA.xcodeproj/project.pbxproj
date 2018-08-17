@@ -13,6 +13,7 @@
 		84D267A365942252A0930B35 /* Pods_HCFA.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A30C09AE9E8D2369234A9B3C /* Pods_HCFA.framework */; };
 		E30F7ED82106E59500F74370 /* FilterVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E30F7ED72106E59500F74370 /* FilterVC.swift */; };
 		E31246C51FFAC58D0012A4D4 /* EventCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E31246C41FFAC58D0012A4D4 /* EventCell.swift */; };
+		E32A964621262C3200A9FF10 /* AWS.swift in Sources */ = {isa = PBXBuildFile; fileRef = E32A964521262C3200A9FF10 /* AWS.swift */; };
 		E33CE51E210A23E200A81C9D /* PasswordVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E33CE51D210A23E200A81C9D /* PasswordVC.swift */; };
 		E33CE520210ACE5F00A81C9D /* ProfileCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E33CE51F210ACE5F00A81C9D /* ProfileCell.swift */; };
 		E33CE522210ADB7700A81C9D /* ProfileVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E33CE521210ADB7700A81C9D /* ProfileVC.swift */; };
@@ -133,6 +134,7 @@
 		D46CEEB1F9D4068847481203 /* Pods-HCFA.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HCFA.debug.xcconfig"; path = "Pods/Target Support Files/Pods-HCFA/Pods-HCFA.debug.xcconfig"; sourceTree = "<group>"; };
 		E30F7ED72106E59500F74370 /* FilterVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterVC.swift; sourceTree = "<group>"; };
 		E31246C41FFAC58D0012A4D4 /* EventCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventCell.swift; sourceTree = "<group>"; };
+		E32A964521262C3200A9FF10 /* AWS.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AWS.swift; sourceTree = "<group>"; };
 		E33CE51D210A23E200A81C9D /* PasswordVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordVC.swift; sourceTree = "<group>"; };
 		E33CE51F210ACE5F00A81C9D /* ProfileCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileCell.swift; sourceTree = "<group>"; };
 		E33CE521210ADB7700A81C9D /* ProfileVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileVC.swift; sourceTree = "<group>"; };
@@ -555,6 +557,7 @@
 				E3D795E11FF591CE003B78F5 /* AppDelegate.swift */,
 				E37922F920F1526800CA2F7B /* API.swift */,
 				E3E9524E1FF8D9AC00F8A51D /* Helpers.swift */,
+				E32A964521262C3200A9FF10 /* AWS.swift */,
 				E3A4432420003923000D007D /* Extensions */,
 				E34AACC81FFF3BF600828012 /* CustomCells */,
 				E34AACC71FFF3BD000828012 /* Controllers */,
@@ -870,6 +873,7 @@
 				E3E9524F1FF8D9AC00F8A51D /* Helpers.swift in Sources */,
 				E30F7ED82106E59500F74370 /* FilterVC.swift in Sources */,
 				E3A4435920006FC6000D007D /* DSCameraHandler.swift in Sources */,
+				E32A964621262C3200A9FF10 /* AWS.swift in Sources */,
 				E3E9524D1FF8389600F8A51D /* SignInVC.swift in Sources */,
 				E33CE522210ADB7700A81C9D /* ProfileVC.swift in Sources */,
 				E34AACCA1FFF3DB000828012 /* SideMenuVC.swift in Sources */,
