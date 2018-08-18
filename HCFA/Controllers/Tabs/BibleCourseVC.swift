@@ -290,6 +290,8 @@ class BibleCourseVC: TemplateVC {
         
         if defaults.bool(forKey: "admin") {
             hostVC.navigationItem.rightBarButtonItems = [hostVC.create]
+        } else {
+            hostVC.navigationItem.rightBarButtonItems = nil
         }
         
         tableView.reloadData()

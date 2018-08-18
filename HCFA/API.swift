@@ -18,7 +18,7 @@ enum URLResponses {
 
 class API {
     static let environment = "development"
-    static let rootURLString = "http://0.0.0.0:8080"
+    static let rootURLString = environment == "production" ? "http://0.0.0.0:8080" : "http://0.0.0.0:8080"
     
     class func login(email: String, password: String, completionHandler: @escaping (URLResponses, Any?) -> Void) {
         

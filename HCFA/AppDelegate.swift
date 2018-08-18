@@ -20,9 +20,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         
         registerForPushNotifications()
-        if let poolID = getPoolID() {
-            print(poolID)
-        }
         
         window = UIWindow(frame: UIScreen.main.bounds)
         
