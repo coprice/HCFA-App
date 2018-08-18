@@ -44,7 +44,11 @@ class BibleCourseVC: TemplateVC {
         filterButton.tintColor = barHighlightColor
         filterButton.imageView?.contentMode = .scaleAspectFit
         filterButton.addTarget(self, action: #selector(toggleFilter), for: .touchUpInside)
-        filterButton.widthAnchor.constraint(equalToConstant: 44).isActive = true
+        if defaults.bool(forKey: "admin") {
+            filterButton.widthAnchor.constraint(equalToConstant: 44).isActive = true
+        } else {
+            filterButton.widthAnchor.constraint(equalToConstant: 28).isActive = true
+        }
         filterButton.heightAnchor.constraint(equalToConstant: 28).isActive = true
         
         filter = UIBarButtonItem(customView: filterButton)
