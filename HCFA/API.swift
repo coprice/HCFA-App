@@ -18,7 +18,7 @@ enum URLResponses {
 
 class API {
     static let environment = "development"
-    static let rootURLString = environment == "production" ? "http://0.0.0.0:8080" : "http://0.0.0.0:8080"
+    static let rootURLString = environment == "production" ? "http://0.0.0.0:8080" : "http://192.168.1.192:8080"
     
     class func login(email: String, password: String, completionHandler: @escaping (URLResponses, Any?) -> Void) {
         
@@ -104,6 +104,15 @@ class API {
         let json = ["uid": uid, "token": token, "image": image] as [String:Any]
         
         API.performRequest(requestType: "POST", urlPath: "/users/update/image", json: json,
+                           completionHandler: completionHandler)
+    }
+    
+    class func updateNotifications(uid: Int, token: String, ntfType: String, ntfBool: Bool,
+                                   completionHandler: @escaping (URLResponses, Any?) -> Void) {
+        
+        let json = ["uid": uid, "token": token, "ntf_type": ntfType, "ntf_bool": ntfBool] as [String:Any]
+        
+        API.performRequest(requestType: "POST", urlPath: "/users/update/notifications", json: json,
                            completionHandler: completionHandler)
     }
     

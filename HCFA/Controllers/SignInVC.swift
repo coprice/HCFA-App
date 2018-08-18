@@ -468,6 +468,9 @@ class SignInVC: UIViewController {
                         defaults.set(data["admin"] as! Bool, forKey: "admin")
                         defaults.set(data["leader"] as! Bool, forKey: "leader")
                         defaults.set(data["token"] as! String, forKey: "token")
+                        defaults.set(data["event_ntf"] as! Bool, forKey: "event_ntf")
+                        defaults.set(data["course_ntf"] as! Bool, forKey: "course_ntf")
+                        defaults.set(data["team_ntf"] as! Bool, forKey: "team_ntf")
                         
                         if let imageURL = data["image"] as? String {
                             if let url = URL(string: imageURL) {
@@ -545,11 +548,15 @@ class SignInVC: UIViewController {
                         defaults.set(data["first_name"] as! String, forKey: "first")
                         defaults.set(data["last_name"] as! String, forKey: "last")
                         defaults.set(data["email"] as! String, forKey: "email")
-                        defaults.set(data["admin"] as! Bool, forKey: "admin")
-                        defaults.set(data["leader"] as! Bool, forKey: "leader")
                         defaults.set(data["token"] as! String, forKey: "token")
+                        
+                        defaults.set(false, forKey: "admin")
+                        defaults.set(false, forKey: "leader")
                         defaults.set(nil, forKey: "image")
                         defaults.set(nil, forKey: "profile")
+                        defaults.set(true, forKey: "event_ntf")
+                        defaults.set(true, forKey: "course_ntf")
+                        defaults.set(true, forKey: "team_ntf")
                         
                         DispatchQueue.main.async {
                             if let loadedToken = defaults.string(forKey: "loadedAPNToken") {

@@ -49,6 +49,9 @@ func resetDefaults() {
     defaults.set(nil, forKey: "image")
     defaults.set(nil, forKey: "profile")
     defaults.set(nil, forKey: "userAPNToken")
+    defaults.set(true, forKey: "event_ntf")
+    defaults.set(true, forKey: "course_ntf")
+    defaults.set(true, forKey: "team_ntf")
 }
 
 // -- Colors --
