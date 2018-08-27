@@ -17,12 +17,14 @@
 	<key>CFBundleShortVersionString</key>
 	<string>1.0</string>
 	<key>CFBundleVersion</key>
-	<string>1</string>
+	<string>2</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSCalendarsUsageDescription</key>
 	<string>Used for entering events to your calendar</string>
 	<key>NSCameraUsageDescription</key>
+	<string>Used for setting profile and event pictures</string>
+	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Used for setting profile and event pictures</string>
 	<key>UIAppFonts</key>
 	<array>
