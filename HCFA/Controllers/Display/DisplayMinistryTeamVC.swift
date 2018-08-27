@@ -122,12 +122,12 @@ class DisplayMinistryTeamVC: DisplayTemplateVC {
                 }
                 
                 if members.isEmpty {
-                    offset += TOP_MARGIN/2
+                    offset += TOP_MARGIN
                     let label = UILabel(frame: CGRect(x: SIDE_MARGIN, y: offset,
                                                       width: FULL_WIDTH, height: categoryHeight))
                     createListLabel(label: label, text: "There are no members", font: displayFont, color: .gray,
                                     view: scrollView)
-                    offset += label.frame.height
+                    offset += label.frame.height + TOP_MARGIN/2
                 }
                 
                 offset += TOP_MARGIN/2

@@ -210,7 +210,7 @@ class CreateMinistryTeamVC: CreateTemplateVC {
                 }
             }
             $0.multivaluedRowToInsertAt = { index in
-                return EmailRow() { row in
+                return NameRow() { row in
                     row.placeholder = "Leader's Name"
                     row.tag = "leaderName\(index)"
                     row.cellUpdate { cell, _ in
@@ -221,7 +221,7 @@ class CreateMinistryTeamVC: CreateTemplateVC {
             if editingMT {
                 var idx = 0
                 for leader in (data["leaders"] as! [String]) {
-                    $0 <<< EmailRow() { row in
+                    $0 <<< NameRow() { row in
                         row.placeholder = "Leader's Name"
                         row.value = leader
                         row.tag = "leaderName\(idx)"
@@ -232,7 +232,7 @@ class CreateMinistryTeamVC: CreateTemplateVC {
                     }
                 }
             } else {
-                $0 <<< EmailRow() { row in
+                $0 <<< NameRow() { row in
                     row.placeholder = "Leader's Name"
                     row.tag = "leaderName0"
                     row.cellUpdate { cell, _ in

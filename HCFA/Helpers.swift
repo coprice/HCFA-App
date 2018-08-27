@@ -47,7 +47,6 @@ func resetDefaults() {
     defaults.set("", forKey: "token")
     defaults.set([], forKey: "courses")
     defaults.set(nil, forKey: "image")
-    defaults.set(nil, forKey: "profile")
     defaults.set(nil, forKey: "userAPNToken")
     defaults.set(true, forKey: "event_ntf")
     defaults.set(true, forKey: "course_ntf")
@@ -77,6 +76,8 @@ let cellFont = UIFont(name: "Montserrat-Light", size: UIScreen.main.bounds.width
     UIFont.systemFont(ofSize: UIScreen.main.bounds.width*0.043)
 let displayFont = UIFont(name: "Montserrat-Regular", size: UIScreen.main.bounds.width*0.05) ??
     UIFont.systemFont(ofSize: UIScreen.main.bounds.width*0.05)
+let memberFont = UIFont(name: "Montserrat-Regular", size: UIScreen.main.bounds.width*0.04) ??
+    UIFont.systemFont(ofSize: UIScreen.main.bounds.width*0.04)
 let blockTextFont = UIFont(name: "OpenSans-Light", size: UIScreen.main.bounds.width*0.05) ??
     UIFont.systemFont(ofSize: UIScreen.main.bounds.width*0.05)
 

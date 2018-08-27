@@ -104,7 +104,7 @@ class DisplayBibleCourseVC: DisplayTemplateVC {
                         }
                     }
                     
-                    imageView.frame = CGRect(x: SIDE_MARGIN + FULL_WIDTH*0.235, y: offset,
+                    imageView.frame = CGRect(x: SIDE_MARGIN + FULL_WIDTH*0.23, y: offset,
                                              width: FULL_WIDTH/8, height: FULL_WIDTH/8)
                     imageView.layer.cornerRadius = imageView.frame.width/2
                     imageView.contentMode = .scaleAspectFill
@@ -113,9 +113,9 @@ class DisplayBibleCourseVC: DisplayTemplateVC {
                     imageView.layer.borderWidth = 1
                     scrollView.addSubview(imageView)
                     
-                    let label = UILabel(frame: CGRect(x: SIDE_MARGIN*2 + FULL_WIDTH*0.36 , y: offset,
-                                                      width: FULL_WIDTH*0.625 - SIDE_MARGIN*3, height: FULL_WIDTH/8))
-                    createListLabel(label: label, text: member[0]!, font: displayFont, color: .black, view: scrollView)
+                    let label = UILabel(frame: CGRect(x: SIDE_MARGIN*2 + FULL_WIDTH*0.35 , y: offset,
+                                                      width: FULL_WIDTH*0.65 - SIDE_MARGIN, height: FULL_WIDTH/8))
+                    createListLabel(label: label, text: member[0]!, font: memberFont, color: .black, view: scrollView)
                     label.textAlignment = .left
                     
                     if i + 1 != members.count {
@@ -127,12 +127,12 @@ class DisplayBibleCourseVC: DisplayTemplateVC {
                 }
                 
                 if members.isEmpty {
-                    offset += TOP_MARGIN/2
+                    offset += TOP_MARGIN
                     let label = UILabel(frame: CGRect(x: SIDE_MARGIN, y: offset,
                                                       width: FULL_WIDTH, height: categoryHeight))
                     createListLabel(label: label, text: "There are no members", font: displayFont, color: .gray,
                                     view: scrollView)
-                    offset += label.frame.height
+                    offset += label.frame.height + TOP_MARGIN/2
                 }
                 
                 offset += TOP_MARGIN/2

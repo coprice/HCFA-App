@@ -14,6 +14,7 @@ class ProfileCell: UITableViewCell {
     var cellWidth: CGFloat!
     var cellHeight: CGFloat!
     let picture = UIImageView()
+    let name = UILabel()
     
     func load() {
         frame = CGRect(x: 0, y: 0, width: cellWidth, height: cellHeight)
@@ -34,9 +35,7 @@ class ProfileCell: UITableViewCell {
         
         DispatchQueue.main.async {
             if let urlString = defaults.string(forKey: "image") {
-                if let data = defaults.object(forKey: "profile") as? Data {
-                    self.picture.image = UIImage(data: data)!
-                } else if let url = URL(string: urlString) {
+                if let url = URL(string: urlString) {
                     downloadImage(url: url, view: self.picture)
                 }
             }
@@ -44,8 +43,7 @@ class ProfileCell: UITableViewCell {
         
         let y = picture.frame.origin.y + picture.frame.height
         
-        let name = UILabel(frame: CGRect(x: 0, y: y,
-                                         width: cellWidth, height: (cellHeight - y)*0.8))
+        name.frame = CGRect(x: 0, y: y, width: cellWidth, height: (cellHeight - y)*0.8)
         name.text = "\(defaults.string(forKey: "first")!) \(defaults.string(forKey: "last")!)"
         name.textColor = .black
         name.font = UIFont(name: "Montserrat-Regular", size: cellWidth*0.0675) ??

@@ -49,9 +49,7 @@ class ProfileVC: FormViewController {
         
         DispatchQueue.main.async {
             if let urlString = defaults.string(forKey: "image") {
-                if let data = defaults.object(forKey: "profile") as? Data {
-                    self.picture.setImage(UIImage(data: data), for: .normal)
-                } else if let url = URL(string: urlString) {
+                if let url = URL(string: urlString) {
                     downloadImage(url: url, button: self.picture)
                 }
             }
@@ -230,6 +228,7 @@ class ProfileVC: FormViewController {
 
                         API.updateImage(uid: uid, token: defaults.string(forKey: "token")!, image: imageURL,
                                         completionHandler: { _, _ in })
+                        URLCache.shared.removeAllCachedResponses()
                         defaults.set(imageURL, forKey: "image")
                     }
                 }
@@ -285,8 +284,16 @@ class ProfileVC: FormViewController {
             let last = last!
             let email = email!
             
+            self.view.addSubview(loadingView)
+            self.navigationController!.navigationBar.isUserInteractionEnabled = false
+            self.view.isUserInteractionEnabled = false
+            
             API.updateContact(uid: defaults.integer(forKey: "uid"), token: defaults.string(forKey: "token")!,
                               first: first, last: last, email: email) { (response, data) in
+                
+                self.loadingView.removeFromSuperview()
+                self.navigationController!.navigationBar.isUserInteractionEnabled = true
+                self.view.isUserInteractionEnabled = true
                 
                 switch response {
                 case .NotConnected:
@@ -302,6 +309,8 @@ class ProfileVC: FormViewController {
                     defaults.set(first, forKey: "first")
                     defaults.set(last, forKey: "last")
                     defaults.set(email, forKey: "email")
+                    
+                    self.profileCell.name.text = "\(first) \(last)"
                     self.displayingSave = false
                     self.hostVC.navigationItem.rightBarButtonItem = nil
                     self.picture.isUserInteractionEnabled = true
@@ -353,7 +362,6 @@ extension ProfileVC: UINavigationControllerDelegate, UIImagePickerControllerDele
                     self.uploadImage(data: data, setImages: {
                         self.picture.setImage(image, for: .normal)
                         self.profileCell.picture.image = image
-                        defaults.set(data, forKey: "profile")
                     })
                 }
             default:

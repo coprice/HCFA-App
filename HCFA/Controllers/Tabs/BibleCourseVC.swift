@@ -321,6 +321,8 @@ class BibleCourseVC: TemplateVC {
             
             if self.firstAppearance {
                 self.firstAppearance = false
+            } else {
+                URLCache.shared.removeAllCachedResponses()
             }
 
             switch response {

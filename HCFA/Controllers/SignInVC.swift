@@ -384,16 +384,6 @@ class SignInVC: UIViewController {
         })
     }
     
-    func downloadProfile(url: URL) {
-        getDataFromUrl(url: url) { data, response, error in
-            guard let data = data, error == nil else { return }
-            
-            DispatchQueue.main.async() {
-                defaults.set(data, forKey: "profile")
-            }
-        }
-    }
-    
     func startSpinner() {
         
         let submitY = scrollView.frame.origin.y + submit.frame.origin.y
@@ -473,13 +463,9 @@ class SignInVC: UIViewController {
                         defaults.set(data["team_ntf"] as! Bool, forKey: "team_ntf")
                         
                         if let imageURL = data["image"] as? String {
-                            if let url = URL(string: imageURL) {
-                                defaults.set(imageURL, forKey: "image")
-                                self.downloadProfile(url: url)
-                            }
+                            defaults.set(imageURL, forKey: "image")
                         } else {
                             defaults.set(nil, forKey: "image")
-                            defaults.set(nil, forKey: "profile")
                         }
 
                         if let apnTokens = data["apn_tokens"] as? [String] {
@@ -553,7 +539,6 @@ class SignInVC: UIViewController {
                         defaults.set(false, forKey: "admin")
                         defaults.set(false, forKey: "leader")
                         defaults.set(nil, forKey: "image")
-                        defaults.set(nil, forKey: "profile")
                         defaults.set(true, forKey: "event_ntf")
                         defaults.set(true, forKey: "course_ntf")
                         defaults.set(true, forKey: "team_ntf")

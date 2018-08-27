@@ -64,7 +64,7 @@ class TemplateVC: UIViewController {
     func hideUpButton() {
         showingUpButton = false
         UIView.beginAnimations(nil, context: nil)
-        UIView.setAnimationDuration(0.05)
+        UIView.setAnimationDuration(0.2)
         UIView.setAnimationCurve(.linear)
         UIView.setAnimationBeginsFromCurrentState(true)
         upButton.transform = CGAffineTransform(translationX: upButton.frame.width*1.5, y: 0)
