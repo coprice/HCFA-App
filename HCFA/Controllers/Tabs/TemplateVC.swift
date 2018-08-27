@@ -97,7 +97,7 @@ extension TemplateVC: UIScrollViewDelegate {
         if tableView.contentOffset.y > tableView.frame.height/2 && !showingUpButton {
             showUpButton()
             
-        } else if tableView.contentOffset.y < tableView.frame.height/2 && showingUpButton {
+        } else if tableView.contentOffset.y == 0 && showingUpButton {
             hideUpButton()
         }
     }

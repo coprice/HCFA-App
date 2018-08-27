@@ -130,14 +130,14 @@ class BibleCourseVC: TemplateVC {
         
         switch displayingGender {
         case .Men:
-            return year + " MEN"
+            return "\(year) MEN"
         case .Women:
-            return year + " WOMEN"
+            return "\(year) WOMEN"
         default:
             if section % 2 == 0 {
-                return year + " MEN"
+                return "\(year) MEN"
             }
-            return year + " WOMEN"
+            return "\(year) WOMEN"
         }
     }
     
