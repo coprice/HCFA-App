@@ -17,7 +17,7 @@ class ForgotPasswordVC: FormViewController {
         super.viewDidLoad()
         
         tableView.backgroundColor = lightColor
-        navigationAccessoryView.tintColor = redColor
+        navigationAccessoryView.barTintColor = redColor
         loadingView = LoadingView(frame: CGRect(x: view.frame.width*0.375,
                                                 y: view.frame.height/2 - view.frame.width*0.125,
                                                 width: view.frame.width*0.25, height: view.frame.width*0.25))

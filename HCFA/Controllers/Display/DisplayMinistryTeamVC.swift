@@ -110,7 +110,7 @@ class DisplayMinistryTeamVC: DisplayTemplateVC {
                     
                     let label = UILabel(frame: CGRect(x: SIDE_MARGIN*2 + FULL_WIDTH*0.36 , y: offset,
                                                       width: FULL_WIDTH*0.625 - SIDE_MARGIN*3, height: FULL_WIDTH/8))
-                    createListLabel(label: label, text: member[0]!, font: displayFont, color: .black, view: scrollView)
+                    createListLabel(label: label, text: member[0]!, font: memberFont, color: .black, view: scrollView)
                     label.textAlignment = .left
                     
                     if i + 1 != members.count {
@@ -234,14 +234,19 @@ class DisplayMinistryTeamVC: DisplayTemplateVC {
     }
     
     @objc func addToCalendar() {
-        let backItem = UIBarButtonItem()
-        backItem.title = "Back"
-        navigationItem.backBarButtonItem = backItem
-        
-        let calendarVC = CalendarVC()
-        calendarVC.data = data
-        calendarVC.type = .Team
-        navigationController!.pushViewController(calendarVC, animated: true)
+        if shouldDisplayCalendar() {
+            let backItem = UIBarButtonItem()
+            backItem.title = "Back"
+            navigationItem.backBarButtonItem = backItem
+            
+            let calendarVC = CalendarVC()
+            calendarVC.data = data
+            calendarVC.type = .Team
+            navigationController!.pushViewController(calendarVC, animated: true)
+        } else {
+            createAlert(title: "Access not granted", message: "Go to Settings > HCFA > Turn on Calendars",
+                        view: self)
+        }
     }
     
     @objc func leaveMT() {

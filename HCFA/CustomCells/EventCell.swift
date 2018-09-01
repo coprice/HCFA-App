@@ -67,7 +67,7 @@ class EventCell: UITableViewCell {
         let endDateString = dateFormatter.string(from: endDate)
         
         if startDateString == endDateString {
-            dateFormatter.dateFormat = "MMM d, YYYY"
+            dateFormatter.dateFormat = "EE - MMM d"
             date.text = "\(dateFormatter.string(from: startDate)) | \(startTime)-\(endTime)"
 
         } else {

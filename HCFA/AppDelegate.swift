@@ -27,6 +27,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         let barAppearance = UINavigationBar.appearance()
         barAppearance.barTintColor = redColor
         barAppearance.backgroundColor = redColor
+        barAppearance.tintColor = .white
         barAppearance.titleTextAttributes =
             [NSAttributedStringKey.foregroundColor: UIColor.white,
              NSAttributedStringKey.font: UIFont(name: "Montserrat-Medium", size: window!.frame.width/18)!]
@@ -45,16 +46,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         let signIn = SignInVC()
         
         if let notification = launchOptions?[.remoteNotification] as? [String: AnyObject] {
-            let aps = notification["aps"] as! [String: AnyObject]
             
-            if let category = aps["category"] as? String {
-                switch category {
-                case "team":
-                    signIn.defaultTab = Tabs.MinistryTeams
-                case "course":
-                    signIn.defaultTab = Tabs.BibleCourses
-                default:
-                    signIn.defaultTab = Tabs.Events
+            if let aps = notification["aps"] as? [String: AnyObject] {
+                if let category = aps["category"] as? String {
+                    switch category {
+                    case "team":
+                        signIn.defaultTab = Tabs.MinistryTeams
+                    case "course":
+                        signIn.defaultTab = Tabs.BibleCourses
+                    default:
+                        signIn.defaultTab = Tabs.Events
+                    }
                 }
             }
         }
@@ -70,36 +72,36 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
                       fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
         
         let signIn = SignInVC()
-        let aps = (userInfo["aps"] as! [String: AnyObject])
         
-        if let category = aps["category"] as? String {
-            switch category {
-            case "team":
-                signIn.defaultTab = Tabs.MinistryTeams
-            case "course":
-                signIn.defaultTab = Tabs.BibleCourses
-            default:
-                signIn.defaultTab = Tabs.Events
+        if let aps = userInfo["aps"] as? [String: AnyObject] {
+            if let category = aps["category"] as? String {
+                switch category {
+                case "team":
+                    signIn.defaultTab = Tabs.MinistryTeams
+                case "course":
+                    signIn.defaultTab = Tabs.BibleCourses
+                default:
+                    signIn.defaultTab = Tabs.Events
+                }
             }
-        }
-        
-        if UIApplication.shared.applicationState != .active {
-            window?.rootViewController = signIn
-            window?.makeKeyAndVisible()
-        } else {
-            if let alert = aps["alert"] as? String {
+            
+            if UIApplication.shared.applicationState != .active {
+                window?.rootViewController = signIn
+                window?.makeKeyAndVisible()
                 
-                let root = window!.rootViewController as! SignInVC
-                
-                if let nav = root.nav {
-                    createAlert(title: "", message: alert, view: nav.viewControllers.last!)
-                } else {
-                    createAlert(title: "", message: alert, view: root)
+            } else {
+                if let alert = aps["alert"] as? String {
+                    if let root = window?.rootViewController as? SignInVC {
+                        if let nav = root.nav {
+                            createAlert(title: "", message: alert, view: nav.viewControllers.last!)
+                        } else {
+                            createAlert(title: "", message: alert, view: root)
+                        }
+                    }
                 }
             }
         }
     }
-    
     
     func applicationWillResignActive(_ application: UIApplication) {
         // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
@@ -148,15 +150,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
                 }
             }
         }
-        
-        EKEventStore().requestAccess(to: .event, completion: {_, _ in })
     }
     
     func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
-        // 1. Print out error if PNs registration not successful
         print("Failed to register for remote notifications with error: \(error)")
-        
-        EKEventStore().requestAccess(to: .event, completion: {_, _ in })
     }
     
     func registerForPushNotifications() {

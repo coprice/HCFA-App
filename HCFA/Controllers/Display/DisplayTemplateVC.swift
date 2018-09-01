@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import EventKit
 
 class DisplayTemplateVC: UIViewController {
     
@@ -18,6 +19,22 @@ class DisplayTemplateVC: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
+    }
+    
+    func shouldDisplayCalendar() -> Bool {
+        
+        var granted: Bool!
+        
+        let group = DispatchGroup()
+        group.enter()
+        
+        EKEventStore().requestAccess(to: .event, completion: {grantedAccess, error in
+            granted = grantedAccess
+            group.leave()
+        })
+        
+        group.wait()
+        return granted
     }
     
     func backToSignIn() {

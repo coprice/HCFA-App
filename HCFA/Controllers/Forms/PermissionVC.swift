@@ -16,7 +16,6 @@ class PermissionVC: FormViewController, TypedRowControllerType {
         super.viewDidLoad()
         
         tableView.backgroundColor = lightColor
-        navigationAccessoryView.barTintColor = redColor
         hostVC = navigationController?.viewControllers.first as! HostVC
         
         form +++ Section("Leaders")

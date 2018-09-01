@@ -275,7 +275,7 @@ class CalendarVC: FormViewController {
 
                 if !granted {
                     createAlert(title: "Access not granted",
-                                message: "Go to Settings > HCFA > toggle Calendars on",
+                                message: "Go to Settings > HCFA > Turn on Calendars",
                                 view: hostVC)
                 } else if error == nil {
 

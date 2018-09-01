@@ -49,7 +49,7 @@ class DisplayEventVC: DisplayTemplateVC {
             let startTime = dateFormatter.string(from: startDate).lowercased()
             let endTime = dateFormatter.string(from: endDate).lowercased()
             
-            dateFormatter.dateFormat = "MMMM d, YYYY"
+            dateFormatter.dateFormat = "MMMM d"
             let startDateString = dateFormatter.string(from: startDate)
             let endDateString = dateFormatter.string(from: endDate)
             
@@ -86,24 +86,18 @@ class DisplayEventVC: DisplayTemplateVC {
                                                 color: redColor, alignment: .left)
                 scrollView.addSubview(ends)
                 
-                let startStrings = startDateString.split(separator: Character(","))
-                let endStrings = endDateString.split(separator: Character(","))
-                
-                let startingDateString =
-                "\(startStrings[0])\(daySuffix(from: startDate)),\(startStrings[1]) at \(endTime)"
-                
-                let endingDateString = "\(endStrings[0])\(daySuffix(from: endDate)),\(endStrings[1]) at \(endTime)"
-                
+                let startText = "\(startDateString)\(daySuffix(from: startDate)) at \(startTime)"
                 let startDateLabel = createLabel(frame: CGRect(x: SIDE_MARGIN*5, y: offset,
                                                                width: view.frame.width*0.7, height: height/2),
-                                                 text: startingDateString, font: displayFont,
-                                                 color: .black, alignment: .left, fitToWidth: true)
+                                                 text: startText, font: displayFont, color: .black,
+                                                 alignment: .left, fitToWidth: true)
                 scrollView.addSubview(startDateLabel)
                 
+                let endText = "\(endDateString)\(daySuffix(from: endDate)) at \(endTime)"
                 let endDateLabel = createLabel(frame: CGRect(x: SIDE_MARGIN*5, y: offset + height/2,
                                                              width: view.frame.width*0.7, height: height/2),
-                                               text: endingDateString, font: displayFont,
-                                               color: .black, alignment: .left, fitToWidth: true)
+                                               text: endText, font: displayFont, color: .black,
+                                               alignment: .left, fitToWidth: true)
                 scrollView.addSubview(endDateLabel)
                 offset += height
             }
@@ -193,13 +187,19 @@ class DisplayEventVC: DisplayTemplateVC {
     }
     
     @objc func addToCalendar() {
-        let backItem = UIBarButtonItem()
-        backItem.title = "Back"
-        navigationItem.backBarButtonItem = backItem
         
-        let calendarVC = CalendarVC()
-        calendarVC.data = data
-        calendarVC.type = .Event
-        navigationController!.pushViewController(calendarVC, animated: true)
+        if shouldDisplayCalendar() {
+            let backItem = UIBarButtonItem()
+            backItem.title = "Back"
+            navigationItem.backBarButtonItem = backItem
+            
+            let calendarVC = CalendarVC()
+            calendarVC.data = data
+            calendarVC.type = .Event
+            navigationController!.pushViewController(calendarVC, animated: true)
+        } else {
+            createAlert(title: "Access not granted", message: "Go to Settings > HCFA > Turn on Calendars",
+                        view: self)
+        }
     }
 }

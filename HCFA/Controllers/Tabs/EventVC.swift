@@ -103,9 +103,9 @@ class EventVC: TemplateVC {
         let backItem = UIBarButtonItem()
         backItem.title = hostVC.navigationItem.title
         hostVC.navigationItem.backBarButtonItem = backItem
-
+        
         if defaults.bool(forKey: "admin") || defaults.bool(forKey: "leader") {
-            if !displayingUpcoming {
+            if !displayingUpcoming && !pastRows.isEmpty {
                 hostVC.navigationItem.rightBarButtonItems = [hostVC.create, select]
             } else {
                 hostVC.navigationItem.rightBarButtonItem = hostVC.create

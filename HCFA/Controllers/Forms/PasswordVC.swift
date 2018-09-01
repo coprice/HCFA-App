@@ -18,6 +18,7 @@ class PasswordViewController: FormViewController, TypedRowControllerType {
 
         tableView.backgroundColor = lightColor
         hostVC = navigationController?.viewControllers.first as! HostVC
+        navigationAccessoryView.barTintColor = redColor
         loadingView = LoadingView(frame: CGRect(x: view.frame.width*0.375,
                                                 y: view.frame.height/2 - view.frame.width*0.125,
                                                 width: view.frame.width*0.25, height: view.frame.width*0.25))
@@ -30,6 +31,7 @@ class PasswordViewController: FormViewController, TypedRowControllerType {
             row.cellUpdate { cell, row in
                 cell.textLabel?.font = formFont
                 cell.textField.font = formFont
+                cell.textField.textContentType = UITextContentType("")
             }
             row.onCellHighlightChanged { cell, row in
                 cell.textLabel?.textColor = redColor
@@ -43,6 +45,7 @@ class PasswordViewController: FormViewController, TypedRowControllerType {
             row.cellUpdate { cell, row in
                 cell.textLabel?.font = formFont
                 cell.textField.font = formFont
+                cell.textField.textContentType = UITextContentType("")
             }
             row.onCellHighlightChanged { cell, row in
                 cell.textLabel?.textColor = redColor
@@ -56,6 +59,7 @@ class PasswordViewController: FormViewController, TypedRowControllerType {
             row.cellUpdate { cell, row in
                 cell.textLabel?.font = formFont
                 cell.textField.font = formFont
+                cell.textField.textContentType = UITextContentType("")
             }
             row.onCellHighlightChanged { cell, row in
                 cell.textLabel?.textColor = redColor

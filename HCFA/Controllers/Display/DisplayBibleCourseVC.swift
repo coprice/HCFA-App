@@ -266,14 +266,19 @@ class DisplayBibleCourseVC: DisplayTemplateVC {
     }
     
     @objc func addToCalendar() {
-        let backItem = UIBarButtonItem()
-        backItem.title = "Back"
-        navigationItem.backBarButtonItem = backItem
-        
-        let calendarVC = CalendarVC()
-        calendarVC.data = data
-        calendarVC.type = .Course
-        navigationController!.pushViewController(calendarVC, animated: true)
+        if shouldDisplayCalendar() {
+            let backItem = UIBarButtonItem()
+            backItem.title = "Back"
+            navigationItem.backBarButtonItem = backItem
+            
+            let calendarVC = CalendarVC()
+            calendarVC.data = data
+            calendarVC.type = .Course
+            navigationController!.pushViewController(calendarVC, animated: true)
+        } else {
+            createAlert(title: "Access not granted", message: "Go to Settings > HCFA > Turn on Calendars",
+                        view: self)
+        }
     }
     
     @objc func leaveBC() {
