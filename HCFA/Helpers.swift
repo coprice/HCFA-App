@@ -51,6 +51,7 @@ func resetDefaults() {
     defaults.set(true, forKey: "event_ntf")
     defaults.set(true, forKey: "course_ntf")
     defaults.set(true, forKey: "team_ntf")
+    defaults.set(nil, forKey: "calendar")
 }
 
 // -- Colors --

@@ -85,16 +85,16 @@ class SignInVC: UIViewController {
                 
                 self.banner.removeFromSuperview()
                             
-                if response == .Success {
+                if response == .InvalidSession {
+                    resetDefaults()
+                    self.handleLogin()
+                
+                } else {
                     self.atLaunch = false
                     let hostVC = HostVC()
                     hostVC.defaultTab = self.defaultTab
                     self.nav = UINavigationController(rootViewController: hostVC)
                     self.present(self.nav!, animated: true, completion: nil)
-                
-                } else {
-                    resetDefaults()
-                    self.handleLogin()
                 }
             })
         }

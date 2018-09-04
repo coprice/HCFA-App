@@ -243,7 +243,12 @@ class CalendarVC: FormViewController {
         <<< PushRow<String>(){ row in
             row.title = "Calendar"
             row.options = Array(Set(eventStore.calendars(for: .event).map({ $0.title })))
-            row.value = eventStore.defaultCalendarForNewEvents?.title
+            
+            if let calendar = getCalendar(withTitle: defaults.string(forKey: "calendar")) {
+                row.value = calendar.title
+            } else {
+                row.value = eventStore.defaultCalendarForNewEvents?.title
+            }
             row.tag = "calendar"
         }
         .onPresent({ from, to in
@@ -256,6 +261,11 @@ class CalendarVC: FormViewController {
             cell.textLabel?.font = formFont
             cell.detailTextLabel?.font = formFont
             self.form.rowBy(tag: "endRepeat")?.evaluateHidden()
+        })
+        .onChange({ row in
+            if let title = row.value {
+                defaults.set(title, forKey: "calendar")
+            }
         })
         
         +++ Section()
@@ -282,23 +292,15 @@ class CalendarVC: FormViewController {
                     let values = self.form.values()
                     let event = EKEvent(eventStore: self.eventStore)
                     
-                    event.title = values["title"] as! String
-                    event.startDate = values["start"] as! Date
-                    event.endDate = values["end"] as! Date
-                    event.location = (values["location"] as! String)
-                    event.notes = (values["notes"] as! String)
+                    event.title = values["title"] as? String
+                    event.startDate = values["start"] as? Date
+                    event.endDate = values["end"] as? Date
+                    event.location = values["location"] as? String
+                    event.notes = values["notes"] as? String
                     event.alarms = self.getAlarmsFor(event.startDate)
                     
-                    var calendar: EKCalendar? = nil
-                    for cal in self.eventStore.calendars(for: .event) {
-                        if cal.title == (values["calendar"] as! String) {
-                            calendar = cal
-                        }
-                    }
-                    
-                    if let calendar = calendar {
+                    if let calendar = self.getCalendar(withTitle: values["calendar"] as? String) {
                         event.calendar = calendar
-                        print("using calendar \(calendar.title)")
                     } else {
                         event.calendar = self.eventStore.defaultCalendarForNewEvents
                     }
@@ -310,7 +312,7 @@ class CalendarVC: FormViewController {
                         
                         var endRepeat: EKRecurrenceEnd? = nil
                         
-                        if (values["endRepeat"] as! String) == "Date" {
+                        if values["endRepeat"] as? String == "Date" {
                             endRepeat = EKRecurrenceEnd(end: (values["endRepeatDate"] as! Date))
                         }
                         
@@ -352,6 +354,17 @@ class CalendarVC: FormViewController {
 
 // HELPERS
 extension CalendarVC {
+    
+    func getCalendar(withTitle title: String?) -> EKCalendar? {
+        guard let title = title else { return nil }
+        
+        for cal in self.eventStore.calendars(for: .event) {
+            if cal.title == title {
+                return cal
+            }
+        }
+        return nil
+    }
     
     func getStartAndEndTimes(start: String, end: String) -> (Date, Date) {
         let gregorian = Calendar(identifier: .gregorian)
