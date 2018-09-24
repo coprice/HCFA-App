@@ -46,12 +46,34 @@ class TemplateVC: UIViewController {
         hostVC.navigationItem.rightBarButtonItems = nil
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        if shouldShowUpButton() {
+            showUpButton()
+        }
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        if showingUpButton {
+            hideUpButton()
+        }
+    }
+    
     func backToSignIn() {
         resetDefaults()
         let signInVC = navigationController!.presentingViewController!
         dismiss(animated: true, completion: {
             createAlert(title: "Session Expired", message: "", view: signInVC)
         })
+    }
+    
+    func shouldShowUpButton() -> Bool {
+        return tableView.contentOffset.y >= tableView.frame.height/2 && !showingUpButton
+    }
+    
+    func shouldHideUpButton() -> Bool {
+        return tableView.contentOffset.y < tableView.frame.height/2 && showingUpButton
     }
     
     func showUpButton() {
@@ -94,10 +116,9 @@ extension TemplateVC: UIScrollViewDelegate {
     }
     
     func scrollingFinish() -> Void {
-        if tableView.contentOffset.y > tableView.frame.height/2 && !showingUpButton {
+        if shouldShowUpButton() {
             showUpButton()
-            
-        } else if tableView.contentOffset.y == 0 && showingUpButton {
+        } else if shouldHideUpButton() {
             hideUpButton()
         }
     }

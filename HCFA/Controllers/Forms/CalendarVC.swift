@@ -25,6 +25,7 @@ class CalendarVC: FormViewController {
         super.viewDidLoad()
         
         tableView.backgroundColor = lightColor
+        navigationAccessoryView.barTintColor = redColor
         
         title = "Add to Calendar"
         
