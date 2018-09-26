@@ -17,7 +17,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
     
     var window: UIWindow?
     
-    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         
         registerForPushNotifications()
         
@@ -29,17 +29,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         barAppearance.backgroundColor = redColor
         barAppearance.tintColor = .white
         barAppearance.titleTextAttributes =
-            [NSAttributedStringKey.foregroundColor: UIColor.white,
-             NSAttributedStringKey.font: UIFont(name: "Montserrat-Medium", size: window!.frame.width/18)!]
+            [NSAttributedString.Key.foregroundColor: UIColor.white,
+             NSAttributedString.Key.font: UIFont(name: "Montserrat-Medium", size: window!.frame.width/18)!]
         
         // Navigation bar button appearances
         let itemAppearance = UIBarButtonItem.appearance()
         itemAppearance.tintColor = .white
-        itemAppearance.setTitleTextAttributes([NSAttributedStringKey.foregroundColor: UIColor.white,
-                                               NSAttributedStringKey.font: UIFont(name: "Montserrat-Medium",
+        itemAppearance.setTitleTextAttributes([NSAttributedString.Key.foregroundColor: UIColor.white,
+                                               NSAttributedString.Key.font: UIFont(name: "Montserrat-Medium",
                                                                                   size: window!.frame.width/24)!],
                                               for: .normal)
-        itemAppearance.setTitleTextAttributes([NSAttributedStringKey.font: UIFont(name: "Montserrat-Medium",
+        itemAppearance.setTitleTextAttributes([NSAttributedString.Key.font: UIFont(name: "Montserrat-Medium",
                                                                                   size: window!.frame.width/24)!],
                                               for: .highlighted)
         

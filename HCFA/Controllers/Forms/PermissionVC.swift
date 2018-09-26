@@ -16,7 +16,7 @@ class PermissionVC: FormViewController, TypedRowControllerType {
         super.viewDidLoad()
         
         tableView.backgroundColor = lightColor
-        hostVC = navigationController?.viewControllers.first as! HostVC
+        hostVC = (navigationController?.viewControllers.first as! HostVC)
         
         form +++ Section("Leaders")
         <<< ButtonRowWithPresent<SetPermissionVC> { row in

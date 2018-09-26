@@ -21,7 +21,7 @@ class RequestVC: FormViewController {
         
         tableView.backgroundColor = lightColor
         navigationAccessoryView.barTintColor = redColor
-        hostVC = navigationController?.viewControllers.first as! HostVC
+        hostVC = (navigationController?.viewControllers.first as! HostVC)
         navBar = navigationController!.navigationBar
         loadingView = LoadingView(frame: CGRect(x: view.frame.width*0.375,
                                                 y: view.frame.height/2 - view.frame.width*0.125,

@@ -19,7 +19,7 @@ extension UIFont {
         while tempMin <= tempMax {
             mid = tempMin + (tempMax - tempMin) / 2
             
-            difference = Int((labelSize.height - testString.size(withAttributes: [NSAttributedStringKey.font: UIFont.systemFont(ofSize: CGFloat(mid))]).height))
+            difference = Int((labelSize.height - testString.size(withAttributes: [NSAttributedString.Key.font: UIFont.systemFont(ofSize: CGFloat(mid))]).height))
             if mid == tempMin || mid == tempMax {
                 if difference < 0 {
                     return (UIFont(name: fontName, size: CGFloat((mid - 1))))!

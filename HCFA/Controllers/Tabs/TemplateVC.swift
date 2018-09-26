@@ -22,7 +22,7 @@ class TemplateVC: UIViewController {
         super.viewDidLoad()
         
         view.backgroundColor = lightColor
-        hostVC = navigationController?.viewControllers.first as! HostVC
+        hostVC = (navigationController?.viewControllers.first as! HostVC)
         
         let barHeight = navigationController!.navigationBar.frame.height
         let BUTTON_LENGTH = barHeight*0.6

@@ -88,14 +88,14 @@ let TOGGLE_HEIGHT = UIScreen.main.bounds.height*0.06
 // -- Alerts --
 
 func createAlert(title: String, message: String, view: UIViewController) {
-    let alert = UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.alert)
-    alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
+    let alert = UIAlertController(title: title, message: message, preferredStyle: UIAlertController.Style.alert)
+    alert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: nil))
     view.present(alert, animated: true, completion: nil)
 }
 
 func createAlert(title: String, message: String, view: UIViewController, completion: @escaping () -> Void) {
-    let alert = UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.alert)
-    alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
+    let alert = UIAlertController(title: title, message: message, preferredStyle: UIAlertController.Style.alert)
+    alert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: nil))
     view.present(alert, animated: true, completion: completion)
 }
 
@@ -127,7 +127,7 @@ func createUnderlineLabel(frame: CGRect, text: String, font: UIFont, color: UICo
                           alignment: NSTextAlignment) -> UILabel {
     let label = UILabel(frame: frame)
     let underline = NSMutableAttributedString(string: text)
-    underline.addAttribute(NSAttributedStringKey.underlineStyle, value: 1, range: NSMakeRange(0, underline.length))
+    underline.addAttribute(NSAttributedString.Key.underlineStyle, value: 1, range: NSMakeRange(0, underline.length))
     label.attributedText = underline
     label.font = font
     label.textAlignment = alignment

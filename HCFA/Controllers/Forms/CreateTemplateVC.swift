@@ -20,7 +20,7 @@ class CreateTemplateVC: FormViewController {
         tableView.backgroundColor = lightColor
         navigationAccessoryView.barTintColor = redColor
         navBar = navigationController!.navigationBar
-        hostVC = navigationController?.viewControllers.first as! HostVC
+        hostVC = (navigationController?.viewControllers.first as! HostVC)
         
         loadingView = LoadingView(frame: CGRect(x: view.frame.width*0.375,
                                                 y: view.frame.height/2 - view.frame.width*0.125,

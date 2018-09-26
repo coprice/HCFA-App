@@ -21,7 +21,7 @@ class CreateBibleCourseVC: CreateTemplateVC {
         super.viewDidLoad()
 
         done = UIBarButtonItem(title: "Done", style: .done, target: self, action: #selector(doneTapped))
-        courseVC = hostVC.contentViewControllers[Tabs.BibleCourses] as! BibleCourseVC
+        courseVC = (hostVC.contentViewControllers[Tabs.BibleCourses] as! BibleCourseVC)
         
         let today = Calendar.current.date(bySetting: .minute, value: 0, of: Date())
         

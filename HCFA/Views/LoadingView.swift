@@ -20,7 +20,7 @@ class LoadingView: UIView {
         
         let spinner = UIActivityIndicatorView(frame: CGRect(x: 0, y: 0,
                                                             width: frame.width, height: frame.height))
-        spinner.activityIndicatorViewStyle = .whiteLarge
+        spinner.style = .whiteLarge
         spinner.tintColor = redColor
         spinner.color = redColor
         spinner.startAnimating()

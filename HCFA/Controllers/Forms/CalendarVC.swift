@@ -51,7 +51,7 @@ class CalendarVC: FormViewController {
             let (sd, ed) = getStartAndEndTimes(start: (data["start"] as! String), end: (data["end"] as! String))
             startDate = sd
             endDate = ed
-            notes = data["material"] as! String
+            notes = (data["material"] as! String)
         
         } else if type == .Team {
             titleString = (data["name"] as! String) + " Meeting"
@@ -158,7 +158,7 @@ class CalendarVC: FormViewController {
                 cell.detailTextLabel?.font = formFont
                 self.form.rowBy(tag: "endRepeat")?.evaluateHidden()
             })
-            
+
             <<< PushRow<String>() { row in
                 row.title = "End Repeat"
                 row.options = ["Never", "Date"]

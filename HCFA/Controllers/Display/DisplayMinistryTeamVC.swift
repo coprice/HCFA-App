@@ -23,7 +23,7 @@ class DisplayMinistryTeamVC: DisplayTemplateVC {
         
         if firstAppearance {
             firstAppearance = false
-            hostVC = navigationController!.viewControllers.first as! HostVC
+            hostVC = (navigationController!.viewControllers.first as! HostVC)
             
             edit = UIBarButtonItem(title: "Edit", style: .done, target: self, action: #selector(editTapped))
             
@@ -295,11 +295,16 @@ class DisplayMinistryTeamVC: DisplayTemplateVC {
     @objc func joinMT() {
         let requestVC = RequestVC()
         requestVC.isCourse = false
-        requestVC.id = data["tid"] as! Int
+        requestVC.id = (data["tid"] as! Int)
         navigationController!.pushViewController(requestVC, animated: true)
     }
     
     @objc func groupmeLink() {
-        UIApplication.shared.open(URL(string: data["groupme"] as! String)!, options: [:], completionHandler: nil)
+        UIApplication.shared.open(URL(string: data["groupme"] as! String)!, options: convertToUIApplicationOpenExternalURLOptionsKeyDictionary([:]), completionHandler: nil)
     }
+}
+
+// Helper function inserted by Swift 4.2 migrator.
+fileprivate func convertToUIApplicationOpenExternalURLOptionsKeyDictionary(_ input: [String: Any]) -> [UIApplication.OpenExternalURLOptionsKey: Any] {
+	return Dictionary(uniqueKeysWithValues: input.map { key, value in (UIApplication.OpenExternalURLOptionsKey(rawValue: key), value)})
 }

@@ -14,7 +14,7 @@ class DisplayEventVC: DisplayTemplateVC {
         super.viewWillAppear(animated)
         
         if firstAppearance {
-            hostVC = navigationController!.viewControllers.first as! HostVC
+            hostVC = (navigationController!.viewControllers.first as! HostVC)
             firstAppearance = false
             
             edit = UIBarButtonItem(title: "Edit", style: .done, target: self, action: #selector(editTapped))

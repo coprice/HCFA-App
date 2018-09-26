@@ -27,9 +27,9 @@ class ProfileVC: FormViewController {
         super.viewDidLoad()
         
         tableView.backgroundColor = lightColor
-        hostVC = navigationController?.viewControllers.first as! HostVC
-        sideMenu = hostVC.menuViewController as! SideMenuVC
-        profileCell = sideMenu.tableView.cellForRow(at: IndexPath(row: 0, section: 0)) as! ProfileCell
+        hostVC = (navigationController?.viewControllers.first as! HostVC)
+        sideMenu = (hostVC.menuViewController as! SideMenuVC)
+        profileCell = (sideMenu.tableView.cellForRow(at: IndexPath(row: 0, section: 0)) as! ProfileCell)
 
         navigationAccessoryView.barTintColor = redColor
         
@@ -345,9 +345,12 @@ class ProfileVC: FormViewController {
 extension ProfileVC: UINavigationControllerDelegate, UIImagePickerControllerDelegate {
     
     func imagePickerController(_ picker: UIImagePickerController,
-                                        didFinishPickingMediaWithInfo info: [String : Any]) {
+                                        didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+// Local variable inserted by Swift 4.2 migrator.
+let info = convertFromUIImagePickerControllerInfoKeyDictionary(info)
+
         
-        let image = info[UIImagePickerControllerEditedImage] as! UIImage
+        let image = info[convertFromUIImagePickerControllerInfoKey(UIImagePickerController.InfoKey.editedImage)] as! UIImage
         picker.dismiss(animated: true, completion: nil)
         navigationController!.navigationBar.isUserInteractionEnabled = false
         tableView.isUserInteractionEnabled = false
@@ -358,7 +361,7 @@ extension ProfileVC: UINavigationControllerDelegate, UIImagePickerControllerDele
             
             switch response {
             case .Success:
-                if let data = UIImageJPEGRepresentation(image, 0.6) {
+                if let data = image.jpegData(compressionQuality: 0.6) {
                     self.uploadImage(data: data, setImages: {
                         self.picture.setImage(image, for: .normal)
                         self.profileCell.picture.image = image
@@ -369,4 +372,14 @@ extension ProfileVC: UINavigationControllerDelegate, UIImagePickerControllerDele
             }
         }
     }
+}
+
+// Helper function inserted by Swift 4.2 migrator.
+fileprivate func convertFromUIImagePickerControllerInfoKeyDictionary(_ input: [UIImagePickerController.InfoKey: Any]) -> [String: Any] {
+	return Dictionary(uniqueKeysWithValues: input.map {key, value in (key.rawValue, value)})
+}
+
+// Helper function inserted by Swift 4.2 migrator.
+fileprivate func convertFromUIImagePickerControllerInfoKey(_ input: UIImagePickerController.InfoKey) -> String {
+	return input.rawValue
 }

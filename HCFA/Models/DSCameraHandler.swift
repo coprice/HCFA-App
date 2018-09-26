@@ -18,9 +18,9 @@ class DSCameraHandler: NSObject {
     private let isCameraAvailable = UIImagePickerController.isSourceTypeAvailable(.camera)
     private let isRearCameraAvailable = UIImagePickerController.isCameraDeviceAvailable(.rear)
     private let isFrontCameraAvailable = UIImagePickerController.isCameraDeviceAvailable(.front)
-    private let sourceTypeCamera = UIImagePickerControllerSourceType.camera
-    private let rearCamera = UIImagePickerControllerCameraDevice.rear
-    private let frontCamera = UIImagePickerControllerCameraDevice.front
+    private let sourceTypeCamera = UIImagePickerController.SourceType.camera
+    private let rearCamera = UIImagePickerController.CameraDevice.rear
+    private let frontCamera = UIImagePickerController.CameraDevice.front
     
     var delegate: UINavigationControllerDelegate & UIImagePickerControllerDelegate
     init(delegate_: UINavigationControllerDelegate & UIImagePickerControllerDelegate) {

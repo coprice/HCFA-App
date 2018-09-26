@@ -20,7 +20,7 @@ class CreateMinistryTeamVC: CreateTemplateVC {
         super.viewDidLoad()
         
         done = UIBarButtonItem(title: "Done", style: .done, target: self, action: #selector(doneTapped))
-        teamVC = hostVC.contentViewControllers[Tabs.MinistryTeams] as! MinistryTeamVC
+        teamVC = (hostVC.contentViewControllers[Tabs.MinistryTeams] as! MinistryTeamVC)
         
         let today = Calendar.current.date(bySetting: .minute, value: 0, of: Date())
         

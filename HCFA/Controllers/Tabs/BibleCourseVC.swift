@@ -64,7 +64,7 @@ class BibleCourseVC: TemplateVC {
         
         let refreshControl = UIRefreshControl(frame: CGRect(x: 0, y: 0, width: view.frame.width, height: 0))
         refreshControl.tintColor = highlightColor
-        refreshControl.addTarget(self, action: #selector(refresh), for: UIControlEvents.valueChanged)
+        refreshControl.addTarget(self, action: #selector(refresh), for: UIControl.Event.valueChanged)
         
         tableView = UITableView(frame: CGRect(x: 0, y: offset, width: view.frame.width,
                                               height: view.frame.height - offset), style: .grouped)
@@ -416,7 +416,7 @@ extension BibleCourseVC: UITableViewDelegate {
                     UIFont.systemFont(ofSize: view.frame.width*0.042)
                 let text = getHeaderTextBySection(section)
                 let underline = NSMutableAttributedString(string: text)
-                underline.addAttribute(NSAttributedStringKey.underlineStyle, value: 1,
+                underline.addAttribute(NSAttributedString.Key.underlineStyle, value: 1,
                                        range: NSMakeRange(0, underline.length))
                 firstSection.attributedText = underline
                 firstSection.font = font
@@ -441,7 +441,7 @@ extension BibleCourseVC: UITableViewDelegate {
                 UIFont.systemFont(ofSize: view.frame.width*0.041)
             let text = getHeaderTextBySection(section)
             let underline = NSMutableAttributedString(string: text)
-            underline.addAttribute(NSAttributedStringKey.underlineStyle, value: 1,
+            underline.addAttribute(NSAttributedString.Key.underlineStyle, value: 1,
                                    range: NSMakeRange(0, underline.length))
             nextSection.attributedText = underline
             nextSection.font = font

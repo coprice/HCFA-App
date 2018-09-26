@@ -16,7 +16,7 @@ class SettingsVC: FormViewController {
         super.viewDidLoad()
         
         tableView.backgroundColor = lightColor
-        hostVC = navigationController?.viewControllers.first as! HostVC
+        hostVC = (navigationController?.viewControllers.first as! HostVC)
         
         form +++ Section("Notifications")
         <<< SwitchRow { row in

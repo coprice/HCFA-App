@@ -23,7 +23,7 @@ class DisplayBibleCourseVC: DisplayTemplateVC {
         
         if firstAppearance {
             firstAppearance = false
-            hostVC = navigationController!.viewControllers.first as! HostVC
+            hostVC = (navigationController!.viewControllers.first as! HostVC)
             
             edit = UIBarButtonItem(title: "Edit", style: .done, target: self, action: #selector(editTapped))
             
@@ -243,10 +243,10 @@ class DisplayBibleCourseVC: DisplayTemplateVC {
     }
     
     func createStringWithBoldRange(from string: String, boldRange: NSRange, fontSize: CGFloat, color: UIColor) -> NSAttributedString {
-        let boldAttribute: [NSAttributedStringKey : Any] =
+        let boldAttribute: [NSAttributedString.Key : Any] =
             [.font: UIFont(name: "Montserrat-Bold", size: fontSize) ?? UIFont.systemFont(ofSize: fontSize),
              .foregroundColor: color]
-        let nonBoldAttribute: [NSAttributedStringKey : Any] =
+        let nonBoldAttribute: [NSAttributedString.Key : Any] =
             [.font: UIFont(name: "Montserrat-Regular" , size: fontSize) ?? UIFont.systemFont(ofSize: fontSize),
              .foregroundColor: color]
         let attrStr = NSMutableAttributedString(string: string, attributes: nonBoldAttribute)
@@ -327,11 +327,16 @@ class DisplayBibleCourseVC: DisplayTemplateVC {
     @objc func joinBC() {
         let requestVC = RequestVC()
         requestVC.isCourse = true
-        requestVC.id = data["cid"] as! Int
+        requestVC.id = (data["cid"] as! Int)
         navigationController!.pushViewController(requestVC, animated: true)
     }
     
     @objc func groupmeLink() {
-        UIApplication.shared.open(URL(string: data["groupme"] as! String)!, options: [:], completionHandler: nil)
+        UIApplication.shared.open(URL(string: data["groupme"] as! String)!, options: convertToUIApplicationOpenExternalURLOptionsKeyDictionary([:]), completionHandler: nil)
     }
  }
+
+// Helper function inserted by Swift 4.2 migrator.
+fileprivate func convertToUIApplicationOpenExternalURLOptionsKeyDictionary(_ input: [String: Any]) -> [UIApplication.OpenExternalURLOptionsKey: Any] {
+	return Dictionary(uniqueKeysWithValues: input.map { key, value in (UIApplication.OpenExternalURLOptionsKey(rawValue: key), value)})
+}

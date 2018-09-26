@@ -75,10 +75,10 @@ class MinistryTeamCell: UITableViewCell {
     }
 
     func createLeaderString(from string: String, fontSize: CGFloat, color: UIColor) -> NSAttributedString {
-        let boldAttribute: [NSAttributedStringKey : Any] =
+        let boldAttribute: [NSAttributedString.Key : Any] =
             [.font: UIFont(name: "Montserrat-Bold", size: fontSize) ?? UIFont.systemFont(ofSize: fontSize),
              .foregroundColor: color]
-        let nonBoldAttribute: [NSAttributedStringKey : Any] =
+        let nonBoldAttribute: [NSAttributedString.Key : Any] =
             [.font: UIFont(name: "Montserrat-Light" , size: fontSize) ?? UIFont.systemFont(ofSize: fontSize),
              .foregroundColor: color]
         let attrStr = NSMutableAttributedString(string: string, attributes: nonBoldAttribute)

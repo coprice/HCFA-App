@@ -645,6 +645,7 @@
 				E3D795DB1FF591CE003B78F5 /* Frameworks */,
 				E3D795DC1FF591CE003B78F5 /* Resources */,
 				0F8C0521037E489E2B132005 /* [CP] Embed Pods Frameworks */,
+				48F72B46F67852A29A8149C8 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -667,6 +668,7 @@
 				TargetAttributes = {
 					E3D795DD1FF591CE003B78F5 = {
 						CreatedOnToolsVersion = 9.2;
+						LastSwiftMigration = 1000;
 						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
 							com.apple.BackgroundModes = {
@@ -813,6 +815,21 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-HCFA/Pods-HCFA-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		48F72B46F67852A29A8149C8 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-HCFA/Pods-HCFA-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		9CB10D3C11B4003E8611C8E6 /* [CP] Check Pods Manifest.lock */ = {
@@ -1014,7 +1031,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.collinprice.hcfa;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
@@ -1035,7 +1052,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.collinprice.hcfa;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;

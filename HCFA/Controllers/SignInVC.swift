@@ -188,7 +188,7 @@ class SignInVC: UIViewController {
         
         if #available(iOS 11, *) {
             // Disables the password autoFill accessory view.
-            let empty = UITextContentType("")
+            let empty = UITextContentType(rawValue: "")
             firstName.textContentType = empty
             lastName.textContentType = empty
             email.textContentType = empty

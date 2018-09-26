@@ -17,7 +17,7 @@ class PasswordViewController: FormViewController, TypedRowControllerType {
         super.viewDidLoad()
 
         tableView.backgroundColor = lightColor
-        hostVC = navigationController?.viewControllers.first as! HostVC
+        hostVC = (navigationController?.viewControllers.first as! HostVC)
         navigationAccessoryView.barTintColor = redColor
         loadingView = LoadingView(frame: CGRect(x: view.frame.width*0.375,
                                                 y: view.frame.height/2 - view.frame.width*0.125,
@@ -31,7 +31,7 @@ class PasswordViewController: FormViewController, TypedRowControllerType {
             row.cellUpdate { cell, row in
                 cell.textLabel?.font = formFont
                 cell.textField.font = formFont
-                cell.textField.textContentType = UITextContentType("")
+                cell.textField.textContentType = UITextContentType(rawValue: "")
             }
             row.onCellHighlightChanged { cell, row in
                 cell.textLabel?.textColor = redColor
@@ -45,7 +45,7 @@ class PasswordViewController: FormViewController, TypedRowControllerType {
             row.cellUpdate { cell, row in
                 cell.textLabel?.font = formFont
                 cell.textField.font = formFont
-                cell.textField.textContentType = UITextContentType("")
+                cell.textField.textContentType = UITextContentType(rawValue: "")
             }
             row.onCellHighlightChanged { cell, row in
                 cell.textLabel?.textColor = redColor
@@ -59,7 +59,7 @@ class PasswordViewController: FormViewController, TypedRowControllerType {
             row.cellUpdate { cell, row in
                 cell.textLabel?.font = formFont
                 cell.textField.font = formFont
-                cell.textField.textContentType = UITextContentType("")
+                cell.textField.textContentType = UITextContentType(rawValue: "")
             }
             row.onCellHighlightChanged { cell, row in
                 cell.textLabel?.textColor = redColor

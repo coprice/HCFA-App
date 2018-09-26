@@ -11,6 +11,7 @@ import Eureka
 import AWSCore
 import AWSS3
 
+
 class CreateEventVC: CreateTemplateVC {
     
     var done: UIBarButtonItem!
@@ -22,7 +23,7 @@ class CreateEventVC: CreateTemplateVC {
         super.viewDidLoad()
         
         done = UIBarButtonItem(title: "Done", style: .done, target: self, action: #selector(doneTapped))
-        eventVC = hostVC.contentViewControllers[Tabs.Events] as! EventVC
+        eventVC = (hostVC.contentViewControllers[Tabs.Events] as! EventVC)
         
         let today = Calendar.current.date(bySetting: .minute, value: 0, of: Date())
         
@@ -51,7 +52,7 @@ class CreateEventVC: CreateTemplateVC {
                 cell.textLabel?.textColor = redColor
             }
         }
-            <<< NameRow() { row in
+        <<< NameRow() { row in
             row.title = "Location"
             row.placeholder = "Location"
             row.tag = "location"
@@ -66,6 +67,8 @@ class CreateEventVC: CreateTemplateVC {
                 cell.textLabel?.textColor = redColor
             }
         }
+        
+        form +++ Section("Date & Time")
             
         <<< DateTimeInlineRow() { row in
             row.title = "Start"
@@ -137,7 +140,72 @@ class CreateEventVC: CreateTemplateVC {
             }
         }
             
-        +++ Section("Description")
+        +++ Section("Repeat")
+        
+        <<< PushRow<String>() { row in
+            row.title = "Repeat"
+            row.options = ["Never", "Every Day", "Every Week", "Every 2 weeks", "Every Month", "Every Year"]
+            row.tag = "repeat"
+            if editingEvent {
+                row.value = eventData["repeat"] as? String
+            } else {
+                row.value = "Never"
+            }
+        }
+        .onPresent({(from, to) in
+            to.enableDeselection = false
+            to.selectableRowCellSetup = { cell, _ in
+                cell.textLabel?.font = formFont
+            }
+        })
+        .cellSetup({cell, _ in
+            cell.textLabel?.font = formFont
+            cell.detailTextLabel?.font = formFont
+            cell.detailTextLabel?.textColor = .black
+            cell.update()
+        })
+        
+        <<< SwitchRow() { row in
+            row.title = "Multiple Days"
+            row.tag = "multiple"
+            row.value = false
+            row.hidden = Condition.function(["repeat"], { form in
+                if let value = form.rowBy(tag: "repeat")?.baseValue as? String {
+                    return value != "Every Week" && value != "Every 2 weeks"
+                }
+                return true
+            })
+            
+            row.cellSetup  { cell, _ in
+                cell.textLabel?.font = formFont
+                cell.switchControl.onTintColor = redColor
+            }
+        }
+            
+        let repeatSection = Section("Repeat Days") {
+            $0.tag = "repeat_days"
+            $0.hidden = Condition.function(["multiple", "repeat"], { form in
+                if let multiple = form.rowBy(tag: "multiple") {
+                    return multiple.isHidden || !(multiple.baseValue as! Bool)
+                }
+                return true
+            })
+        }
+        
+        for day in ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"] {
+            repeatSection <<< CheckRow { row in
+                row.title = day
+                row.tag = day
+                row.value = false
+                row.cellUpdate { cell, row in
+                    cell.textLabel?.font = formFont
+                }
+            }
+        }
+        
+        form +++ repeatSection
+        
+        form +++ Section("Description")
             <<< TextAreaRow() { row in
             row.title = "Description"
             row.placeholder = "Description"
@@ -356,7 +424,7 @@ class CreateEventVC: CreateTemplateVC {
                         createAlert(title: "Internal Server Error", message: "Something went wrong", view: self)
                     default:
                         if let image = values["image"] as? UIImage {
-                            if let data = UIImageJPEGRepresentation(image, 0.6) {
+                            if let data = image.jpegData(compressionQuality: 0.6) {
                                 self.uploadImage(data: data, eid: eid, completion: {
                                     updateEventImages(eid, data)
                                     self.backToEvents(title: "Event Updated", message: "")
@@ -396,7 +464,7 @@ class CreateEventVC: CreateTemplateVC {
                     default:
                         let eid = (data as! [String:Any])["eid"] as! Int
                         if let image = values["image"] as? UIImage {
-                            if let data = UIImageJPEGRepresentation(image, 0.6) {
+                            if let data = image.jpegData(compressionQuality: 0.6) {
                                 self.uploadImage(data: data, eid: eid, completion: {
                                     
                                     updateEventImages(eid, data)
@@ -422,4 +490,3 @@ class CreateEventVC: CreateTemplateVC {
         }
     }
 }
-

@@ -17,8 +17,8 @@ class FilterVC: FormViewController {
         super.viewDidLoad()
         
         tableView.backgroundColor = lightColor
-        hostVC = navigationController?.viewControllers.first as! HostVC
-        courseVC = hostVC.contentViewControllers[Tabs.BibleCourses] as! BibleCourseVC
+        hostVC = (navigationController?.viewControllers.first as! HostVC)
+        courseVC = (hostVC.contentViewControllers[Tabs.BibleCourses] as! BibleCourseVC)
         
         var gender: String!
         switch courseVC.displayingGender {
@@ -50,7 +50,7 @@ class FilterVC: FormViewController {
         form +++ genderSection
         
         for option in ["Both", "Men", "Women"] {
-            form.last! <<< ListCheckRow<String>(option){ listRow in
+            form.last! <<< ListCheckRow<String>(option) { listRow in
                 listRow.title = option
                 listRow.selectableValue = option
                 

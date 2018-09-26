@@ -37,7 +37,7 @@ class MinistryTeamVC: TemplateVC {
         
         let refreshControl = UIRefreshControl(frame: CGRect(x: 0, y: 0, width: view.frame.width, height: 0))
         refreshControl.tintColor = highlightColor
-        refreshControl.addTarget(self, action: #selector(refresh), for: UIControlEvents.valueChanged)
+        refreshControl.addTarget(self, action: #selector(refresh), for: UIControl.Event.valueChanged)
         
         tableView = UITableView(frame: CGRect(x: 0, y: offset, width: view.frame.width,
                                               height: view.frame.height - offset), style: .grouped)

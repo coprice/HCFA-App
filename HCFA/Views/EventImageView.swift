@@ -23,7 +23,7 @@ class EventImageView: UIImageView {
         layer.masksToBounds = true
         contentMode = .scaleAspectFill
         
-        spinner.activityIndicatorViewStyle = .whiteLarge
+        spinner.style = .whiteLarge
         spinner.center = CGPoint(x: frame.width/2, y: frame.height/2)
         addSubview(spinner)
     }
