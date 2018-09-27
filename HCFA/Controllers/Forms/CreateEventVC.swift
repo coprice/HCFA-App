@@ -37,7 +37,7 @@ class CreateEventVC: CreateTemplateVC {
         }
         
         form +++ Section("General")
-            <<< NameRow() { row in
+            <<< NameRow { row in
             row.title = "Title"
             row.placeholder = "Title"
             row.tag = "title"
@@ -52,7 +52,8 @@ class CreateEventVC: CreateTemplateVC {
                 cell.textLabel?.textColor = redColor
             }
         }
-        <<< NameRow() { row in
+            
+        <<< NameRow { row in
             row.title = "Location"
             row.placeholder = "Location"
             row.tag = "location"
@@ -70,11 +71,17 @@ class CreateEventVC: CreateTemplateVC {
         
         form +++ Section("Date & Time")
             
-        <<< DateTimeInlineRow() { row in
+        <<< DateTimeInlineRow { row in
             row.title = "Start"
             row.tag = "start"
             row.minuteInterval = 5
             row.dateFormatter?.dateFormat = "h:mm a, MMM d, YYYY"
+            row.hidden = Condition.function(["multiple", "repeat"], { form in
+                if let multiple = form.rowBy(tag: "multiple")?.baseValue as? Bool {
+                    return multiple
+                }
+                return false
+            })
             if editingEvent {
                 row.value = startDate
             } else {
@@ -93,23 +100,36 @@ class CreateEventVC: CreateTemplateVC {
                 cell.detailTextLabel?.textColor = .black
                 row.updateCell()
                 
-                let endRow = (self.form.rowBy(tag: "end") as! DateTimeInlineRow).baseCell.baseRow
-                if let endDate = endRow?.baseValue as? Date {
-                    if let startDate = row.value {
-                        if startDate > endDate {
-                            endRow?.baseValue = startDate
-                            endRow?.updateCell()
+                if let startTRow = self.form.rowBy(tag: "start_time") as? TimeInlineRow {
+                    startTRow.baseValue = row.baseValue
+                    startTRow.updateCell()
+                }
+                
+                if let endDTRow = self.form.rowBy(tag: "end") as? DateTimeInlineRow {
+                    let endRow = endDTRow.baseCell.baseRow
+                    if let endDate = endRow?.baseValue as? Date {
+                        if let startDate = row.value {
+                            if startDate > endDate {
+                                endRow?.baseValue = startDate
+                                endRow?.updateCell()
+                            }
                         }
                     }
                 }
             }
         }
             
-        <<< DateTimeInlineRow() { row in
+        <<< DateTimeInlineRow { row in
             row.title = "End"
             row.tag = "end"
             row.minuteInterval = 5
             row.dateFormatter?.dateFormat = "h:mm a, MMM d, YYYY"
+            row.hidden = Condition.function(["multiple"], { form in
+                if let multiple = form.rowBy(tag: "multiple")?.baseValue as? Bool {
+                    return multiple
+                }
+                return false
+            })
             if editingEvent {
                 row.value = endDate
             } else {
@@ -128,12 +148,105 @@ class CreateEventVC: CreateTemplateVC {
                 cell.detailTextLabel?.textColor = .black
                 row.updateCell()
                 
-                let startRow = (self.form.rowBy(tag: "start") as! DateTimeInlineRow).baseCell.baseRow
-                if let startDate = startRow?.baseValue as? Date {
-                    if let endDate = row.value {
-                        if endDate < startDate {
-                            startRow?.baseValue = endDate
-                            startRow?.updateCell()
+                if let endTRow = self.form.rowBy(tag: "end_time") as? TimeInlineRow {
+                    endTRow.baseValue = row.baseValue
+                    endTRow.updateCell()
+                }
+                
+                if let startDTRow = self.form.rowBy(tag: "start") as? DateTimeInlineRow {
+                    let startRow = startDTRow.baseCell.baseRow
+                    if let startDate = startRow?.baseValue as? Date {
+                        if let endDate = row.value {
+                            if endDate < startDate {
+                                startRow?.baseValue = endDate
+                                startRow?.updateCell()
+                            }
+                        }
+                    }
+                }
+            }
+        }
+            
+        <<< TimeInlineRow { row in
+            row.title = "Start"
+            row.tag = "start_time"
+            row.minuteInterval = 5
+            row.dateFormatter?.dateFormat = "h:mm a"
+            row.hidden = Condition.function(["multiple"], { form in
+                if let multiple = form.rowBy(tag: "multiple")?.baseValue as? Bool {
+                    return !multiple
+                }
+                return true
+            })
+            if editingEvent {
+                row.value = startDate
+            } else {
+                row.value = today
+            }
+            row.cellSetup { cell, row in
+                cell.textLabel?.font = formFont
+                cell.detailTextLabel?.font = formFont
+                cell.detailTextLabel?.textColor = .black
+            }
+            row.onExpandInlineRow { cell, row, _ in
+                cell.detailTextLabel?.textColor = redColor
+                row.updateCell()
+            }
+            row.onCollapseInlineRow { cell, row, _ in
+                cell.detailTextLabel?.textColor = .black
+                row.updateCell()
+                
+                if let endTRow = self.form.rowBy(tag: "end_time") as? TimeInlineRow {
+                    let endRow = endTRow.baseCell.baseRow
+                    if let endDate = endRow?.baseValue as? Date {
+                        if let startDate = row.value {
+                            if startDate > endDate {
+                                endRow?.baseValue = startDate
+                                endRow?.updateCell()
+                            }
+                        }
+                    }
+                }
+            }
+        }
+            
+        <<< TimeInlineRow { row in
+            row.title = "End"
+            row.tag = "end_time"
+            row.minuteInterval = 5
+            row.dateFormatter?.dateFormat = "h:mm a"
+            row.hidden = Condition.function(["multiple"], { form in
+                if let multiple = form.rowBy(tag: "multiple")?.baseValue as? Bool {
+                    return !multiple
+                }
+                return true
+            })
+            if editingEvent {
+                row.value = endDate
+            } else {
+                row.value = today
+            }
+            row.cellSetup { cell, row in
+                cell.textLabel?.font = formFont
+                cell.detailTextLabel?.font = formFont
+                cell.detailTextLabel?.textColor = .black
+            }
+            row.onExpandInlineRow { cell, row, _ in
+                cell.detailTextLabel?.textColor = redColor
+                row.updateCell()
+            }
+            row.onCollapseInlineRow { cell, row, _ in
+                cell.detailTextLabel?.textColor = .black
+                row.updateCell()
+                
+                if let startTRow = self.form.rowBy(tag: "start_time") as? TimeInlineRow {
+                    let startRow = startTRow.baseCell.baseRow
+                    if let startDate = startRow?.baseValue as? Date {
+                        if let endDate = row.value {
+                            if endDate < startDate {
+                                startRow?.baseValue = endDate
+                                startRow?.updateCell()
+                            }
                         }
                     }
                 }
@@ -142,7 +255,7 @@ class CreateEventVC: CreateTemplateVC {
             
         +++ Section("Repeat")
         
-        <<< PushRow<String>() { row in
+        <<< PushRow<String> { row in
             row.title = "Repeat"
             row.options = ["Never", "Every Day", "Every Week", "Every 2 weeks", "Every Month", "Every Year"]
             row.tag = "repeat"
@@ -164,8 +277,18 @@ class CreateEventVC: CreateTemplateVC {
             cell.detailTextLabel?.textColor = .black
             cell.update()
         })
+        .onChange({ row in
+            if let multRow = self.form.rowBy(tag: "multiple") as? SwitchRow {
+                if let multiple = multRow.value {
+                    if multiple && row.value != "Every Week" && row.value != "Every 2 weeks" {
+                        multRow.value = false
+                        multRow.updateCell()
+                    }
+                }
+            }
+        })
         
-        <<< SwitchRow() { row in
+        <<< SwitchRow { row in
             row.title = "Multiple Days"
             row.tag = "multiple"
             row.value = false
@@ -176,29 +299,86 @@ class CreateEventVC: CreateTemplateVC {
                 return true
             })
             
+            row.onChange({ row in
+                if let startRow = self.form.rowBy(tag: "start") as? DateTimeInlineRow,
+                    let endRow = self.form.rowBy(tag: "end") as? DateTimeInlineRow {
+                    
+                    if row.value ?? false {
+                        startRow.dateFormatter?.dateFormat = "h:mm a"
+                        endRow.dateFormatter?.dateFormat = "h:mm a"
+                    } else {
+                        startRow.dateFormatter?.dateFormat = "h:mm a, MMM d, YYYY"
+                        endRow.dateFormatter?.dateFormat = "h:mm a, MMM d, YYYY"
+                    }
+                    startRow.updateCell()
+                    endRow.updateCell()
+                }
+            })
+            
             row.cellSetup  { cell, _ in
                 cell.textLabel?.font = formFont
                 cell.switchControl.onTintColor = redColor
             }
         }
+           
             
         let repeatSection = Section("Repeat Days") {
             $0.tag = "repeat_days"
             $0.hidden = Condition.function(["multiple", "repeat"], { form in
-                if let multiple = form.rowBy(tag: "multiple") {
-                    return multiple.isHidden || !(multiple.baseValue as! Bool)
+                if let multiple = form.rowBy(tag: "multiple")?.baseValue as? Bool {
+                    return !multiple
                 }
                 return true
             })
         }
         
         for day in ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"] {
+            let dayTag = day.lowercased()
+            
             repeatSection <<< CheckRow { row in
                 row.title = day
-                row.tag = day
+                row.tag = dayTag
                 row.value = false
                 row.cellUpdate { cell, row in
                     cell.textLabel?.font = formFont
+                }
+                row.onChange({ row in
+                    if row.value ?? false {
+                        if let locSwitchRow = self.form.rowBy(tag: "\(dayTag)_location_bool") as? SwitchRow {
+                            if !(locSwitchRow.value ?? false) {
+                                locSwitchRow.value = true
+                                locSwitchRow.updateCell()
+                            }
+                        }
+                    }
+                })
+            }
+            
+            <<< SwitchRow { row in
+                row.title = "Use Generic Location"
+                row.tag = "\(dayTag)_location_bool"
+                row.value = true
+                row.hidden = Condition.function([dayTag], { form in
+                    return !(self.form.rowBy(tag: dayTag)?.baseValue as? Bool ?? false)
+                })
+                row.cellSetup  { cell, _ in
+                    cell.textLabel?.font = formFont
+                    cell.switchControl.onTintColor = redColor
+                }
+            }
+            
+            <<< NameRow { row in
+                row.title = "\(day) Location"
+                row.tag = "\(dayTag)_location"
+                row.hidden = Condition.function(["\(dayTag)_location_bool"], { form in
+                    return self.form.rowBy(tag: "\(dayTag)_location_bool")?.baseValue as? Bool ?? true
+                })
+                row.cellUpdate { cell, _ in
+                    cell.textLabel?.font = formFont
+                    cell.textField.font = formFont
+                }
+                row.onCellHighlightChanged { cell, row in
+                    cell.textLabel?.textColor = redColor
                 }
             }
         }
@@ -220,7 +400,7 @@ class CreateEventVC: CreateTemplateVC {
         }
         
         +++ Section("Optional")
-            <<< ImageRow() { row in
+            <<< ImageRow { row in
             row.title = "Image"
             row.sourceTypes = [.PhotoLibrary, .Camera]
             row.clearAction = .yes(style: .default)
