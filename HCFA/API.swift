@@ -139,23 +139,28 @@ class API {
     }
 
     class func createEvent(uid: Int, token: String, title: String, location: String, startDate: String,
-                           endDate: String, description: String, image: String?,
+                           endDate: String, description: String, repeatString: String?, endRepeat: String?,
+                           repeatDays: [String:Any]?, image: String?,
                            completionHandler: @escaping (URLResponses, Any?) -> Void) {
 
         let json = ["uid": uid, "token": token, "title": title, "location": location,
                     "start": startDate, "end": endDate, "description": description,
-                    "image": image] as [String:Any?]
+                    "repeat": repeatString, "end_repeat": endRepeat,
+                    "repeat_days": repeatDays, "image": image] as [String:Any?]
 
         API.performRequest(requestType: "POST", urlPath: "/events/create", json: json,
                            completionHandler: completionHandler)
     }
 
     class func updateEvent(uid: Int, token: String, eid: Int, title: String, location: String,
-                           startDate: String, endDate: String, description: String, image: String?,
+                           startDate: String, endDate: String, description: String,
+                           repeatString: String?, endRepeat: String?, repeatDays: [String:Any]?, image: String?,
                            completionHandler: @escaping (URLResponses, Any?) -> Void) {
 
         let json = ["uid": uid, "token": token, "eid":eid, "title": title, "location": location,
-                    "start": startDate, "end": endDate, "description": description, "image": image] as [String:Any?]
+                    "start": startDate, "end": endDate, "description": description,
+                    "repeat": repeatString, "end_repeat": endRepeat,
+                    "repeat_days": repeatDays, "image": image] as [String:Any?]
 
         API.performRequest(requestType: "POST", urlPath: "/events/update", json: json,
                            completionHandler: completionHandler)

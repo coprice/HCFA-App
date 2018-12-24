@@ -11,6 +11,9 @@ import Eureka
 import AWSCore
 import AWSS3
 
+let days = [("Sunday", 0), ("Monday", 1), ("Tuesday", 2), ("Wednesday", 3),
+            ("Thursday", 4), ("Friday", 5), ("Saturday", 6)]
+
 
 class CreateEventVC: CreateTemplateVC {
     
@@ -71,7 +74,7 @@ class CreateEventVC: CreateTemplateVC {
         
         <<< PushRow<String> { row in
             row.title = "Repeat"
-            row.options = ["Never", "Every Day", "Every Week", "Every 2 weeks", "Every Month", "Every Year"]
+            row.options = ["Never", "Every Day", "Every Week", "Every 2 Weeks", "Every Month", "Every Year"]
             row.tag = "repeat"
             if editingEvent {
                 row.value = eventData["repeat"] as? String
@@ -94,7 +97,7 @@ class CreateEventVC: CreateTemplateVC {
         .onChange({ row in
             if let multRow = self.form.rowBy(tag: "multiple") as? SwitchRow {
                 if let multiple = multRow.value {
-                    if multiple && row.value != "Every Week" && row.value != "Every 2 weeks" {
+                    if multiple && row.value != "Every Week" && row.value != "Every 2 Weeks" {
                         multRow.value = false
                         multRow.updateCell()
                     }
@@ -102,33 +105,61 @@ class CreateEventVC: CreateTemplateVC {
             }
         })
             
+        <<< PushRow<String> { row in
+            row.title = "End Repeat"
+            row.options = ["Never", "Date"]
+            row.value = "Never"
+            row.tag = "end_repeat"
+            row.hidden = Condition.function(["repeat"], { form in
+                return form.rowBy(tag: "repeat")?.value == "Never"
+            })
+        }
+        .onPresent({ from, to in
+            to.enableDeselection = false
+            to.selectableRowCellSetup = { cell, row in
+                cell.textLabel?.font = formFont
+            }
+        })
+        .cellUpdate({ cell, row in
+            cell.textLabel?.font = formFont
+            cell.detailTextLabel?.font = formFont
+        })
+        
+        <<< DateInlineRow { row in
+            row.title = "End Repeat Date"
+            row.tag = "end_repeat_date"
+            row.value = Date()
+            row.dateFormatter?.dateFormat = "MMM d, YYYY"
+            row.hidden = Condition.function(["end_repeat"], { form in
+                return form.rowBy(tag: "end_repeat")?.value == "Never"
+            })
+            
+            row.cellSetup { cell, row in
+                cell.textLabel?.font = formFont
+                cell.detailTextLabel?.font = formFont
+                cell.detailTextLabel?.textColor = .black
+            }
+            row.onExpandInlineRow { cell, row, _ in
+                cell.detailTextLabel?.textColor = redColor
+                row.updateCell()
+            }
+            row.onCollapseInlineRow { cell, row, _ in
+                cell.detailTextLabel?.textColor = .black
+                row.updateCell()
+            }
+        }
+            
         <<< SwitchRow { row in
             row.title = "Multiple Days"
             row.tag = "multiple"
             row.value = false
             row.hidden = Condition.function(["repeat"], { form in
                 if let value = form.rowBy(tag: "repeat")?.baseValue as? String {
-                    return value != "Every Week" && value != "Every 2 weeks"
+                    return !value.contains("Week")
                 }
                 return true
             })
-            
-            row.onChange({ row in
-                if let startRow = self.form.rowBy(tag: "start") as? DateTimeInlineRow,
-                    let endRow = self.form.rowBy(tag: "end") as? DateTimeInlineRow {
-                    
-                    if row.value ?? false {
-                        startRow.dateFormatter?.dateFormat = "h:mm a"
-                        endRow.dateFormatter?.dateFormat = "h:mm a"
-                    } else {
-                        startRow.dateFormatter?.dateFormat = "h:mm a, MMM d, YYYY"
-                        endRow.dateFormatter?.dateFormat = "h:mm a, MMM d, YYYY"
-                    }
-                    startRow.updateCell()
-                    endRow.updateCell()
-                }
-            })
-            
+
             row.cellSetup  { cell, _ in
                 cell.textLabel?.font = formFont
                 cell.switchControl.onTintColor = redColor
@@ -140,9 +171,6 @@ class CreateEventVC: CreateTemplateVC {
             row.tag = "start"
             row.minuteInterval = 5
             row.dateFormatter?.dateFormat = "h:mm a, MMM d, YYYY"
-            row.hidden = Condition.function(["multiple", "repeat"], { form in
-                return form.rowBy(tag: "multiple")?.baseValue as? Bool ?? false
-            })
             if editingEvent {
                 row.value = startDate
             } else {
@@ -160,11 +188,6 @@ class CreateEventVC: CreateTemplateVC {
             row.onCollapseInlineRow { cell, row, _ in
                 cell.detailTextLabel?.textColor = .black
                 row.updateCell()
-                
-                if let startTRow = self.form.rowBy(tag: "start_time") as? TimeInlineRow {
-                    startTRow.baseValue = row.baseValue
-                    startTRow.updateCell()
-                }
                 
                 if let endDTRow = self.form.rowBy(tag: "end") as? DateTimeInlineRow {
                     let endRow = endDTRow.baseCell.baseRow
@@ -185,9 +208,6 @@ class CreateEventVC: CreateTemplateVC {
             row.tag = "end"
             row.minuteInterval = 5
             row.dateFormatter?.dateFormat = "h:mm a, MMM d, YYYY"
-            row.hidden = Condition.function(["multiple"], { form in
-                return form.rowBy(tag: "multiple")?.baseValue as? Bool ?? false
-            })
             if editingEvent {
                 row.value = endDate
             } else {
@@ -205,94 +225,9 @@ class CreateEventVC: CreateTemplateVC {
             row.onCollapseInlineRow { cell, row, _ in
                 cell.detailTextLabel?.textColor = .black
                 row.updateCell()
-                
-                if let endTRow = self.form.rowBy(tag: "end_time") as? TimeInlineRow {
-                    endTRow.baseValue = row.baseValue
-                    endTRow.updateCell()
-                }
                 
                 if let startDTRow = self.form.rowBy(tag: "start") as? DateTimeInlineRow {
                     let startRow = startDTRow.baseCell.baseRow
-                    if let startDate = startRow?.baseValue as? Date {
-                        if let endDate = row.value {
-                            if endDate < startDate {
-                                startRow?.baseValue = endDate
-                                startRow?.updateCell()
-                            }
-                        }
-                    }
-                }
-            }
-        }
-            
-        <<< TimeInlineRow { row in
-            row.title = "Start"
-            row.tag = "start_time"
-            row.minuteInterval = 5
-            row.dateFormatter?.dateFormat = "h:mm a"
-            row.hidden = Condition.function(["multiple"], { form in
-                return !(form.rowBy(tag: "multiple")?.baseValue as? Bool ?? false)
-            })
-            if editingEvent {
-                row.value = startDate
-            } else {
-                row.value = today
-            }
-            row.cellSetup { cell, row in
-                cell.textLabel?.font = formFont
-                cell.detailTextLabel?.font = formFont
-                cell.detailTextLabel?.textColor = .black
-            }
-            row.onExpandInlineRow { cell, row, _ in
-                cell.detailTextLabel?.textColor = redColor
-                row.updateCell()
-            }
-            row.onCollapseInlineRow { cell, row, _ in
-                cell.detailTextLabel?.textColor = .black
-                row.updateCell()
-                
-                if let endTRow = self.form.rowBy(tag: "end_time") as? TimeInlineRow {
-                    let endRow = endTRow.baseCell.baseRow
-                    if let endDate = endRow?.baseValue as? Date {
-                        if let startDate = row.value {
-                            if startDate > endDate {
-                                endRow?.baseValue = startDate
-                                endRow?.updateCell()
-                            }
-                        }
-                    }
-                }
-            }
-        }
-            
-        <<< TimeInlineRow { row in
-            row.title = "End"
-            row.tag = "end_time"
-            row.minuteInterval = 5
-            row.dateFormatter?.dateFormat = "h:mm a"
-            row.hidden = Condition.function(["multiple"], { form in
-                return !(form.rowBy(tag: "multiple")?.baseValue as? Bool ?? false)
-            })
-            if editingEvent {
-                row.value = endDate
-            } else {
-                row.value = today
-            }
-            row.cellSetup { cell, row in
-                cell.textLabel?.font = formFont
-                cell.detailTextLabel?.font = formFont
-                cell.detailTextLabel?.textColor = .black
-            }
-            row.onExpandInlineRow { cell, row, _ in
-                cell.detailTextLabel?.textColor = redColor
-                row.updateCell()
-            }
-            row.onCollapseInlineRow { cell, row, _ in
-                cell.detailTextLabel?.textColor = .black
-                row.updateCell()
-                
-                if let startTRow = self.form.rowBy(tag: "start_time") as? TimeInlineRow {
-                    let startRow = startTRow.baseCell.baseRow
                     if let startDate = startRow?.baseValue as? Date {
                         if let endDate = row.value {
                             if endDate < startDate {
@@ -312,8 +247,8 @@ class CreateEventVC: CreateTemplateVC {
             })
         }
         
-        for day in ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"] {
-            let dayTag = day.lowercased()
+        for (day, tag) in days {
+            let dayTag = String(tag)
             
             repeatSection <<< CheckRow { row in
                 row.title = day
@@ -394,7 +329,7 @@ class CreateEventVC: CreateTemplateVC {
                 row.hidden = Condition.function(["\(dayTag)_time_bool"], { form in
                     return form.rowBy(tag: "\(dayTag)_time_bool")?.baseValue as? Bool ?? true
                 })
-                row.value = (form.rowBy(tag: "start_time") as? TimeInlineRow)?.value
+                row.value = (form.rowBy(tag: "start") as? DateTimeInlineRow)?.value
                 row.cellSetup { cell, row in
                     cell.textLabel?.font = formFont
                     cell.backgroundColor = lightColor
@@ -431,7 +366,7 @@ class CreateEventVC: CreateTemplateVC {
                 row.hidden = Condition.function(["\(dayTag)_time_bool"], { form in
                     return form.rowBy(tag: "\(dayTag)_time_bool")?.baseValue as? Bool ?? true
                 })
-                row.value = (form.rowBy(tag: "end_time") as? TimeInlineRow)?.value
+                row.value = (form.rowBy(tag: "end") as? DateTimeInlineRow)?.value
                 row.cellSetup { cell, row in
                     cell.textLabel?.font = formFont
                     cell.backgroundColor = lightColor
@@ -626,125 +561,216 @@ class CreateEventVC: CreateTemplateVC {
         }
     }
     
+    func checkDates(start: Date, end: Date) -> String? {
+        if end < start {
+            return "An event cannot end before it starts!"
+        } else if end == start {
+            return "An event cannot start when it ends!"
+        }
+        return nil
+    }
+    
     @objc func doneTapped() {
         tableView.endEditing(true)
-        let values = form.values()
-        let startDate = values["start"] as! Date
-        let endDate = values["end"] as! Date
         
-        if values["title"]! == nil {
-            createAlert(title: "Title Empty", message: "Enter an event title", view: self)
-        } else if values["location"]! == nil {
-            createAlert(title: "Location Empty", message: "Enter a location", view: self)
-        } else if values["description"]! == nil {
-            createAlert(title: "Description Empty", message: "Enter a description", view: self)
-        } else if endDate < startDate {
-            createAlert(title: "Invalid Dates", message: "An event cannot end before it starts!", view: self)
-        } else if endDate == startDate {
-            createAlert(title: "Invalid Dates", message: "An event cannot end when it starts!", view: self)
-        } else {
-            let dateFormatter = DateFormatter()
-            dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+        let values = form.values()
+        
+        guard let title = values["title"] as? String else {
+            return createAlert(title: "Title Empty", message: "Enter an event title", view: self)
+        }
+        
+        guard let location = values["location"] as? String else {
+            return createAlert(title: "Location Empty", message: "Enter a location", view: self)
+        }
+        
+        guard let startDate = values["start"] as? Date, let endDate = values["end"] as? Date else {
+            return wtf()
+        }
+        
+        if let errMsg = checkDates(start: startDate, end: endDate) {
+            return createAlert(title: "Invalid Date/Times", message: errMsg, view: self)
+        }
+        
+        guard let repeatStringVal = values["repeat"] as? String else { return wtf() }
+        let dateFormatter = DateFormatter()
+        var repeatString: String? = nil
+        var endRepeat: String? = nil
+        var multiple: Bool? = nil
+        
+        if repeatStringVal != "Never" {
+            repeatString = repeatStringVal
             
-            let title = values["title"] as! String
-            let location = values["location"] as! String
-            let description = values["description"] as! String
-            let start = dateFormatter.string(from: startDate)
-            let end = dateFormatter.string(from: endDate)
+            guard let endRepeatVal = values["end_repeat"] as? String else { return wtf() }
             
-            startLoading()
-            
-            if editingEvent {
+            if endRepeatVal == "Date" {
+                guard let endRepeatDate = values["end_repeat_date"] as? Date else { return wtf() }
                 
-                let eid = eventData["eid"] as! Int
-
-                var imageURL: String? = nil
-                if let _ = values["image"] as? UIImage {
-                    imageURL = eventImageURL(eid)
+                if endRepeatDate <= Date() {
+                    return createAlert(title: "Invalid End Repeat",
+                                       message: "Event cannot stop repeating before it starts", view: self)
                 }
                 
-                API.updateEvent(uid: defaults.integer(forKey: "uid"), token: defaults.string(forKey: "token")!,
-                                eid: eid, title: title, location: location, startDate: start,
-                                endDate: end, description: description, image: imageURL) { response, data in
-                                    
-                    switch response {
-                    case .NotConnected:
-                        self.stopLoading()
-                        createAlert(title: "Connection Error", message: "Unable to connect to the server", view: self)
-                    case .Error:
-                        self.stopLoading()
-                        createAlert(title: "Error", message: data as! String, view: self)
-                    case .InvalidSession:
-                        self.stopLoading()
-                        self.backToSignIn()
-                    case .InternalError:
-                        self.stopLoading()
-                        createAlert(title: "Internal Server Error", message: "Something went wrong", view: self)
-                    default:
-                        if let image = values["image"] as? UIImage {
-                            if let data = image.jpegData(compressionQuality: 0.6) {
-                                self.uploadImage(data: data, eid: eid, completion: {
-                                    updateEventImages(eid, data)
-                                    self.backToEvents(title: "Event Updated", message: "")
-                                })
-                            } else {
+                dateFormatter.dateFormat = "MMM d, YYYY"
+                endRepeat = dateFormatter.string(from: endRepeatDate)
+            }
+            
+            if repeatStringVal.contains("Week") {
+                guard let m = values["multiple"] as? Bool else { return wtf() }
+                multiple = m
+            }
+        }
+        
+        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+        let start = dateFormatter.string(from: startDate)
+        let end = dateFormatter.string(from: endDate)
+        
+        var repeatDays: [String:Any]? = nil
+        
+        if multiple ?? false {
+            repeatDays = [:]
+            
+            for (day, tag) in days {
+                if values[String(tag)] as? Bool ?? false {
+                    var currentDay: [String:String] = [:]
+                    
+                    if !(values["\(tag)_location_bool"] as? Bool ?? true) {
+                        guard let location = values["\(tag)_location"] as? String else {
+                            return createAlert(title: "\(day) Location Empty",
+                                               message: "Enter a location for \(day)", view: self)
+                        }
+                        currentDay["location"] = location
+                    }
+                    
+                    if !(values["\(tag)_time_bool"] as? Bool ?? true) {
+                        guard let startTime = values["\(tag)_start_time"] as? Date,
+                            let endTime = values["\(tag)_end_time"] as? Date else {
+                            return createAlert(title: "Whaaaaaaaaat??", message: "This should never happen",
+                                               view: self)
+                        }
+                        
+                        if let errMsg = checkDates(start: startTime, end: endTime) {
+                            return createAlert(title: "Invalid Dates", message: errMsg, view: self)
+                        }
+                        
+                        dateFormatter.dateFormat = "h:mm a"
+                        currentDay["start"] = dateFormatter.string(from: startTime)
+                        currentDay["end"] = dateFormatter.string(from: endTime)
+                    }
+                    
+                    repeatDays![String(tag)] = currentDay
+                }
+            }
+            
+            if repeatDays!.count < 2 {
+                return createAlert(title: "Too Few Days",
+                                   message: "You must have at least two days to have multiple days",
+                                   view: self)
+            }
+        }
+        
+        guard let description = values["description"] as? String else {
+            return createAlert(title: "Description Empty", message: "Enter a description", view: self)
+        }
+        
+        startLoading()
+        
+        if editingEvent {
+            
+            let eid = eventData["eid"] as! Int
+
+            var imageURL: String? = nil
+            if let _ = values["image"] as? UIImage {
+                imageURL = eventImageURL(eid)
+            }
+            
+            API.updateEvent(uid: defaults.integer(forKey: "uid"), token: defaults.string(forKey: "token")!,
+                            eid: eid, title: title, location: location, startDate: start, endDate: end,
+                            description: description, repeatString: repeatString, endRepeat: endRepeat,
+                            repeatDays: repeatDays, image: imageURL) { response, data in
+                                
+                switch response {
+                case .NotConnected:
+                    self.stopLoading()
+                    createAlert(title: "Connection Error", message: "Unable to connect to the server", view: self)
+                case .Error:
+                    self.stopLoading()
+                    createAlert(title: "Error", message: data as! String, view: self)
+                case .InvalidSession:
+                    self.stopLoading()
+                    self.backToSignIn()
+                case .InternalError:
+                    self.stopLoading()
+                    createAlert(title: "Internal Server Error", message: "Something went wrong", view: self)
+                default:
+                    if let image = values["image"] as? UIImage {
+                        if let data = image.jpegData(compressionQuality: 0.6) {
+                            self.uploadImage(data: data, eid: eid, completion: {
+                                updateEventImages(eid, data)
                                 self.backToEvents(title: "Event Updated", message: "")
-                            }
+                            })
                         } else {
-                            // event had an image but update got rid of it
-                            if let _ = self.eventData["image"] as? String {
-                                deleteEventImage(eid)
-                            }
                             self.backToEvents(title: "Event Updated", message: "")
                         }
+                    } else {
+                        // event had an image but update got rid of it
+                        if let _ = self.eventData["image"] as? String {
+                            deleteEventImage(eid)
+                        }
+                        self.backToEvents(title: "Event Updated", message: "")
                     }
                 }
-            } else {
+            }
+        } else {
+
+            API.createEvent(uid: defaults.integer(forKey: "uid"), token: defaults.string(forKey: "token")!,
+                            title: title, location: location, startDate: start, endDate: end,
+                            description: description, repeatString: repeatString, endRepeat: endRepeat,
+                            repeatDays: repeatDays, image: nil) { response, data in
                 
-                API.createEvent(uid: defaults.integer(forKey: "uid"), token: defaults.string(forKey: "token")!,
-                                title: title, location: location, startDate: start, endDate: end,
-                                description: description, image: nil) { response, data in
-                                    
-                    switch response {
-                    case .NotConnected:
-                        self.stopLoading()
-                        createAlert(title: "Connection Error", message: "Unable to connect to the server",
-                                    view: self)
-                    case .Error:
-                        self.stopLoading()
-                        createAlert(title: "Error", message: data as! String, view: self)
-                    case .InvalidSession:
-                        self.stopLoading()
-                        self.backToSignIn()
-                    case .InternalError:
-                        self.stopLoading()
-                        createAlert(title: "Internal Server Error", message: "Something went wrong", view: self)
-                    default:
-                        let eid = (data as! [String:Any])["eid"] as! Int
-                        if let image = values["image"] as? UIImage {
-                            if let data = image.jpegData(compressionQuality: 0.6) {
-                                self.uploadImage(data: data, eid: eid, completion: {
-                                    
-                                    updateEventImages(eid, data)
-                                    
-                                    API.updateEvent(uid: defaults.integer(forKey: "uid"),
-                                                    token: defaults.string(forKey: "token")!, eid: eid, title: title,
-                                                    location: location, startDate: start, endDate: end,
-                                                    description: description, image: eventImageURL(eid),
-                                                    completionHandler: { _, _ in
-                                                        
-                                        self.backToEvents(title: "Event Created", message: "")
-                                    })
+                switch response {
+                case .NotConnected:
+                    self.stopLoading()
+                    createAlert(title: "Connection Error", message: "Unable to connect to the server",
+                                view: self)
+                case .Error:
+                    self.stopLoading()
+                    createAlert(title: "Error", message: data as! String, view: self)
+                case .InvalidSession:
+                    self.stopLoading()
+                    self.backToSignIn()
+                case .InternalError:
+                    self.stopLoading()
+                    createAlert(title: "Internal Server Error", message: "Something went wrong", view: self)
+                default:
+                    let eid = (data as! [String:Any])["eid"] as! Int
+                    if let image = values["image"] as? UIImage {
+                        if let data = image.jpegData(compressionQuality: 0.6) {
+                            self.uploadImage(data: data, eid: eid, completion: {
+                                
+                                updateEventImages(eid, data)
+                                
+                                API.updateEvent(uid: defaults.integer(forKey: "uid"),
+                                                token: defaults.string(forKey: "token")!, eid: eid, title: title,
+                                                location: location, startDate: start, endDate: end,
+                                                description: description, repeatString: repeatString,
+                                                endRepeat: endRepeat, repeatDays: repeatDays,
+                                                image: eventImageURL(eid), completionHandler: { _, _ in
+                                                    
+                                    self.backToEvents(title: "Event Created", message: "")
                                 })
-                            } else {
-                                self.backToEvents(title: "Event Created", message: "")
-                            }
+                            })
                         } else {
                             self.backToEvents(title: "Event Created", message: "")
                         }
+                    } else {
+                        self.backToEvents(title: "Event Created", message: "")
                     }
                 }
             }
         }
+    }
+    
+    func wtf() {
+        createAlert(title: "Whaaaaaaaaat??", message: "This should never happen", view: self)
     }
 }

@@ -63,129 +63,156 @@ class CalendarVC: FormViewController {
         }
         
         form +++ Section("Name and Location")
-            <<< NameRow() { row in
-                row.placeholder = "Title"
-                row.tag = "title"
-                row.value = titleString
-                row.cellUpdate { cell, row in
-                    cell.textLabel?.font = formFont
-                    cell.textField.font = formFont
-                }
+        <<< NameRow() { row in
+            row.placeholder = "Title"
+            row.tag = "title"
+            row.value = titleString
+            row.cellUpdate { cell, row in
+                cell.textLabel?.font = formFont
+                cell.textField.font = formFont
             }
-            <<< NameRow() { row in
-                row.placeholder = "Location"
-                row.tag = "location"
-                row.value = (data["location"] as! String)
-                row.cellUpdate { cell, row in
-                    cell.textLabel?.font = formFont
-                    cell.textField.font = formFont
-                }
-            }
+        }
             
-            +++ Section("Date and Time")
-            <<< DateTimeInlineRow() { row in
-                row.title = "Starts"
-                row.tag = "start"
-                row.value = startDate
-                row.cellSetup { cell, row in
-                    cell.textLabel?.font = formFont
-                    cell.detailTextLabel?.font = formFont
-                    cell.detailTextLabel?.textColor = .black
-                }
-                row.onExpandInlineRow { cell, row, _ in
-                    cell.detailTextLabel?.textColor = redColor
-                    row.updateCell()
-                }
-                row.onCollapseInlineRow { cell, row, _ in
-                    cell.detailTextLabel?.textColor = .black
-                    row.updateCell()
-                    
-                    let endRow = (self.form.rowBy(tag: "end") as! DateTimeInlineRow).baseCell.baseRow
-                    if let endDate = endRow?.baseValue as? Date {
-                        if let startDate = row.value {
-                            if startDate > endDate {
-                                endRow?.baseValue = startDate
-                                endRow?.updateCell()
-                            }
-                        }
-                    }
-                }
+        <<< NameRow() { row in
+            row.placeholder = "Location"
+            row.tag = "location"
+            row.value = (data["location"] as! String)
+            row.cellUpdate { cell, row in
+                cell.textLabel?.font = formFont
+                cell.textField.font = formFont
             }
+        }
             
-            <<< DateTimeInlineRow() { row in
-                row.title = "Ends"
-                row.tag = "end"
-                row.value = endDate
-                row.cellSetup { cell, row in
-                    cell.textLabel?.font = formFont
-                    cell.detailTextLabel?.font = formFont
-                    cell.detailTextLabel?.textColor = .black
-                }
-                row.onExpandInlineRow { cell, row, _ in
-                    cell.detailTextLabel?.textColor = redColor
-                    row.updateCell()
-                }
-                row.onCollapseInlineRow { cell, row, _ in
-                    cell.detailTextLabel?.textColor = .black
-                    row.updateCell()
-                    
-                    let startRow = (self.form.rowBy(tag: "start") as! DateTimeInlineRow).baseCell.baseRow
-                    if let startDate = startRow?.baseValue as? Date {
-                        if let endDate = row.value {
-                            if endDate < startDate {
-                                startRow?.baseValue = endDate
-                                startRow?.updateCell()
-                            }
-                        }
-                    }
-                }
-            }
-            
-            <<< PushRow<String>() { row in
-                row.title = "Repeat"
-                row.options = ["Never", "Every Day", "Every Week", "Every 2 weeks", "Every Month", "Every Year"]
-                row.value = repeatString
-                row.tag = "repeat"
-            }
-            .onPresent({ from, to in
-                to.enableDeselection = false
-                to.selectableRowCellSetup = { cell, _ in
-                    cell.textLabel?.font = formFont
-                }
-            })
-            .cellUpdate({ cell, _ in
+        +++ Section("Date and Time")
+        <<< DateTimeInlineRow() { row in
+            row.title = "Starts"
+            row.tag = "start"
+            row.value = startDate
+            row.cellSetup { cell, row in
                 cell.textLabel?.font = formFont
                 cell.detailTextLabel?.font = formFont
-                self.form.rowBy(tag: "endRepeat")?.evaluateHidden()
-            })
+                cell.detailTextLabel?.textColor = .black
+            }
+            row.onExpandInlineRow { cell, row, _ in
+                cell.detailTextLabel?.textColor = redColor
+                row.updateCell()
+            }
+            row.onCollapseInlineRow { cell, row, _ in
+                cell.detailTextLabel?.textColor = .black
+                row.updateCell()
+                
+                let endRow = (self.form.rowBy(tag: "end") as! DateTimeInlineRow).baseCell.baseRow
+                if let endDate = endRow?.baseValue as? Date {
+                    if let startDate = row.value {
+                        if startDate > endDate {
+                            endRow?.baseValue = startDate
+                            endRow?.updateCell()
+                        }
+                    }
+                }
+            }
+        }
+            
+        <<< DateTimeInlineRow() { row in
+            row.title = "Ends"
+            row.tag = "end"
+            row.value = endDate
+            row.cellSetup { cell, row in
+                cell.textLabel?.font = formFont
+                cell.detailTextLabel?.font = formFont
+                cell.detailTextLabel?.textColor = .black
+            }
+            row.onExpandInlineRow { cell, row, _ in
+                cell.detailTextLabel?.textColor = redColor
+                row.updateCell()
+            }
+            row.onCollapseInlineRow { cell, row, _ in
+                cell.detailTextLabel?.textColor = .black
+                row.updateCell()
+                
+                let startRow = (self.form.rowBy(tag: "start") as! DateTimeInlineRow).baseCell.baseRow
+                if let startDate = startRow?.baseValue as? Date {
+                    if let endDate = row.value {
+                        if endDate < startDate {
+                            startRow?.baseValue = endDate
+                            startRow?.updateCell()
+                        }
+                    }
+                }
+            }
+        }
+            
+        <<< PushRow<String>() { row in
+            row.title = "Repeat"
+            row.options = ["Never", "Every Day", "Every Week", "Every 2 weeks", "Every Month", "Every Year"]
+            row.value = repeatString
+            row.tag = "repeat"
+        }
+        .onPresent({ from, to in
+            to.enableDeselection = false
+            to.selectableRowCellSetup = { cell, _ in
+                cell.textLabel?.font = formFont
+            }
+        })
+        .cellUpdate({ cell, _ in
+            cell.textLabel?.font = formFont
+            cell.detailTextLabel?.font = formFont
+            self.form.rowBy(tag: "endRepeat")?.evaluateHidden()
+        })
 
-            <<< PushRow<String>() { row in
-                row.title = "End Repeat"
-                row.options = ["Never", "Date"]
-                row.value = "Never"
-                row.tag = "endRepeat"
-                row.hidden = Condition.function(["repeat"], { form in
-                    return (form.rowBy(tag: "repeat")?.value == "Never")
-                })
-            }
-            .onPresent({ from, to in
-                to.enableDeselection = false
-                to.selectableRowCellSetup = { cell, row in
-                    cell.textLabel?.font = formFont
-                }
+        <<< PushRow<String>() { row in
+            row.title = "End Repeat"
+            row.options = ["Never", "Date"]
+            row.value = "Never"
+            row.tag = "endRepeat"
+            row.hidden = Condition.function(["repeat"], { form in
+                return (form.rowBy(tag: "repeat")?.value == "Never")
             })
-            .cellUpdate({ cell, row in
+        }
+        .onPresent({ from, to in
+            to.enableDeselection = false
+            to.selectableRowCellSetup = { cell, row in
                 cell.textLabel?.font = formFont
-                cell.detailTextLabel?.font = formFont
+            }
+        })
+        .cellUpdate({ cell, row in
+            cell.textLabel?.font = formFont
+            cell.detailTextLabel?.font = formFont
+        })
+            
+        <<< DateInlineRow { row in
+            row.title = "End Repeat Date"
+            row.tag = "endRepeatDate"
+            row.value = Date()
+            row.dateFormatter?.dateFormat = "MMM d, YYYY"
+            row.hidden = Condition.function(["endRepeat"], { form in
+                return form.rowBy(tag: "endRepeat")?.value == "Never"
             })
             
-            <<< DatePickerRow() { row in
-                row.tag = "endRepeatDate"
-                row.validationOptions = .validatesOnChange
-                row.hidden = Condition.function(["endRepeat"], { form in
-                    return (form.rowBy(tag: "endRepeat")?.value == "Never")
-                })
+            row.cellSetup { cell, row in
+                cell.textLabel?.font = formFont
+                cell.detailTextLabel?.font = formFont
+                cell.detailTextLabel?.textColor = .black
             }
+            row.onExpandInlineRow { cell, row, _ in
+                cell.detailTextLabel?.textColor = redColor
+                row.updateCell()
+            }
+            row.onCollapseInlineRow { cell, row, _ in
+                cell.detailTextLabel?.textColor = .black
+                row.updateCell()
+                
+                let startRow = (self.form.rowBy(tag: "start") as! DateTimeInlineRow).baseCell.baseRow
+                if let startDate = startRow?.baseValue as? Date {
+                    if let endDate = row.value {
+                        if endDate < startDate {
+                            startRow?.baseValue = endDate
+                            startRow?.updateCell()
+                        }
+                    }
+                }
+            }
+        }
             
         +++ Section("Alerts")
         <<< PushRow<String>(){ row in

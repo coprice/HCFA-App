@@ -251,7 +251,7 @@ class EventVC: TemplateVC {
     @objc func refresh() {
         
         API.getEvents { response, data in
-            
+
             if self.firstAppearance {
                 self.firstAppearance = false
             }
