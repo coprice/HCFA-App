@@ -64,7 +64,7 @@ func deleteEventImage(_ eid: Int) {
                                                                 identityPoolId: poolID)
         let configuration = AWSServiceConfiguration(region: .USEast1, credentialsProvider: credentialsProvider)
         AWSServiceManager.default().defaultServiceConfiguration = configuration
-        
+
         let S3 = AWSS3.default()
         let deleteObjectRequest = AWSS3DeleteObjectRequest()
         deleteObjectRequest?.bucket = S3BUCKET

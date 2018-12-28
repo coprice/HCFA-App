@@ -39,6 +39,7 @@ class CalendarVC: FormViewController {
             titleString = (data["title"] as! String)
 
             let dateFormatter = DateFormatter()
+            dateFormatter.timeZone = TimeZone(abbreviation: "EST")
             dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
             startDate = dateFormatter.date(from: (data["start"] as! String))!
             endDate = dateFormatter.date(from: (data["end"] as! String))!
@@ -343,6 +344,7 @@ class CalendarVC: FormViewController {
                     event.location = values["location"] as? String
                     event.notes = values["notes"] as? String
                     event.alarms = self.getAlarmsFor(event.startDate)
+                    event.timeZone = TimeZone(abbreviation: "EST")
                     
                     if let calendar = self.getCalendar(withTitle: values["calendar"] as? String) {
                         event.calendar = calendar
@@ -413,6 +415,7 @@ extension CalendarVC {
         let gregorian = Calendar(identifier: .gregorian)
 
         let dateFormatter = DateFormatter()
+        dateFormatter.timeZone = TimeZone(abbreviation: "EST")
         dateFormatter.dateFormat = "h:mma"
         let startTime = dateFormatter.date(from: start)!
         let endTime = dateFormatter.date(from: end)!
