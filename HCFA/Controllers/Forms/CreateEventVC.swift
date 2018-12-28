@@ -11,17 +11,16 @@ import Eureka
 import AWSCore
 import AWSS3
 
-let days = [("Sunday", 0), ("Monday", 1), ("Tuesday", 2), ("Wednesday", 3),
-            ("Thursday", 4), ("Friday", 5), ("Saturday", 6)]
+let days = [("Sunday", 1), ("Monday", 2), ("Tuesday", 3), ("Wednesday", 4),
+            ("Thursday", 5), ("Friday", 6), ("Saturday", 7)]
 
 
 class CreateEventVC: CreateTemplateVC {
     
     var done: UIBarButtonItem!
     var eventVC: EventVC!
-    var eventData: [String:Any]!
-    var editingEvent = false
-    
+    var eventData: [String:Any] = [:]
+
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -29,14 +28,21 @@ class CreateEventVC: CreateTemplateVC {
         eventVC = (hostVC.contentViewControllers[Tabs.Events] as! EventVC)
         
         let today = Calendar.current.date(bySetting: .minute, value: 0, of: Date())
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
         
         var startDate: Date!
         var endDate: Date!
-        if editingEvent {           
-            let dateFormatter = DateFormatter()
-            dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-            startDate = dateFormatter.date(from: (eventData["start"] as! String))!
-            endDate = dateFormatter.date(from: (eventData["end"] as! String))!
+        if let start = eventData["start"] as? String, let end = eventData["end"] as? String {
+            if let o_start = eventData["original_start"] as? String,
+                let o_end = eventData["original_end"] as? String {
+                
+                startDate = dateFormatter.date(from: o_start)!
+                endDate = dateFormatter.date(from: o_end)!
+            } else {
+                startDate = dateFormatter.date(from: start)!
+                endDate = dateFormatter.date(from: end)!
+            }
         }
         
         form +++ Section("General")
@@ -44,8 +50,8 @@ class CreateEventVC: CreateTemplateVC {
             row.title = "Title"
             row.placeholder = "Title"
             row.tag = "title"
-            if editingEvent {
-                row.value = (eventData["title"] as! String)
+            if let title = eventData["title"] as? String {
+                row.value = title
             }
             row.cellUpdate { cell, _ in
                 cell.textLabel?.font = formFont
@@ -60,8 +66,12 @@ class CreateEventVC: CreateTemplateVC {
             row.title = "Location"
             row.placeholder = "Location"
             row.tag = "location"
-            if editingEvent {
-                row.value = (eventData["location"] as! String)
+            if let loc = eventData["location"] as? String {
+                if let o_loc = eventData["original_location"] as? String {
+                    row.value = o_loc
+                } else {
+                    row.value = loc
+                }
             }
             row.cellUpdate { cell, row in
                 cell.textLabel?.font = formFont
@@ -76,8 +86,8 @@ class CreateEventVC: CreateTemplateVC {
             row.title = "Repeat"
             row.options = ["Never", "Every Day", "Every Week", "Every 2 Weeks", "Every Month", "Every Year"]
             row.tag = "repeat"
-            if editingEvent {
-                row.value = eventData["repeat"] as? String
+            if let r = eventData["repeat"] as? String {
+                row.value = r
             } else {
                 row.value = "Never"
             }
@@ -108,7 +118,11 @@ class CreateEventVC: CreateTemplateVC {
         <<< PushRow<String> { row in
             row.title = "End Repeat"
             row.options = ["Never", "Date"]
-            row.value = "Never"
+            if eventData["end_repeat"] != nil {
+                row.value = "Date"
+            } else {
+                row.value = "Never"
+            }
             row.tag = "end_repeat"
             row.hidden = Condition.function(["repeat"], { form in
                 return form.rowBy(tag: "repeat")?.value == "Never"
@@ -128,8 +142,13 @@ class CreateEventVC: CreateTemplateVC {
         <<< DateInlineRow { row in
             row.title = "End Repeat Date"
             row.tag = "end_repeat_date"
-            row.value = Date()
-            row.dateFormatter?.dateFormat = "MMM d, YYYY"
+            if let erd = eventData["end_repeat"] as? String {
+                dateFormatter.dateFormat = "yyyy-MM-dd"
+                row.value = dateFormatter.date(from: erd)
+            } else {
+                row.value = today
+            }
+            row.dateFormatter?.dateFormat = "MMM dd, YYYY"
             row.hidden = Condition.function(["end_repeat"], { form in
                 return form.rowBy(tag: "end_repeat")?.value == "Never"
             })
@@ -152,7 +171,7 @@ class CreateEventVC: CreateTemplateVC {
         <<< SwitchRow { row in
             row.title = "Multiple Days"
             row.tag = "multiple"
-            row.value = false
+            row.value = eventData["repeat_days"] != nil
             row.hidden = Condition.function(["repeat"], { form in
                 if let value = form.rowBy(tag: "repeat")?.baseValue as? String {
                     return !value.contains("Week")
@@ -171,7 +190,7 @@ class CreateEventVC: CreateTemplateVC {
             row.tag = "start"
             row.minuteInterval = 5
             row.dateFormatter?.dateFormat = "h:mm a, MMM d, YYYY"
-            if editingEvent {
+            if eventData["start"] != nil {
                 row.value = startDate
             } else {
                 row.value = today
@@ -208,7 +227,7 @@ class CreateEventVC: CreateTemplateVC {
             row.tag = "end"
             row.minuteInterval = 5
             row.dateFormatter?.dateFormat = "h:mm a, MMM d, YYYY"
-            if editingEvent {
+            if eventData["end"] != nil {
                 row.value = endDate
             } else {
                 row.value = today
@@ -253,7 +272,11 @@ class CreateEventVC: CreateTemplateVC {
             repeatSection <<< CheckRow { row in
                 row.title = day
                 row.tag = dayTag
-                row.value = false
+                if let repeatDays = eventData["repeat_days"] as? [String:Any] {
+                    row.value = repeatDays[dayTag] != nil
+                } else {
+                    row.value = false
+                }
                 row.cellUpdate { cell, row in
                     cell.textLabel?.font = formFont
                 }
@@ -280,7 +303,16 @@ class CreateEventVC: CreateTemplateVC {
             <<< SwitchRow { row in
                 row.title = "Use General Location"
                 row.tag = "\(dayTag)_location_bool"
-                row.value = true
+                
+                if let repeatDays = eventData["repeat_days"] as? [String:Any] {
+                    if let dayDict = repeatDays[dayTag] as? [String:Any] {
+                        row.value = dayDict["location"] == nil
+                    } else {
+                        row.value = true
+                    }
+                } else {
+                    row.value = true
+                }
                 row.hidden = Condition.function([dayTag], { form in
                     return !(form.rowBy(tag: dayTag)?.baseValue as? Bool ?? false)
                 })
@@ -295,6 +327,11 @@ class CreateEventVC: CreateTemplateVC {
                 row.title = "Location"
                 row.tag = "\(dayTag)_location"
                 row.baseCell.backgroundColor = lightColor
+                if let repeatDays = eventData["repeat_days"] as? [String:Any] {
+                    if let dayDict = repeatDays[dayTag] as? [String:Any] {
+                        row.value = dayDict["location"] as? String
+                    }
+                }
                 row.hidden = Condition.function(["\(dayTag)_location_bool"], { form in
                     return form.rowBy(tag: "\(dayTag)_location_bool")?.baseValue as? Bool ?? true
                 })
@@ -310,7 +347,15 @@ class CreateEventVC: CreateTemplateVC {
             <<< SwitchRow { row in
                 row.title = "Use General Time"
                 row.tag = "\(dayTag)_time_bool"
-                row.value = true
+                if let repeatDays = eventData["repeat_days"] as? [String:Any] {
+                    if let dayDict = repeatDays[dayTag] as? [String:Any] {
+                        row.value = dayDict["start"] == nil
+                    } else {
+                        row.value = true
+                    }
+                } else {
+                    row.value = true
+                }
                 row.hidden = Condition.function([dayTag], { form in
                     return !(form.rowBy(tag: dayTag)?.baseValue as? Bool ?? false)
                 })
@@ -329,7 +374,21 @@ class CreateEventVC: CreateTemplateVC {
                 row.hidden = Condition.function(["\(dayTag)_time_bool"], { form in
                     return form.rowBy(tag: "\(dayTag)_time_bool")?.baseValue as? Bool ?? true
                 })
-                row.value = (form.rowBy(tag: "start") as? DateTimeInlineRow)?.value
+                
+                var flag = false
+                if let repeatDays = eventData["repeat_days"] as? [String:Any] {
+                    if let dayDict = repeatDays[dayTag] as? [String:Any] {
+                        if let start = dayDict["start"] as? String {
+                            dateFormatter.dateFormat = "h:mm a"
+                            row.value = dateFormatter.date(from: start)
+                            flag = true
+                        }
+                    }
+                }
+                if flag {
+                    row.value = startDate
+                }
+                
                 row.cellSetup { cell, row in
                     cell.textLabel?.font = formFont
                     cell.backgroundColor = lightColor
@@ -366,7 +425,19 @@ class CreateEventVC: CreateTemplateVC {
                 row.hidden = Condition.function(["\(dayTag)_time_bool"], { form in
                     return form.rowBy(tag: "\(dayTag)_time_bool")?.baseValue as? Bool ?? true
                 })
-                row.value = (form.rowBy(tag: "end") as? DateTimeInlineRow)?.value
+                var flag = false
+                if let repeatDays = eventData["repeat_days"] as? [String:Any] {
+                    if let dayDict = repeatDays[dayTag] as? [String:Any] {
+                        if let end = dayDict["end"] as? String {
+                            dateFormatter.dateFormat = "h:mm a"
+                            row.value = dateFormatter.date(from: end)
+                            flag = true
+                        }
+                    }
+                }
+                if flag {
+                    row.value = endDate
+                }
                 row.cellSetup { cell, row in
                     cell.textLabel?.font = formFont
                     cell.backgroundColor = lightColor
@@ -403,8 +474,8 @@ class CreateEventVC: CreateTemplateVC {
             row.title = "Description"
             row.placeholder = "Description"
             row.tag = "description"
-            if editingEvent {
-                row.value = (eventData["description"] as! String)
+            if let description = eventData["description"] as? String {
+                row.value = description
             }
             row.cellUpdate { cell, row in
                 cell.placeholderLabel?.font = formFont
@@ -418,7 +489,7 @@ class CreateEventVC: CreateTemplateVC {
             row.sourceTypes = [.PhotoLibrary, .Camera]
             row.clearAction = .yes(style: .default)
             row.tag = "image"
-            if editingEvent {
+            if eventData["image"] != nil {
                 DispatchQueue.main.async {
                     if let eventImages = defaults.dictionary(forKey: "eventImages") as? [String:Data] {
                         if let data = eventImages[String(self.eventData["eid"] as! Int)] {
@@ -433,7 +504,7 @@ class CreateEventVC: CreateTemplateVC {
             }
         }
         
-        if editingEvent {
+        if eventData.count != 0 {
             form +++ Section()
                 <<< ButtonRow() { row in
                 row.title = "Delete Event"
@@ -495,7 +566,7 @@ class CreateEventVC: CreateTemplateVC {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        if editingEvent {
+        if eventData.count != 0 {
             navigationItem.title = "Edit Event"
         } else {
             navigationItem.title = "New Event"
@@ -507,7 +578,6 @@ class CreateEventVC: CreateTemplateVC {
     }
 
     func editWith(_ data: [String:Any]) {
-        editingEvent = true
         eventData = data
     }
     
@@ -570,6 +640,10 @@ class CreateEventVC: CreateTemplateVC {
         return nil
     }
     
+    func wtf() {
+        createAlert(title: "Whaaaaaaaaat??", message: "This should never happen", view: self)
+    }
+    
     @objc func doneTapped() {
         tableView.endEditing(true)
         
@@ -592,10 +666,10 @@ class CreateEventVC: CreateTemplateVC {
         }
         
         guard let repeatStringVal = values["repeat"] as? String else { return wtf() }
-        let dateFormatter = DateFormatter()
         var repeatString: String? = nil
         var endRepeat: String? = nil
         var multiple: Bool? = nil
+        let dateFormatter = DateFormatter()
         
         if repeatStringVal != "Never" {
             repeatString = repeatStringVal
@@ -610,7 +684,7 @@ class CreateEventVC: CreateTemplateVC {
                                        message: "Event cannot stop repeating before it starts", view: self)
                 }
                 
-                dateFormatter.dateFormat = "MMM d, YYYY"
+                dateFormatter.dateFormat = "yyyy-MM-dd"
                 endRepeat = dateFormatter.string(from: endRepeatDate)
             }
             
@@ -666,6 +740,14 @@ class CreateEventVC: CreateTemplateVC {
                                    message: "You must have at least two days to have multiple days",
                                    view: self)
             }
+            
+            let weekday = Calendar.current.component(.weekday, from: startDate)
+            if repeatDays![String(weekday)] == nil {
+                let day = dateFormatter.weekdaySymbols[weekday - 1].lowercased()
+                return createAlert(title: "Multi-Day Error",
+                                   message: "The event starts on a \(day), but there is no \(day) in the specified repeat days",
+                                   view: self)
+            }
         }
         
         guard let description = values["description"] as? String else {
@@ -674,10 +756,7 @@ class CreateEventVC: CreateTemplateVC {
         
         startLoading()
         
-        if editingEvent {
-            
-            let eid = eventData["eid"] as! Int
-
+        if let eid = eventData["eid"] as? Int {
             var imageURL: String? = nil
             if let _ = values["image"] as? UIImage {
                 imageURL = eventImageURL(eid)
@@ -713,7 +792,7 @@ class CreateEventVC: CreateTemplateVC {
                         }
                     } else {
                         // event had an image but update got rid of it
-                        if let _ = self.eventData["image"] as? String {
+                        if self.eventData["image"] != nil {
                             deleteEventImage(eid)
                         }
                         self.backToEvents(title: "Event Updated", message: "")
@@ -768,9 +847,5 @@ class CreateEventVC: CreateTemplateVC {
                 }
             }
         }
-    }
-    
-    func wtf() {
-        createAlert(title: "Whaaaaaaaaat??", message: "This should never happen", view: self)
     }
 }

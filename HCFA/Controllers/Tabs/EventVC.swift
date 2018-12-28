@@ -166,6 +166,190 @@ class EventVC: TemplateVC {
         tableView.reloadData()
     }
     
+    func getNextDayFrom(_ startDate: Date, _ endDate: Date, with weekday: Int) -> (Date, Date)? {
+        let calendar = Calendar(identifier: .gregorian)
+        let weekdayComponents = DateComponents(calendar: calendar, weekday: weekday)
+        
+        if let sd = calendar.nextDate(after: startDate, matching: weekdayComponents,
+                                      matchingPolicy: .nextTimePreservingSmallerComponents),
+           let ed = calendar.nextDate(after: endDate, matching: weekdayComponents,
+                                      matchingPolicy: .nextTimePreservingSmallerComponents) {
+            return (sd, ed)
+        }
+        return nil
+    }
+    
+    func nextDateCandidate(_ startDate: Date, _ endDate: Date, _ repeatEvent: [String:Any]) -> (Date, Date) {
+        var today = Date()
+        
+        if let endRepeatString = repeatEvent["end_repeat"] as? String {
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "yyyy-MM-dd"
+            let endRepeatDate = dateFormatter.date(from: endRepeatString)!
+            if endRepeatDate < today { // event expired -- so get next date after expiry
+                today = endRepeatDate
+            }
+        }
+        
+        var updateValue = 1
+        var difference: Int!
+        var component: Calendar.Component!
+        
+        switch repeatEvent["repeat"] as! String {
+        case "Every Week":
+            difference = Calendar.current.dateComponents([.weekOfYear], from: startDate, to: today).weekOfYear
+            component = .weekOfYear
+        case "Every 2 Weeks":
+            difference = Calendar.current.dateComponents([.weekOfYear], from: startDate, to: today).weekOfYear
+            if difference % 2 == 1 { difference -= 1 }
+            component = .weekOfYear
+            updateValue = 2
+        case "Every Month":
+            difference = Calendar.current.dateComponents([.month], from: startDate, to: today).month
+            component = .month
+        case "Every Year":
+            difference = Calendar.current.dateComponents([.year], from: startDate, to: today).year
+            component = .year
+        default:
+            difference = Calendar.current.dateComponents([.day], from: startDate, to: today).day
+            component = .day
+        }
+
+        var newStart = Calendar.current.date(byAdding: component, value: difference, to: startDate)!
+        var newEnd = Calendar.current.date(byAdding: component, value: difference, to: endDate)!
+        
+        if newEnd < today {
+            newStart = Calendar.current.date(byAdding: component, value: updateValue, to: newStart)!
+            newEnd = Calendar.current.date(byAdding: component, value: updateValue, to: newEnd)!
+        }
+        
+        if let endRepeatString = repeatEvent["end_repeat"] as? String {
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "yyyy-MM-dd"
+            let endRepeatDate = dateFormatter.date(from: endRepeatString)!
+            if endRepeatDate < newEnd {
+                newStart = Calendar.current.date(byAdding: component, value: -updateValue, to: newStart)!
+                newEnd = Calendar.current.date(byAdding: component, value: -updateValue, to: newEnd)!
+            }
+        }
+        
+        return (newStart, newEnd)
+    }
+    
+    // gets next start/end dates and location for repeating event
+    func getNextDatesAndLocation(_ repeatEvent: [String:Any]) -> [(Date, Date, String?)] {
+        
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+        let startDate = dateFormatter.date(from: repeatEvent["start"] as! String)!
+        let endDate = dateFormatter.date(from: repeatEvent["end"] as! String)!
+        
+        if Date() < endDate {
+            return [(startDate, endDate, nil)]
+        }
+        
+        if let repeatDays = repeatEvent["repeat_days"] as? [String:Any] {
+            var candidates: [(Date, Date, String?)] = []
+            for day in 1...7 {
+                let key = String(day)
+                if let dict = repeatDays[key] as? [String:Any] {
+                    if let (newStartDate, newEndDate) = getNextDayFrom(startDate, endDate, with: day) {
+                        let location = dict["location"] as? String
+        
+                        if let start = dict["start"] as? String, let end = dict["end"] as? String {
+                            dateFormatter.dateFormat = "h:mm a"
+                            let st = dateFormatter.date(from: start)!
+                            let et = dateFormatter.date(from: end)!
+                            
+                            let newStart = Calendar.current.date(bySettingHour: Calendar.current.component(.hour, from: st), minute: Calendar.current.component(.minute, from: st), second: 0, of: newStartDate)!
+                            let newEnd = Calendar.current.date(bySettingHour: Calendar.current.component(.hour, from: et), minute: Calendar.current.component(.minute, from: et), second: 0, of: newEndDate)!
+                            let (s, e) = nextDateCandidate(newStart, newEnd, repeatEvent)
+                            candidates.append((s, e, location))
+                        } else {
+                            let newStart = Calendar.current.date(bySettingHour: Calendar.current.component(.hour, from: startDate), minute: Calendar.current.component(.minute, from: startDate), second: 0, of: newStartDate)!
+                            let newEnd = Calendar.current.date(bySettingHour: Calendar.current.component(.hour, from: endDate), minute: Calendar.current.component(.minute, from: endDate), second: 0, of: newEndDate)!
+                            
+                            let (s, e) = nextDateCandidate(newStart, newEnd, repeatEvent)
+                            candidates.append((s, e, location))
+                        }
+                    }
+                }
+            }
+            
+            dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+            candidates.sort(by: { $0.0 < $1.0 })
+            return candidates
+        } else {
+            let (sd, ed) = nextDateCandidate(startDate, endDate, repeatEvent)
+            return [(sd, ed, nil)]
+        }
+    }
+    
+    func merge(_ x: [[String:Any]], _ y: [[String:Any]]) -> [[String:Any]] {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+        
+        var result: [[String:Any]] = []
+        var (l, r) = (0, 0)
+        
+        while l != x.count || r != y.count {
+            if l == x.count {
+                return result + y[r..<y.count]
+            }
+            if r == y.count {
+                return result + x[l..<x.count]
+            }
+            if dateFormatter.date(from: x[l]["start"] as! String)! <
+                dateFormatter.date(from: y[r]["start"] as! String)! {
+                result.append(x[l])
+                l += 1
+            } else {
+                result.append(y[r])
+                r += 1
+            }
+        }
+        return result
+    }
+    
+    func mergeRepeatEvents(_ repeatEvents: inout [[String:Any]]) {
+        let today = Date()
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+        var pastRepeats: [[String:Any]] = []
+        var upcomingRepeats: [[String:Any]] = []
+        
+        for i in 0..<repeatEvents.count {
+            repeatEvents[i]["original_start"] = repeatEvents[i]["start"]
+            repeatEvents[i]["original_end"] = repeatEvents[i]["end"]
+            repeatEvents[i]["original_location"] = repeatEvents[i]["location"]
+            
+            for (sd, ed, location) in getNextDatesAndLocation(repeatEvents[i]) {
+                repeatEvents[i]["start"] = dateFormatter.string(from: sd)
+                repeatEvents[i]["end"] = dateFormatter.string(from: ed)
+                if let loc = location {
+                    repeatEvents[i]["location"] = loc
+                } else {
+                    repeatEvents[i]["location"] = repeatEvents[i]["original_location"]
+                }
+                if ed < today {
+                    pastRepeats.append(repeatEvents[i])
+                } else {
+                    upcomingRepeats.append(repeatEvents[i])
+                }
+            }
+        }
+        
+        pastRepeats.sort(by: {
+            dateFormatter.date(from: $0["start"] as! String)! > dateFormatter.date(from: $1["start"] as! String)!
+        })
+        upcomingRepeats.sort(by: {
+            dateFormatter.date(from: $0["start"] as! String)! < dateFormatter.date(from: $1["start"] as! String)!
+        })
+        
+        upcomingRows = merge(upcomingRows, upcomingRepeats)
+        pastRows = merge(pastRows, pastRepeats)
+    }
+    
     @objc func create() {
         navigationController!.pushViewController(CreateEventVC(), animated: true)
     }
@@ -184,10 +368,11 @@ class EventVC: TemplateVC {
     @objc func deleteSelected() {
         guard let indexPaths = tableView.indexPathsForSelectedRows else { return }
         
-        var events: [Int] = []
+        var seen = Set<Int>()
         for indexPath in indexPaths {
-            events.append(rows[indexPath.row]["eid"] as! Int)
+            seen.insert(rows[indexPath.row]["eid"] as! Int)
         }
+        let events = Array(seen)
         
         var txt: String!
         var msg: String!
@@ -249,7 +434,6 @@ class EventVC: TemplateVC {
     }
     
     @objc func refresh() {
-        
         API.getEvents { response, data in
 
             if self.firstAppearance {
@@ -275,6 +459,10 @@ class EventVC: TemplateVC {
                 let data = data as! [String:Any]
                 self.upcomingRows = data["upcoming_events"] as! [[String:Any]]
                 self.pastRows = data["past_events"] as! [[String:Any]]
+                
+                var repeatEvents = data["repeat_events"] as! [[String:Any]]
+                self.mergeRepeatEvents(&repeatEvents)
+
                 self.rows = self.currentRows()
                 self.tableView.refreshControl?.endRefreshing()
                 self.tableView.reloadData()
@@ -392,23 +580,39 @@ extension EventVC: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
         
-        if tableView.allowsMultipleSelection && tableView.indexPathsForSelectedRows == nil {
-            deleteButton.removeFromSuperview()
+        if tableView.allowsMultipleSelection {
+            if let eid = rows[indexPath.row]["eid"] as? Int {
+                for (i, row) in rows.enumerated() {
+                    if row["eid"] as? Int == eid && i != indexPath.row {
+                        tableView.deselectRow(at: IndexPath(row: i, section: indexPath.section), animated: false)
+                    }
+                }
+            }
+            
+            if tableView.indexPathsForSelectedRows == nil {
+                deleteButton.removeFromSuperview()
+            }
         }
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let data = rows[indexPath.row]
         
         if !tableView.allowsMultipleSelection {
             tableView.deselectRow(at: indexPath, animated: true)
-            
-            let data = rows[indexPath.row]
-            
+
             let displayEvent = DisplayEventVC()
             displayEvent.data = data
             navigationController!.pushViewController(displayEvent, animated: true)
         } else {
-            
+            if let eid = data["eid"] as? Int {
+                for (i, row) in rows.enumerated() {
+                    if row["eid"] as? Int == eid && i != indexPath.row {
+                        tableView.selectRow(at: IndexPath(row: i, section: indexPath.section), animated: false,
+                                            scrollPosition: .none)
+                    }
+                }
+            }
             if deleteButton.superview == nil {
                 view.addSubview(deleteButton)
             }
@@ -435,7 +639,6 @@ extension EventVC: UITableViewDelegate {
 // MARK: UITableViewDataSource methods
     
 extension EventVC: UITableViewDataSource {
-    
     func numberOfSections(in tableView: UITableView) -> Int {
         if firstAppearance {
             return 0

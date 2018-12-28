@@ -491,6 +491,8 @@ class CreateBibleCourseVC: CreateTemplateVC {
                         view: self)
             
         } else {
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "h:mma"
             
             var meetings: [String:String]? = nil
             if day != "TBD" {
@@ -515,8 +517,6 @@ class CreateBibleCourseVC: CreateTemplateVC {
                     return createAlert(title: "Location Empty", message: "Enter a location", view: self)
                 }
                 
-                let dateFormatter = DateFormatter()
-                dateFormatter.dateFormat = "h:mma"
                 let start = dateFormatter.string(from: startTime).lowercased()
                 let end = dateFormatter.string(from: endTime).lowercased()
                 
@@ -524,9 +524,6 @@ class CreateBibleCourseVC: CreateTemplateVC {
                 meetings!["start"] = start
                 meetings!["end"] = end
             }
-            
-            let dateFormatter = DateFormatter()
-            dateFormatter.dateFormat = "h:mma"
             
             let leaderFirst = values["leader_first"] as! String
             let leaderLast = values["leader_last"] as! String

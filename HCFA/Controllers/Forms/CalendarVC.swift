@@ -33,17 +33,26 @@ class CalendarVC: FormViewController {
         var startDate: Date!
         var endDate: Date!
         var repeatString: String! = "Every Week"
+        var endRepeat: Date? = nil
         var notes: String!
         if type == .Event {
             titleString = (data["title"] as! String)
-            
+
             let dateFormatter = DateFormatter()
             dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
             startDate = dateFormatter.date(from: (data["start"] as! String))!
             endDate = dateFormatter.date(from: (data["end"] as! String))!
-            
-            repeatString = "Never"
             notes = (data["description"] as! String)
+            
+            if let r = data["repeat"] as? String {
+                repeatString = r
+            } else {
+                repeatString = "Never"
+            }
+            if let er = data["end_repeat"] as? String {
+                dateFormatter.dateFormat = "yyyy-MM-dd"
+                endRepeat = dateFormatter.date(from: er)
+            }
             
         } else if type == .Course {
             titleString = "Bible Course"
@@ -163,7 +172,11 @@ class CalendarVC: FormViewController {
         <<< PushRow<String>() { row in
             row.title = "End Repeat"
             row.options = ["Never", "Date"]
-            row.value = "Never"
+            if endRepeat != nil {
+                row.value = "Date"
+            } else {
+                row.value = "Never"
+            }
             row.tag = "endRepeat"
             row.hidden = Condition.function(["repeat"], { form in
                 return (form.rowBy(tag: "repeat")?.value == "Never")
@@ -183,7 +196,11 @@ class CalendarVC: FormViewController {
         <<< DateInlineRow { row in
             row.title = "End Repeat Date"
             row.tag = "endRepeatDate"
-            row.value = Date()
+            if let er = endRepeat {
+                row.value = er
+            } else {
+                row.value = Date()
+            }
             row.dateFormatter?.dateFormat = "MMM d, YYYY"
             row.hidden = Condition.function(["endRepeat"], { form in
                 return form.rowBy(tag: "endRepeat")?.value == "Never"
@@ -339,11 +356,9 @@ class CalendarVC: FormViewController {
                         let interval = self.getInterval(repeatString)
                         
                         var endRepeat: EKRecurrenceEnd? = nil
-                        
                         if values["endRepeat"] as? String == "Date" {
                             endRepeat = EKRecurrenceEnd(end: (values["endRepeatDate"] as! Date))
                         }
-                        
                         event.addRecurrenceRule(EKRecurrenceRule(recurrenceWith: frequency, interval: interval,
                                                                  end: endRepeat))
                     }
@@ -396,9 +411,9 @@ extension CalendarVC {
     
     func getStartAndEndTimes(start: String, end: String) -> (Date, Date) {
         let gregorian = Calendar(identifier: .gregorian)
+
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "h:mma"
-        
         let startTime = dateFormatter.date(from: start)!
         let endTime = dateFormatter.date(from: end)!
         
