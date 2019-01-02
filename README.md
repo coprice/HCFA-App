@@ -6,4 +6,4 @@ The HCFA-App serves as a medium for organizing the activities of Harvard College
 
 ### Backend
 
-The supporting backend for the app can be found on my [GitHub](https://github.com/coprice/HCFA-Backend). If you were to try to clone this repository, you would also need to clone the backend and follow the setup instructions to have it run locally.
+The supporting backend for the app can be found [here](https://github.com/coprice/HCFA-Backend).
