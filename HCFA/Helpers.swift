@@ -48,6 +48,7 @@ func resetDefaults() {
     defaults.set(false, forKey: "leader")
     defaults.set("", forKey: "token")
     defaults.set([], forKey: "courses")
+    defaults.set(nil, forKey: "users")
     defaults.set(nil, forKey: "image")
     defaults.set(nil, forKey: "userAPNToken")
     defaults.set(true, forKey: "event_ntf")

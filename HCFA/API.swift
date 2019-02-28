@@ -20,6 +20,13 @@ class API {
     static let environment = "development"
     static let rootURLString = environment == "production" ? "https://hcfa-app.com" : "http://0.0.0.0:8080"
 
+    class func getUsers(uid: Int, token: String, completionHandler: @escaping (URLResponses, Any?) -> Void) {
+        
+        let path = "/users?uid=\(uid)&token=\(token)"
+        
+        API.performRequest(requestType: "GET", urlPath: path, json: nil, completionHandler: completionHandler)
+    }
+    
     class func login(email: String, password: String, completionHandler: @escaping (URLResponses, Any?) -> Void) {
 
         let path = "/users/login?email=\(email)&password=\(password)"

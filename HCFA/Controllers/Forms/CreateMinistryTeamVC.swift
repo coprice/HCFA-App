@@ -212,7 +212,7 @@ class CreateMinistryTeamVC: CreateTemplateVC {
             $0.multivaluedRowToInsertAt = { index in
                 return NameRow() { row in
                     row.placeholder = "Leader's Name"
-                    row.tag = "leaderName\(index)"
+                    row.tag = "leader\(index)"
                     row.cellUpdate { cell, _ in
                         cell.textField.font = formFont
                     }
@@ -224,7 +224,7 @@ class CreateMinistryTeamVC: CreateTemplateVC {
                     $0 <<< NameRow() { row in
                         row.placeholder = "Leader's Name"
                         row.value = leader
-                        row.tag = "leaderName\(idx)"
+                        row.tag = "leader\(idx)"
                         idx += 1
                         row.cellUpdate { cell, _ in
                             cell.textField.font = formFont
@@ -234,7 +234,7 @@ class CreateMinistryTeamVC: CreateTemplateVC {
             } else {
                 $0 <<< NameRow() { row in
                     row.placeholder = "Leader's Name"
-                    row.tag = "leaderName0"
+                    row.tag = "leader0"
                     row.cellUpdate { cell, _ in
                         cell.textField.font = formFont
                     }
@@ -253,26 +253,72 @@ class CreateMinistryTeamVC: CreateTemplateVC {
                 }
             }
             $0.multivaluedRowToInsertAt = { index in
-                return EmailRow() { row in
-                    row.placeholder = "Member's Email"
-                    row.tag = "memberEmail\(index)"
-                    row.cellUpdate { cell, _ in
-                        cell.textField.font = formFont
+                return SearchPushRow<String>() { row in
+                    row.tag = "member\(index)"
+                    if let users = defaults.array(forKey: "users") as? [[String]] {
+                        row.options = users.map({ "\($0[0]) \($0[1]) (\($0[2]))" })
+                    } else {
+                        API.getUsers(uid: defaults.integer(forKey: "uid"), token: defaults.string(forKey: "token")!, completionHandler: { (response, data) in
+                            
+                            if response == .Success {
+                                if let data = data as? [String:Any] {
+                                    if let users = data["users"] as? [[String]] {
+                                        defaults.set(users, forKey: "users")
+                                        row.options = users.map({ "\($0[0]) \($0[1]) (\($0[2]))" })
+                                    }
+                                }
+                            }
+                        })
                     }
                 }
+                .onPresent({(from, to) in
+                    to.enableDeselection = false
+                    to.selectableRowCellSetup = { cell, _ in
+                        cell.textLabel?.font = formFont
+                    }
+                })
+                .cellSetup({cell, _ in
+                    cell.textLabel?.font = formFont
+                    cell.detailTextLabel?.font = formFont
+                    cell.detailTextLabel?.textColor = .black
+                    cell.update()
+                })
             }
             if editingMT {
                 var idx = 0
-                for member in (data["members"] as! [String:Any])["emails"] as! [String] {
-                    $0 <<< EmailRow() { row in
-                        row.placeholder = "Member's Email"
-                        row.value = member
-                        row.tag = "memberEmail\(idx)"
+                for member in (data["members"] as! [String:Any])["info"] as! [[Any]] {
+                    $0 <<< SearchPushRow<String>() { row in
+                        row.value = "\(member[0] as! String) (\(member[1] as! String))"
+                        row.tag = "member\(idx)"
                         idx += 1
-                        row.cellUpdate { cell, _ in
-                            cell.textField.font = formFont
+                        if let users = defaults.array(forKey: "users") as? [[String]] {
+                            row.options = users.map({ "\($0[0]) \($0[1]) (\($0[2]))" })
+                        } else {
+                            API.getUsers(uid: defaults.integer(forKey: "uid"), token: defaults.string(forKey: "token")!, completionHandler: { (response, data) in
+                                
+                                if response == .Success {
+                                    if let data = data as? [String:Any] {
+                                        if let users = data["users"] as? [[String]] {
+                                            defaults.set(users, forKey: "users")
+                                            row.options = users.map({ "\($0[0]) \($0[1]) (\($0[2]))" })
+                                        }
+                                    }
+                                }
+                            })
                         }
                     }
+                    .onPresent({(from, to) in
+                        to.enableDeselection = false
+                        to.selectableRowCellSetup = { cell, _ in
+                            cell.textLabel?.font = formFont
+                        }
+                    })
+                    .cellSetup({cell, _ in
+                        cell.textLabel?.font = formFont
+                        cell.detailTextLabel?.font = formFont
+                        cell.detailTextLabel?.textColor = .black
+                        cell.update()
+                    })
                 }
             }
         }
@@ -288,35 +334,105 @@ class CreateMinistryTeamVC: CreateTemplateVC {
                 }
             }
             $0.multivaluedRowToInsertAt = { index in
-                return EmailRow() { row in
-                    row.placeholder = "Admin's Email"
-                    row.tag = "adminEmail\(index)"
-                    row.cellUpdate { cell, _ in
-                        cell.textField.font = formFont
+                return SearchPushRow<String>() { row in
+                    row.tag = "admin\(index)"
+                    if let users = defaults.array(forKey: "users") as? [[String]] {
+                        row.options = users.map({ "\($0[0]) \($0[1]) (\($0[2]))" })
+                    } else {
+                        API.getUsers(uid: defaults.integer(forKey: "uid"), token: defaults.string(forKey: "token")!, completionHandler: { (response, data) in
+                            
+                            if response == .Success {
+                                if let data = data as? [String:Any] {
+                                    if let users = data["users"] as? [[String]] {
+                                        defaults.set(users, forKey: "users")
+                                        row.options = users.map({ "\($0[0]) \($0[1]) (\($0[2]))" })
+                                    }
+                                }
+                            }
+                        })
                     }
                 }
+                .onPresent({(from, to) in
+                    to.enableDeselection = false
+                    to.selectableRowCellSetup = { cell, _ in
+                        cell.textLabel?.font = formFont
+                    }
+                })
+                .cellSetup({cell, _ in
+                    cell.textLabel?.font = formFont
+                    cell.detailTextLabel?.font = formFont
+                    cell.detailTextLabel?.textColor = .black
+                    cell.update()
+                })
             }
+            
             if editingMT {
                 var idx = 0
-                for admin in (data["admins"] as! [String:Any])["emails"] as! [String] {
-                    $0 <<< EmailRow() { row in
-                        row.placeholder = "Admin's Email"
-                        row.value = admin
-                        row.tag = "adminEmail\(idx)"
+                for admin in (data["admins"] as! [String:Any])["info"] as! [[String]] {
+                    $0 <<< SearchPushRow<String>() { row in
+                        row.value = "\(admin[0]) (\(admin[1]))"
+                        row.tag = "admin\(idx)"
                         idx += 1
-                        row.cellUpdate { cell, _ in
-                            cell.textField.font = formFont
+                        if let users = defaults.array(forKey: "users") as? [[String]] {
+                            row.options = users.map({ "\($0[0]) \($0[1]) (\($0[2]))" })
+                        } else {
+                            API.getUsers(uid: defaults.integer(forKey: "uid"), token: defaults.string(forKey: "token")!, completionHandler: { (response, data) in
+                                
+                                if response == .Success {
+                                    if let data = data as? [String:Any] {
+                                        if let users = data["users"] as? [[String]] {
+                                            defaults.set(users, forKey: "users")
+                                            row.options = users.map({ "\($0[0]) \($0[1]) (\($0[2]))" })
+                                        }
+                                    }
+                                }
+                            })
                         }
                     }
+                    .onPresent({(from, to) in
+                        to.enableDeselection = false
+                        to.selectableRowCellSetup = { cell, _ in
+                            cell.textLabel?.font = formFont
+                        }
+                    })
+                    .cellSetup({cell, _ in
+                        cell.textLabel?.font = formFont
+                        cell.detailTextLabel?.font = formFont
+                        cell.detailTextLabel?.textColor = .black
+                        cell.update()
+                    })
                 }
             } else {
-                $0 <<< EmailRow() { row in
-                    row.placeholder = "Admin's Email"
-                    row.tag = "adminEmail0"
-                    row.cellUpdate { cell, _ in
-                        cell.textField.font = formFont
+                $0 <<< SearchPushRow<String>() { row in
+                    row.tag = "admin0"
+                    if let users = defaults.array(forKey: "users") as? [[String]] {
+                        row.options = users.map({ "\($0[0]) \($0[1]) (\($0[2]))" })
+                    } else {
+                        API.getUsers(uid: defaults.integer(forKey: "uid"), token: defaults.string(forKey: "token")!, completionHandler: { (response, data) in
+                            
+                            if response == .Success {
+                                if let data = data as? [String:Any] {
+                                    if let users = data["users"] as? [[String]] {
+                                        defaults.set(users, forKey: "users")
+                                        row.options = users.map({ "\($0[0]) \($0[1]) (\($0[2]))" })
+                                    }
+                                }
+                            }
+                        })
                     }
                 }
+                .onPresent({(from, to) in
+                    to.enableDeselection = false
+                    to.selectableRowCellSetup = { cell, _ in
+                        cell.textLabel?.font = formFont
+                    }
+                })
+                .cellSetup({cell, _ in
+                    cell.textLabel?.font = formFont
+                    cell.detailTextLabel?.font = formFont
+                    cell.detailTextLabel?.textColor = .black
+                    cell.update()
+                })
             }
         }
         
@@ -459,22 +575,22 @@ class CreateMinistryTeamVC: CreateTemplateVC {
                 meetings!["location"] = location
             }
             
-            let leaderNames = getMultivaluedSectionValues("leaderName")
-            let memberEmails = getMultivaluedSectionValues("memberEmail")
-            let adminEmails = getMultivaluedSectionValues("adminEmail")
+            let leaders = getMultivaluedSectionValues("leader")
+            let members = getMultivaluedSectionValues("member").map({ $0.slice(from: "(", to: ")")! })
+            let admins = getMultivaluedSectionValues("admin").map({ $0.slice(from: "(", to: ")")! })
             
-            if leaderNames.isEmpty {
+            if leaders.isEmpty {
                 return createAlert(title: "Missing Leaders", message: "Enter the names of the team leaders",
                                    view: self)
-            } else if !leaderNames.filter({ $0.contains("|") }).isEmpty {
+            } else if !leaders.filter({ $0.contains("|") }).isEmpty {
                 return createAlert(title: "Invalid Leader Name", message: "Don't be a troll. Remove the |.",
                                    view: self)
             
-            } else if adminEmails.isEmpty {
+            } else if admins.isEmpty {
                 return createAlert(title: "Missing an Admin", message: "Ministry team needs at least one admin",
                                    view: self)
             
-            } else if !memberEmails.filter({ adminEmails.contains($0) }).isEmpty {
+            } else if !members.filter({ admins.contains($0) }).isEmpty {
                 createAlert(title: "Member/Admin Duplicate", message: "Ministry team members cannot be admins",
                             view: self)
             }
@@ -483,8 +599,8 @@ class CreateMinistryTeamVC: CreateTemplateVC {
             
             if editingMT {
                 API.updateTeam(uid: defaults.integer(forKey: "uid"), token: defaults.string(forKey: "token")!,
-                               tid: data["tid"] as! Int, name: name, description: description, leaders: leaderNames,
-                               meetings: meetings, groupme: link, members: memberEmails, admins: adminEmails) {
+                               tid: data["tid"] as! Int, name: name, description: description, leaders: leaders,
+                               meetings: meetings, groupme: link, members: members, admins: admins) {
                     response, data in
                     
                     self.stopLoading()
@@ -506,8 +622,8 @@ class CreateMinistryTeamVC: CreateTemplateVC {
                 
             } else {
                 API.createTeam(uid: defaults.integer(forKey: "uid"), token: defaults.string(forKey: "token")!,
-                               name: name, description: description, leaders: leaderNames, meetings: meetings,
-                               groupme: link, members: memberEmails, admins: adminEmails) { response, data in
+                               name: name, description: description, leaders: leaders, meetings: meetings,
+                               groupme: link, members: members, admins: admins) { response, data in
                     
                     self.stopLoading()
                     

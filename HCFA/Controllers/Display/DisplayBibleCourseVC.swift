@@ -98,7 +98,7 @@ class DisplayBibleCourseVC: DisplayTemplateVC {
                     offset += TOP_MARGIN*0.75
                     
                     let imageView = UIImageView(image: UIImage(named: "generic"))
-                    if let profile = member[1] {
+                    if let profile = member[2] {
                         if let url = URL(string: profile) {
                             downloadImage(url: url, view: imageView)
                         }
